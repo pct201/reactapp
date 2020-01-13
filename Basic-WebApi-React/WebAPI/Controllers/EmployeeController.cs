@@ -59,6 +59,7 @@ namespace WebAPI.Controllers
         }
 
         // GET api/values
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/Employee/GetEducationList")]
         public IList<EducationModel> GetEducationList()
@@ -77,9 +78,10 @@ namespace WebAPI.Controllers
         }
 
         // POST api/values
+        [AllowAnonymous]
         [HttpPost]
-        [Route("api/Employee/InsertEmployeeDetails")]
-        public int InsertEmployeeDetails(UserModel model)
+        [Route("api/Employee/RegisterNewUser")]
+        public int RegisterNewUser(UserModel model)
         {
             try
             {

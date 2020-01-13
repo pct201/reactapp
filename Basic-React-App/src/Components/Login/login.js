@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { userActions } from '../../Actions/userActions'
+import {Link} from "react-router-dom";
+import { userService } from '../../Services/userService'
 
 class Login extends Component {
   constructor(props) {
@@ -58,13 +59,11 @@ class Login extends Component {
                     <a className="forgot float-right" href="#/" title="Forgot password?">Forgot password?</a>
                   </div>
                 </div>
-                <a onClick={this.handleSubmit} className="btn btn-primary w-100">
-                  <span>Log in</span>
-                </a>
+                <input type="button" className="btn btn-primary w-100" value="Log in" onClick={ this.handleSubmit} />              
 
               </form>
               <p className="sign-up p-0">
-                Don’t have an account? <a href="#" title="Sign up"> Sign up</a>
+                Don’t have an account? <Link to="/register">Sign up</Link>
               </p>
             </div>
           </div>
@@ -76,8 +75,8 @@ class Login extends Component {
 }
 
 const actionCreators = {
-  login: userActions.login,
-  logout: userActions.logout
+  login: userService.login,
+  logout: userService.logout
 }
 
 export default connect(null, actionCreators)(Login);
