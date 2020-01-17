@@ -38,8 +38,7 @@ export default class forgotPassword extends Component {
     e.preventDefault();
    
       if (this.validator.allValid()) {
-        authenticationService.forgotPassword(this.state.email).then(result => {  
-          debugger       
+        authenticationService.forgotPassword(this.state.email).then(result => {                
           if (result.success) //reset link sent successfully
           {
             this.setState({

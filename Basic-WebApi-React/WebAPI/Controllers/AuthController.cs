@@ -35,8 +35,6 @@ namespace WebAPI.Controllers
             this.emailService = new EmailService(configuration);
         }
 
-        // POST api/values
-
         [HttpPost]
         public ActionResult RegisterNewUser(UserModel model)
         {
@@ -70,14 +68,14 @@ namespace WebAPI.Controllers
         [HttpPost]
         public ActionResult CreatePassword([FromBody] JObject credentialObj)
         {
-            string emailId = Convert.ToString(credentialObj["userId"]);
+            string emailId = Decrypt(Convert.ToString(credentialObj["userId"]));
             string token = (Convert.ToString(credentialObj["token"])).Replace(" ", "+");
             string password = Convert.ToString(credentialObj["password"]);
             if (!string.IsNullOrEmpty(token) && isLatestToken(token))
             {
                 using (var userServices = new UserServices())
                 {
-                    if (userServices.SetPassword(Decrypt(emailId), token, Encrypt(password)))
+                    if (userServices.SetPassword(emailId, token, Encrypt(password)))
                         return Ok(new { success = true, errorCode = 0 });//Password Created Successfully.                   
                 }
             }
@@ -87,13 +85,14 @@ namespace WebAPI.Controllers
                 string newToken = GenerateEmailToken();
                 using (var userServices = new UserServices())
                 {
-                    if (userServices.UpdateTokenInDatabase(Decrypt(emailId), token, newToken))
+
+                    if (userServices.UpdateTokenInDatabase(emailId, token, newToken))
                     {
                         //Trigger confirm email for expired link                                     
                         ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + Encrypt(emailId)), emailId, "en-us");
                         EmailEvent.Send();
                         return Ok(new { success = false, errorCode = 202 });//Link Expired Sent New Link.
-                    }                 
+                    }
                 }
             }
             return Ok(new { success = false, errorCode = 201 });//Token or email information is invalid.
@@ -120,8 +119,6 @@ namespace WebAPI.Controllers
                 return Ok(new { success = false });
             }
         }
-
-
 
         [HttpPost]
         public ActionResult Login([FromBody] JObject credentialObj)
@@ -223,11 +220,7 @@ namespace WebAPI.Controllers
         {
             byte[] data = Convert.FromBase64String(token);
             DateTime generateTime = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
-            if (generateTime < DateTime.UtcNow.AddHours(-24))
-            {
-                return false;
-            }
-            return true;
+            return (generateTime < DateTime.UtcNow.AddMinutes(Convert.ToInt32(configuration["EmailLink:TimeToLiveHour"]) * -1)) ? true : false;
         }
     }
 }
