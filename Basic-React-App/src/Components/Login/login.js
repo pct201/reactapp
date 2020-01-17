@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import SimpleReactValidator from 'simple-react-validator';
 import { userService } from '../../Services/userService'
-
+import { alertService } from '../../Services/alertService'
+import { history } from '../../Helpers/history';
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -15,6 +17,11 @@ class Login extends Component {
       password: ''
     };
 
+    history.listen((location, action) => {
+      // clear alert on location change
+      this.props.clearAlerts();
+    });
+    this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -28,13 +35,17 @@ class Login extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { username, password } = this.state;
-    if (username && password) {     
-       this.props.login(username, password);
+    if (this.validator.allValid()) {
+      const { username, password } = this.state;
+      this.props.login(username, password);
+    }
+    else {
+      this.validator.showMessages();
     }
   }
 
   render() {
+    const { alert } = this.props;
     return (
       <div className="wrapper login-page">
         <div className="login-panel">
@@ -43,12 +54,18 @@ class Login extends Component {
             <div className="card">
               <span className="login-icon"><span><img src={require('../../images/login-icon.svg')} alt="" /></span></span>
               <h2>Welcome, Provider!</h2>
+              <p> {alert.message &&
+                <div className={`alert ${alert.type}`}>{alert.message}</div>
+              }
+              </p>
               <form>
                 <div className="form-group">
                   <input type="text" className="form-control" id="username" name="username" placeholder="User ID" value={this.state.username} onChange={this.handleChange} />
+                  <span className="errorfont">{this.validator.message('username', this.state.username, `required`)}</span>
                 </div>
                 <div className="form-group">
                   <input type="password" className="form-control" id="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} />
+                  <span className="errorfont">{this.validator.message('password', this.state.password, `required`)}</span>
                 </div>
                 <div className="form-group">
                   <div className="clearfix">
@@ -56,10 +73,10 @@ class Login extends Component {
                       <input type="checkbox" className="custom-control-input" id="customControlInline" />
                       <label className="custom-control-label" >Remember me</label>
                     </div>
-                    <a className="forgot float-right" href="#/" title="Forgot password?">Forgot password?</a>
+                    <Link className="forgot float-right" to="/forgotPassword">Forgot password?</Link>
                   </div>
                 </div>
-                <input type="button" className="btn btn-primary w-100" value="Log in" onClick={ this.handleSubmit} />              
+                <input type="button" className="btn btn-primary w-100" value="Log in" onClick={this.handleSubmit} />
 
               </form>
               <p className="sign-up p-0">
@@ -74,11 +91,16 @@ class Login extends Component {
   }
 }
 
+function mapState(state) {
+  const { alert } = state;
+  return { alert };
+}
 const actionCreators = {
   login: userService.login,
-  logout: userService.logout
+  logout: userService.logout,
+  clearAlerts: alertService.clear
 }
 
-export default connect(null, actionCreators)(Login);
+export default connect(mapState, actionCreators)(Login);
 
 

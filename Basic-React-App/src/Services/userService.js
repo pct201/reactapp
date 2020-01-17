@@ -1,12 +1,15 @@
 import { authHeader } from '../Helpers/authHeader';
 import { userConstants } from '../Constants/userConstants';
-import { history } from '../Helpers/history'
+import { history } from '../Helpers/history';
+import { alertService } from './alertService'
 const axios = require('axios');
 
 export const userService = {
     login,
     logout,
     register,
+    createPassword,
+    forgotPassword,
     getAllUser,
     getUserById,
     updateUserDetail,
@@ -21,17 +24,21 @@ const failure = error => { return { type: userConstants.LOGIN_FAILURE, error } }
 function login(userName, password) {
     return dispatch => {
         dispatch(request({ userName }));
-        debugger;
-        axios.post(process.env.REACT_APP_API_URL + "Auth/Login", { "userName": userName, "password": password }, {
+
+        axios.post(process.env.REACT_APP_Local_API_URL + "Auth/Login", { "userName": userName, "password": password }, {
             'Content-Type': 'application/json'
         }).then(user => {
-            debugger;
-            localStorage.setItem('user', JSON.stringify(user.data));
-            dispatch(success(user.data));
-            history.push('/');
+            if (user.data.isvalidUser) {
+                localStorage.setItem('user', JSON.stringify(user.data));
+                dispatch(success(user.data));
+                history.push('/');
+            }
+            else {
+                dispatch(alertService.error("Username or password is incorrect"));
+            }
         },
             error => {
-                dispatch(failure(error));
+                dispatch(alertService.error("Somthing wrong!"));
             })
     };
 }
@@ -43,14 +50,39 @@ function logout() {
 
 function register(user) {
 
-    return dispatch => {
-        axios.post(process.env.REACT_APP_API_URL + "Employee/RegisterNewUser", user,
+    return (
+        axios.post(process.env.REACT_APP_Local_API_URL + "Auth/RegisterNewUser", user,
             {
                 'Content-Type': 'application/json'
-            }).then(user => {
-                history.push('/login');
+            }).then(users => {
+                return users.data;
             })
-    };
+    );
+}
+
+
+function createPassword(userId, token, password) {
+
+    return (
+        axios.post(process.env.REACT_APP_Local_API_URL + "Auth/CreatePassword", { "userId": userId, "token": token, "password": password }, {
+            'Content-Type': 'application/json'
+        }).then(result => {
+            return result;
+        })
+    );
+}
+
+function forgotPassword(email) {
+
+    return (
+        axios.post(process.env.REACT_APP_Local_API_URL + "Auth/ForgotPassword/?emailId=" + email)
+            .then(result => {
+                return result;
+            },
+                error => {
+                    return error;
+                })
+    );
 }
 
 function getAllUser() {

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
+using WebAPI.Email;
+using Microsoft.Extensions.Configuration;
 
 namespace WebAPI.Controllers
 {
@@ -15,6 +17,12 @@ namespace WebAPI.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        private IConfiguration configuration;
+        private EmailService emailService;
+        public EmployeeController(IConfiguration configuration)
+        {
+            this.emailService = new EmailService(configuration);
+        }
         // GET api/values
         [HttpGet]
         [Route("api/Employee/AllEmployeeDetails")]
@@ -77,24 +85,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        // POST api/values
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("api/Employee/RegisterNewUser")]
-        public int RegisterNewUser(UserModel model)
-        {
-            try
-            {
-                using (var userService = new UserServices())
-                {
-                    return userService.AddEditUser(model);
-                }
-            }
-            catch (Exception e)
-            {
-                return 0;
-            }
-        }
+       
 
         // PUT api/values
         [HttpPut]
@@ -157,6 +148,7 @@ namespace WebAPI.Controllers
             }
         }
 
+      
 
     }
 }

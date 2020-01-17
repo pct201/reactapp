@@ -11,12 +11,13 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using Services;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using WebAPI.Email;
 
 namespace WebAPI.Controllers
 {
@@ -24,24 +25,120 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-       
-        private IConfiguration configuration;
 
+
+        private IConfiguration configuration;
+        private EmailService emailService;
         public AuthController(IConfiguration configuration)
-        {          
+        {
             this.configuration = configuration;
+            this.emailService = new EmailService(configuration);
+        }
+
+        // POST api/values
+
+        [HttpPost]
+        public int RegisterNewUser(UserModel model)
+        {
+            using (var userService = new UserServices())
+            {
+                model.Token = GenerateEmailToken();
+                int userId = userService.AddEditUser(model);
+                if (userId > 0)
+                {
+                    string url = HttpContext.Request.Headers["origin"];
+                    try
+                    {
+                        //Trigger usercreation email
+                        UserCreationEvent emailEvent = new UserCreationEvent(emailService, model.Email, model.Language_code);
+                        emailEvent.Send();
+
+                        //Trigger confirm email                                       
+                        ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + model.Token + "&uid=" + Encrypt(model.Email)), model.Email, model.Language_code);
+                        EmailEvent.Send();
+                    }
+                    catch
+                    {
+                        return 202;
+                    }
+                }
+                return userId;
+            }
+        }
+
+
+        [HttpPost]
+        public int CreatePassword([FromBody] JObject credentialObj)
+        {
+            string emailId = Convert.ToString(credentialObj["userId"]);
+            string token = (Convert.ToString(credentialObj["token"])).Replace(" ", "+");
+            string password = Convert.ToString(credentialObj["password"]);
+            if (!string.IsNullOrEmpty(token) && isLatestToken(token))
+            {
+                using (var userServices = new UserServices())
+                {
+                    if (userServices.SetPassword(Decrypt(emailId), token, Encrypt(password)))
+                        return 1;
+                    else
+                        return -1;
+                }
+            }
+            else
+            {
+                string url = HttpContext.Request.Headers["origin"];
+                string newToken = GenerateEmailToken();
+                using (var userServices = new UserServices())
+                {
+                    if (userServices.UpdateTokenInDatabase(Decrypt(emailId), token, newToken))
+                    {
+                        //Trigger confirm email for expired link                                     
+                        ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + Encrypt(emailId)), emailId, "en-us");
+                        EmailEvent.Send();
+                        return 202;
+                    }
+                    else
+                        return -1;
+                }
+            }
         }
 
         [HttpPost]
+        public ActionResult ForgotPassword(string emailId)
+        {
+            try
+            {
+                string url = HttpContext.Request.Headers["origin"];
+                string newToken = GenerateEmailToken();
+                using (var userServices = new UserServices())
+                {
+                    userServices.UpdateTokenInDatabase(emailId, null, newToken);
+                    //Trigger confirm email for expired link                                     
+                    ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + Encrypt(emailId)), emailId, "en-us");
+                    EmailEvent.Send();
+                }
+                return Ok(new { success = true });
+            }
+            catch
+            {
+                return Ok(new { success = false });
+            }
+        }
+
+
+
+        [HttpPost]
         public ActionResult Login([FromBody] JObject credentialObj)
-        {            
+        {
             string emailId = Convert.ToString(credentialObj["userName"]);
-            string str = Convert.ToString(credentialObj["password"]);
+            string password = Convert.ToString(credentialObj["password"]);
             using (var userServices = new UserServices())
             {
                 UserModel userDetail = userServices.GetUserByEmail(emailId);
-                if (userDetail == null || userDetail.UserId <= 0 || !(str == this.Decrypt(userDetail.Password)))
-                    return BadRequest();
+                if (userDetail == null || userDetail.UserId <= 0 || !(password == this.Decrypt(userDetail.Password)))
+                    return Ok(new
+                    {
+                        isvalidUser = false
+                    });
 
                 var claims = new[]
                 {
@@ -64,14 +161,16 @@ namespace WebAPI.Controllers
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(securityToken),
-                    expiration = securityToken.ValidTo
+                    expiration = securityToken.ValidTo,
+                    isvalidUser = true
                 });
             }
         }
 
+        [NonAction]
         private string Encrypt(string clearText)
         {
-            string EncryptionKey = configuration["EncryptionKey"];        
+            string EncryptionKey = configuration["EncryptionKey"];
             byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
             using (Aes encryptor = Aes.Create())
             {
@@ -91,8 +190,9 @@ namespace WebAPI.Controllers
             return clearText;
         }
 
+        [NonAction]
         private string Decrypt(string cipherText)
-        {           
+        {
             string EncryptionKey = configuration["EncryptionKey"];
             byte[] cipherBytes = Convert.FromBase64String(cipherText);
             using (Aes encryptor = Aes.Create())
@@ -111,6 +211,26 @@ namespace WebAPI.Controllers
                 }
             }
             return cipherText;
+        }
+
+        [NonAction]
+        public string GenerateEmailToken()
+        {
+            byte[] time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
+            byte[] key = Guid.NewGuid().ToByteArray();
+            return Convert.ToBase64String(time.Concat(key).ToArray());
+        }
+
+        [NonAction]
+        public bool isLatestToken(string token)
+        {
+            byte[] data = Convert.FromBase64String(token);
+            DateTime generateTime = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
+            if (generateTime < DateTime.UtcNow.AddHours(-24))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

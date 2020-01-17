@@ -83,8 +83,15 @@ namespace Services
             parameters.Add(new DBParameters() { Name = "@salary", Value = objUserModel.Salary, DBType = DbType.Decimal });
             parameters.Add(new DBParameters() { Name = "@birth_date", Value = objUserModel.Birth_Date, DBType = DbType.Date });
             parameters.Add(new DBParameters() { Name = "@is_married", Value = objUserModel.Is_Married, DBType = DbType.Boolean });
-            parameters.Add(new DBParameters() { Name = "@address", Value = objUserModel.Address, DBType = DbType.AnsiString });
-            parameters.Add(new DBParameters() { Name = "@blog", Value = objUserModel.Blog, DBType = DbType.AnsiString });
+            if (!string.IsNullOrEmpty(objUserModel.Token))
+                parameters.Add(new DBParameters() { Name = "@token", Value = objUserModel.Token, DBType = DbType.String });
+
+            if (!string.IsNullOrEmpty(objUserModel.Address))
+                parameters.Add(new DBParameters() { Name = "@address", Value = objUserModel.Address, DBType = DbType.AnsiString });
+
+            if (!string.IsNullOrEmpty(objUserModel.Blog))
+                parameters.Add(new DBParameters() { Name = "@blog", Value = objUserModel.Blog, DBType = DbType.AnsiString });
+
             parameters.Add(new DBParameters() { Name = "@created_by", Value = objUserModel.Updated_by, DBType = DbType.Int32 });
             return Convert.ToInt32(this.ExecuteProcedure("dbo.add_edit_user", ExecuteType.ExecuteScalar, parameters));
         }
@@ -114,6 +121,38 @@ namespace Services
             return Convert.ToInt32(this.ExecuteProcedure("dbo.user_email_check", ExecuteType.ExecuteScalar, parameters));
         }
 
+
+        /// <summary>
+        /// checks whether email address exist in auth.logins table
+        /// </summary>
+        /// <param name="emailId"></param>
+        /// <returns></returns>
+        public virtual bool SetPassword(string emailId, string token, string password)
+        {
+            System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "@email", Value = emailId, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@token", Value = token, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@password", Value = password, DBType = DbType.AnsiString });
+            return Convert.ToBoolean(this.ExecuteProcedure("dbo.user_update_password", ExecuteType.ExecuteScalar, parameters));
+        }
+
+
+        /// <summary>
+        /// checks whether email address exist in auth.logins table
+        /// </summary>
+        /// <param name="emailId"></param>
+        /// <returns></returns>
+        public virtual bool UpdateTokenInDatabase(string emailId, string oldToken, string newToken)
+        {
+            System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "@email", Value = emailId, DBType = DbType.String });
+
+            if (!string.IsNullOrEmpty(oldToken))
+                parameters.Add(new DBParameters() { Name = "@old_token", Value = oldToken, DBType = DbType.String });
+
+            parameters.Add(new DBParameters() { Name = "@new_token", Value = newToken, DBType = DbType.AnsiString });
+            return Convert.ToBoolean(this.ExecuteProcedure("dbo.user_update_token", ExecuteType.ExecuteScalar, parameters));
+        }
 
         /// <summary>
         /// Get EducationList.

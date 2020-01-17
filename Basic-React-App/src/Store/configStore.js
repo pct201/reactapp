@@ -2,7 +2,7 @@ import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import  {authenticationReducer} from '../Reducers/authenticationReducer';
-
+import  {alertReducer} from '../Reducers/alertReducer';
 
 
 export default function configureStore(initialState,history) {  
@@ -20,7 +20,8 @@ export default function configureStore(initialState,history) {
     //     compose(applyMiddleware(...middleware))
     // );
     const reducers = {
-        authentication: authenticationReducer      
+        authentication: authenticationReducer,  
+        alert:alertReducer
     };
 
     const middleware = [

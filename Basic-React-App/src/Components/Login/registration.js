@@ -76,9 +76,7 @@ export default class registration extends Component {
     handleCancel = () => {
         this.props.history.push('/login', null)
     }
-
-
-
+    
     handleModelHide(isRedirect) {
         if (isRedirect) {
             this.props.history.push('/login', null)
@@ -99,8 +97,8 @@ export default class registration extends Component {
     handleOnSubmit = event => {
         event.preventDefault();
         if (this.validator.allValid()) {            
-            userService.register(this.state.mainState).then(result => {
-                if (result.data.userId > 0) {
+            userService.register(this.state.mainState).then(userId => {                
+                if (userId > 0) {
                     this.setState({
                         popupState: {
                             title: "Thank you for register",
@@ -110,7 +108,7 @@ export default class registration extends Component {
                         }
                     })
                 }
-                else if (result.data.usedEmail) {
+                else if (userId === -1) {
                     this.setState({
                         popupState: {
                             title: "Opps Error !",
