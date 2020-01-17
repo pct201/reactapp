@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import SimpleReactValidator from 'simple-react-validator';
-import { userService } from '../../Services/userService'
-import { alertService } from '../../Services/alertService'
+import { authenticationService,alertService } from '../../Services'
 import { history } from '../../Helpers/history';
 class Login extends Component {
   constructor(props) {
@@ -54,10 +53,10 @@ class Login extends Component {
             <div className="card">
               <span className="login-icon"><span><img src={require('../../images/login-icon.svg')} alt="" /></span></span>
               <h2>Welcome, Provider!</h2>
-              <p> {alert.message &&
+               {alert.message &&
                 <div className={`alert ${alert.type}`}>{alert.message}</div>
               }
-              </p>
+              
               <form>
                 <div className="form-group">
                   <input type="text" className="form-control" id="username" name="username" placeholder="User ID" value={this.state.username} onChange={this.handleChange} />
@@ -69,11 +68,11 @@ class Login extends Component {
                 </div>
                 <div className="form-group">
                   <div className="clearfix">
-                    <div className="custom-control custom-checkbox float-left">
+                    {/* <div className="custom-control custom-checkbox float-left">
                       <input type="checkbox" className="custom-control-input" id="customControlInline" />
                       <label className="custom-control-label" >Remember me</label>
-                    </div>
-                    <Link className="forgot float-right" to="/forgotPassword">Forgot password?</Link>
+                    </div> */}
+                    <Link className="forgot float-left" to="/forgotPassword">Forgot password?</Link>
                   </div>
                 </div>
                 <input type="button" className="btn btn-primary w-100" value="Log in" onClick={this.handleSubmit} />
@@ -96,8 +95,8 @@ function mapState(state) {
   return { alert };
 }
 const actionCreators = {
-  login: userService.login,
-  logout: userService.logout,
+  login: authenticationService.login,
+  logout: authenticationService.logout,
   clearAlerts: alertService.clear
 }
 

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import 'rc-datepicker/lib/style.css';
 import SimpleReactValidator from 'simple-react-validator';
 import { DatePickerInput } from 'rc-datepicker';
-import { userService } from '../../Services/userService';
+import { authenticationService,userService } from '../../Services';
 import MessagePopup from '../Popup/MessagePopup';
 
 export default class registration extends Component {
@@ -23,7 +23,7 @@ export default class registration extends Component {
             email: "",
             mobile_number: "",
             education_id: "",
-            salary: "",           
+            salary: "",
             birth_date: new Date().toISOString(),
             is_married: false
         },
@@ -56,18 +56,18 @@ export default class registration extends Component {
         });
     }
 
-    handleInputChange = event => {       
+    handleInputChange = event => {
         if (event.target.id === "terms") {
             this.setState({
                 ...this.state,
                 termCondition: event.target.checked
             });
-        }        
+        }
         else {
             this.setState({
                 mainState: {
                     ...this.state.mainState,
-                    [event.target.id]: (event.target.id=== "is_married")? event.target.checked: event.target.value
+                    [event.target.id]: (event.target.id === "is_married") ? event.target.checked : event.target.value
                 }
             });
         }
@@ -76,7 +76,7 @@ export default class registration extends Component {
     handleCancel = () => {
         this.props.history.push('/login', null)
     }
-    
+
     handleModelHide(isRedirect) {
         if (isRedirect) {
             this.props.history.push('/login', null)
@@ -96,9 +96,9 @@ export default class registration extends Component {
 
     handleOnSubmit = event => {
         event.preventDefault();
-        if (this.validator.allValid()) {            
-            userService.register(this.state.mainState).then(userId => {                
-                if (userId > 0) {
+        if (this.validator.allValid()) {
+            authenticationService.register(this.state.mainState).then(result => {
+                if (result.success) {
                     this.setState({
                         popupState: {
                             title: "Thank you for register",
@@ -108,25 +108,27 @@ export default class registration extends Component {
                         }
                     })
                 }
-                else if (userId === -1) {
-                    this.setState({
-                        popupState: {
-                            title: "Opps Error !",
-                            message: "<p>Your mail address is allready registered please use diffrent mail id.</P>",
-                            isshow: true,
-                            redirect: false
-                        }
-                    })
-                }
                 else {
-                    this.setState({
-                        popupState: {
-                            title: "Opps Error !",
-                            message: "<p>Something went wrong. Please try again later.</P>",
-                            isshow: true,
-                            redirect: true
-                        }
-                    })
+                    if (result.errorCode === 201) {
+                        this.setState({
+                            popupState: {
+                                title: "Error",
+                                message: "<p>Your mail address is allready registered please use diffrent mail id.</P>",
+                                isshow: true,
+                                redirect: false
+                            }
+                        })
+                    }
+                    else {
+                        this.setState({
+                            popupState: {
+                                title: "Error",
+                                message: "<p>Something went wrong. Please try again later.</P>",
+                                isshow: true,
+                                redirect: true
+                            }
+                        })
+                    }
                 }
             })
         }

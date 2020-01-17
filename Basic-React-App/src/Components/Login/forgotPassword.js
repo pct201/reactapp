@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from "react-router-dom";
 import SimpleReactValidator from 'simple-react-validator';
-import { userService } from '../../Services/userService'
+import { authenticationService } from '../../Services'
 import MessagePopup from '../Popup/MessagePopup';
 
 export default class forgotPassword extends Component {
@@ -38,43 +38,32 @@ export default class forgotPassword extends Component {
     e.preventDefault();
    
       if (this.validator.allValid()) {
-        userService.forgotPassword(this.state.email).then(result => {
-          console.log(result)
-          // if (result === 202)//token is expired
-          // {
-          //   this.setState({
-          //     popupState: {
-          //       isshow: true,
-          //       title: "Error",
-          //       message: "Email Link has been expired so We have sent new link on registerd email. Please check your email"
-          //     }
-          //   })
-          // }
-          // else if (result === -1)//token or email information is invalid
-          // {
-          //   this.setState({
-          //     popupState: {
-          //       isshow: true,
-          //       title: "Error",
-          //       message: "Token Or EmailId is invalid please provide currect information Or Contact Admin."
-          //     }
-          //   })
-          // }
-          // else {
-          //   this.setState({
-          //     popupState: {
-          //       isshow: true,
-          //       title: "Success",
-          //       message: "Your Password set Successfully."
-          //     }
-          //   })
-          // }
+        authenticationService.forgotPassword(this.state.email).then(result => {  
+          debugger       
+          if (result.success) //reset link sent successfully
+          {
+            this.setState({
+              popupState: {
+                isshow: true,
+                title: "Success",
+                message: "We have sent reset password link to your email."
+              }
+            })
+          }         
+          else { //error in mail sending 
+            this.setState({
+              popupState: {
+                isshow: true,
+                title: "Error",
+                message: "Something went wrong. Please try again later."
+              }
+            })
+          }
         })
       }
       else {
         this.validator.showMessages();
-      }
-   
+      }   
   }
 
   render() {

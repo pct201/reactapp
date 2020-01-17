@@ -38,37 +38,37 @@ namespace WebAPI.Controllers
         // POST api/values
 
         [HttpPost]
-        public int RegisterNewUser(UserModel model)
+        public ActionResult RegisterNewUser(UserModel model)
         {
             using (var userService = new UserServices())
             {
                 model.Token = GenerateEmailToken();
                 int userId = userService.AddEditUser(model);
-                if (userId > 0)
+                if (userId < 0)
+                    return Ok(new { success = false, errorCode = 201 });//Email Address Allready Registerd.
+
+                try
                 {
                     string url = HttpContext.Request.Headers["origin"];
-                    try
-                    {
-                        //Trigger usercreation email
-                        UserCreationEvent emailEvent = new UserCreationEvent(emailService, model.Email, model.Language_code);
-                        emailEvent.Send();
+                    //Trigger usercreation email
+                    UserCreationEvent emailEvent = new UserCreationEvent(emailService, model.Email, model.Language_code);
+                    emailEvent.Send();
 
-                        //Trigger confirm email                                       
-                        ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + model.Token + "&uid=" + Encrypt(model.Email)), model.Email, model.Language_code);
-                        EmailEvent.Send();
-                    }
-                    catch
-                    {
-                        return 202;
-                    }
+                    //Trigger confirm email                                       
+                    ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + model.Token + "&uid=" + Encrypt(model.Email)), model.Email, model.Language_code);
+                    EmailEvent.Send();
+
+                    return Ok(new { success = true, errorCode = 0 });//User Registered Successfully.
                 }
-                return userId;
+                catch
+                {
+                    return Ok(new { success = false, errorCode = 202 });//Error In Mail Sending
+                }
             }
         }
 
-
         [HttpPost]
-        public int CreatePassword([FromBody] JObject credentialObj)
+        public ActionResult CreatePassword([FromBody] JObject credentialObj)
         {
             string emailId = Convert.ToString(credentialObj["userId"]);
             string token = (Convert.ToString(credentialObj["token"])).Replace(" ", "+");
@@ -78,9 +78,7 @@ namespace WebAPI.Controllers
                 using (var userServices = new UserServices())
                 {
                     if (userServices.SetPassword(Decrypt(emailId), token, Encrypt(password)))
-                        return 1;
-                    else
-                        return -1;
+                        return Ok(new { success = true, errorCode = 0 });//Password Created Successfully.                   
                 }
             }
             else
@@ -94,12 +92,11 @@ namespace WebAPI.Controllers
                         //Trigger confirm email for expired link                                     
                         ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + Encrypt(emailId)), emailId, "en-us");
                         EmailEvent.Send();
-                        return 202;
-                    }
-                    else
-                        return -1;
+                        return Ok(new { success = false, errorCode = 202 });//Link Expired Sent New Link.
+                    }                 
                 }
             }
+            return Ok(new { success = false, errorCode = 201 });//Token or email information is invalid.
         }
 
         [HttpPost]

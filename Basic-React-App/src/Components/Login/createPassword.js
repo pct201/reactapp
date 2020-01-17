@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from "react-router-dom";
 import SimpleReactValidator from 'simple-react-validator';
-import { userService } from '../../Services/userService'
+import { authenticationService } from '../../Services'
 import queryString from 'query-string';
 import MessagePopup from '../Popup/MessagePopup';
 
@@ -52,28 +52,9 @@ export default class createPassword extends Component {
     }
     else {
       if (this.validator.allValid()) {
-        userService.createPassword(this.state.username,this.state.token,this.state.password).then(result => {
-          if (result === 202)//token is expired
+        authenticationService.createPassword(this.state.username,this.state.token,this.state.password).then(result => {
+          if(result.success)
           {
-            this.setState({
-              popupState: {
-                isshow: true,
-                title: "Error",
-                message: "Email Link has been expired so We have sent new link on registerd email. Please check your email"
-              }
-            })
-          }
-          else if (result === -1)//token or email information is invalid
-          {
-            this.setState({
-              popupState: {
-                isshow: true,
-                title: "Error",
-                message: "Token Or EmailId is invalid please provide currect information Or Contact Admin."
-              }
-            })
-          }
-          else {
             this.setState({
               popupState: {
                 isshow: true,
@@ -82,6 +63,28 @@ export default class createPassword extends Component {
               }
             })
           }
+          else{
+            if (result.errorCode === 202)//token is expired
+            {
+              this.setState({
+                popupState: {
+                  isshow: true,
+                  title: "Error",
+                  message: "Email Link has been expired so We have sent new link on registerd email. Please check your email"
+                }
+              })
+            }
+            else //token or email information is invalid
+            {
+              this.setState({
+                popupState: {
+                  isshow: true,
+                  title: "Error",
+                  message: "Token Or EmailId is invalid please provide currect information Or Contact Admin."
+                }
+              })
+            }
+          }  
         })
       }
       else {
