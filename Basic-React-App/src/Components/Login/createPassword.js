@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import SimpleReactValidator from 'simple-react-validator';
 import { authenticationService } from '../../Services'
 import queryString from 'query-string';
+import  HelpTip from '../Common/HelpTip'
 import MessagePopup from '../Popup/MessagePopup';
+import Loader from '../Common/Loader';
 
 export default class createPassword extends Component {
   constructor(props) {
@@ -15,16 +17,16 @@ export default class createPassword extends Component {
       password: "",
       confirm_password: "",
       token: params.token,
+      showLoader: false,
       popupState: {
         message: "",
         title: "",
         isshow: false
       }
     };
-
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleChange = this.handleChange.bind(this);
-    this.handleModelHide = this.handleModelHide.bind(this);    
+    this.handleModelHide = this.handleModelHide.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -52,20 +54,44 @@ export default class createPassword extends Component {
     }
     else {
       if (this.validator.allValid()) {
-        authenticationService.createPassword(this.state.username,this.state.token,this.state.password).then(result => {
-          if(result.success)
-          {
-            this.setState({
-              popupState: {
-                isshow: true,
-                title: "Success",
-                message: "Your Password set Successfully."
-              }
-            })
-          }
-          else{
-            if (result.errorCode === 202)//token is expired
-            {
+        this.setState({
+          ...this.state,
+          showLoader: true
+      })
+        authenticationService.createPassword(this.state.username, this.state.token, this.state.password).then(result => {
+          this.setState({
+            ...this.state,
+            showLoader: false
+        })
+          switch (result.errorCode) {
+            case 201:
+              this.setState({
+                popupState: {
+                  isshow: true,
+                  title: "Error",
+                  message: "Password should be deffrent then old password."
+                }
+              })
+              break
+            case 202:
+              this.setState({
+                popupState: {
+                  isshow: true,
+                  title: "Error",
+                  message: "Your Account is not active please contact to admin."
+                }
+              })
+              break
+            case 203:
+              this.setState({
+                popupState: {
+                  isshow: true,
+                  title: "Error",
+                  message: "Token Or EmailId is invalid please provide currect information or contact to admin."
+                }
+              })
+              break
+            case 204:
               this.setState({
                 popupState: {
                   isshow: true,
@@ -73,18 +99,16 @@ export default class createPassword extends Component {
                   message: "Email Link has been expired so We have sent new link on registerd email. Please check your email"
                 }
               })
-            }
-            else //token or email information is invalid
-            {
+              break
+            default:
               this.setState({
                 popupState: {
                   isshow: true,
-                  title: "Error",
-                  message: "Token Or EmailId is invalid please provide currect information Or Contact Admin."
+                  title: "Success",
+                  message: "Your Password set Successfully."
                 }
               })
-            }
-          }  
+          }
         })
       }
       else {
@@ -96,7 +120,8 @@ export default class createPassword extends Component {
   render() {
     return (
       <Fragment>
-        <div className="wrapper login-page">
+        <Loader show={this.state.showLoader} />
+        <div className="wrapper login-page">        
           <div className="login-panel">
             <div className="login-block">
               <a className="login-logo" href="#/" title="ProCare"><img src={require('../../images/logo.png')} alt="" /></a>
@@ -104,15 +129,15 @@ export default class createPassword extends Component {
                 <span className="login-icon"><span><img src={require('../../images/login-icon.svg')} alt="" /></span></span>
                 <h2>Set Password</h2>
                 <form>
-                  <div className="form-group">
+                  <div className="form-group tooltipContainer">
                     <input type="password" className="form-control" id="password" name="password" placeholder="New Password" value={this.state.password} onChange={this.handleChange} />
-                    <span className="errorfont">{this.validator.message('password', this.state.password, `required`)}</span>
+                    <HelpTip message={"Password must have 6 to 16 length including at least one number and one special character."}/>
+                    <span className="errorfont">{this.validator.message('password', this.state.password, ['required', { regex: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }], { messages: { regex: 'Password must have 6 to 16 length including at least one number and one special character.' } })}</span>
                   </div>
                   <div className="form-group">
                     <input type="password" className="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" value={this.state.confirm_password} onChange={this.handleChange} />
                     <span className="errorfont">
                       {this.validator.message('confirm_password', this.state.confirm_password, `required|in:${this.state.password}`, { messages: { in: 'Passwords need to match!' } })}
-
                     </span>
                   </div>
                   <input type="button" className="btn btn-primary w-100" value="Set Password" onClick={this.handleSubmit} />

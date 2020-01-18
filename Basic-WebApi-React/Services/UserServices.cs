@@ -114,26 +114,25 @@ namespace Services
         /// </summary>
         /// <param name="emailId"></param>
         /// <returns></returns>
-        public virtual int isEmailAddressExist(string emailId)
+        public virtual bool IsActiveUser(string emailId)
         {
             System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
-            parameters.Add(new DBParameters() { Name = "@email", Value = emailId, DBType = DbType.AnsiString });
-            return Convert.ToInt32(this.ExecuteProcedure("dbo.user_email_check", ExecuteType.ExecuteScalar, parameters));
+            parameters.Add(new DBParameters() { Name = "@email", Value = emailId, DBType = DbType.String });
+            return Convert.ToBoolean(this.ExecuteProcedure("dbo.user_active_check", ExecuteType.ExecuteScalar, parameters));
         }
-
 
         /// <summary>
         /// checks whether email address exist in auth.logins table
         /// </summary>
         /// <param name="emailId"></param>
         /// <returns></returns>
-        public virtual bool SetPassword(string emailId, string token, string password)
+        public virtual int SetPassword(string emailId, string token, string password)
         {
             System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
             parameters.Add(new DBParameters() { Name = "@email", Value = emailId, DBType = DbType.String });
             parameters.Add(new DBParameters() { Name = "@token", Value = token, DBType = DbType.String });
             parameters.Add(new DBParameters() { Name = "@password", Value = password, DBType = DbType.AnsiString });
-            return Convert.ToBoolean(this.ExecuteProcedure("dbo.user_update_password", ExecuteType.ExecuteScalar, parameters));
+            return Convert.ToInt32(this.ExecuteProcedure("dbo.user_update_password", ExecuteType.ExecuteScalar, parameters));
         }
 
 

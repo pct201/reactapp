@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
                     ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + model.Token + "&uid=" + Encrypt(model.Email)), model.Email, model.Language_code);
                     EmailEvent.Send();
 
-                    return Ok(new { success = true, errorCode = 0 });//User Registered Successfully.
+                    return Ok(new { success = true, errorCode = 200 });//User Registered Successfully.
                 }
                 catch
                 {
@@ -75,8 +75,8 @@ namespace WebAPI.Controllers
             {
                 using (var userServices = new UserServices())
                 {
-                    if (userServices.SetPassword(emailId, token, Encrypt(password)))
-                        return Ok(new { success = true, errorCode = 0 });//Password Created Successfully.                   
+                    int resultCode = userServices.SetPassword(emailId, token, Encrypt(password));
+                    return Ok(new { success = (resultCode == 200) ? true : false, errorCode = resultCode });//Password Created Successfully.                   
                 }
             }
             else
@@ -91,11 +91,12 @@ namespace WebAPI.Controllers
                         //Trigger confirm email for expired link                                     
                         ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + Encrypt(emailId)), emailId, "en-us");
                         EmailEvent.Send();
-                        return Ok(new { success = false, errorCode = 202 });//Link Expired Sent New Link.
+                        return Ok(new { success = false, errorCode = 204 });//Link Expired Sent New Link.
                     }
+                    else
+                        return Ok(new { success = false, errorCode = 203 });//token or email provided wrong.
                 }
             }
-            return Ok(new { success = false, errorCode = 201 });//Token or email information is invalid.
         }
 
         [HttpPost]
@@ -128,11 +129,11 @@ namespace WebAPI.Controllers
             using (var userServices = new UserServices())
             {
                 UserModel userDetail = userServices.GetUserByEmail(emailId);
-                if (userDetail == null || userDetail.UserId <= 0 || !(password == this.Decrypt(userDetail.Password)))
-                    return Ok(new
-                    {
-                        isvalidUser = false
-                    });
+
+                if (userDetail != null && string.IsNullOrEmpty(userDetail.Password))
+                    return Ok(new { isvalidUser = false, errorCode = 201 });
+                else if (userDetail == null || userDetail.UserId <= 0 || !(password == this.Decrypt(userDetail.Password)))
+                    return Ok(new { isvalidUser = false, errorCode = 202 });
 
                 var claims = new[]
                 {
@@ -156,7 +157,8 @@ namespace WebAPI.Controllers
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(securityToken),
                     expiration = securityToken.ValidTo,
-                    isvalidUser = true
+                    isvalidUser = true,
+                    errorCode=200,
                 });
             }
         }

@@ -2,8 +2,9 @@ import React, { Component, Fragment } from 'react'
 import 'rc-datepicker/lib/style.css';
 import SimpleReactValidator from 'simple-react-validator';
 import { DatePickerInput } from 'rc-datepicker';
-import { authenticationService,userService } from '../../Services';
+import { authenticationService, userService } from '../../Services';
 import MessagePopup from '../Popup/MessagePopup';
+import Loader from '../Common/Loader';
 
 export default class registration extends Component {
 
@@ -27,6 +28,7 @@ export default class registration extends Component {
             birth_date: new Date().toISOString(),
             is_married: false
         },
+        showLoader: false,
         termCondition: false,
         educationData: null,
         popupState: {
@@ -97,19 +99,17 @@ export default class registration extends Component {
     handleOnSubmit = event => {
         event.preventDefault();
         if (this.validator.allValid()) {
+            this.setState({
+                ...this.state,
+                showLoader: true
+            })
             authenticationService.register(this.state.mainState).then(result => {
-                if (result.success) {
-                    this.setState({
-                        popupState: {
-                            title: "Thank you for register",
-                            message: "<p>Your account details and password has been send to your register mail address please verify it.</P>",
-                            isshow: true,
-                            redirect: true
-                        }
-                    })
-                }
-                else {
-                    if (result.errorCode === 201) {
+                this.setState({
+                    ...this.state,
+                    showLoader: false
+                })
+                switch (result.errorCode) {
+                    case 201:
                         this.setState({
                             popupState: {
                                 title: "Error",
@@ -118,8 +118,8 @@ export default class registration extends Component {
                                 redirect: false
                             }
                         })
-                    }
-                    else {
+                        break
+                    case 202:
                         this.setState({
                             popupState: {
                                 title: "Error",
@@ -128,7 +128,16 @@ export default class registration extends Component {
                                 redirect: true
                             }
                         })
-                    }
+                        break
+                    default:
+                        this.setState({
+                            popupState: {
+                                title: "Success",
+                                message: "<p>Thank you for registration. We have sent set password link to your registered mail address.</P>",
+                                isshow: true,
+                                redirect: true
+                            }
+                        })
                 }
             })
         }
@@ -141,6 +150,7 @@ export default class registration extends Component {
         return (
             <Fragment>
                 <div className="wrapper register-page">
+                    <Loader show={this.state.showLoader} />
                     <div className="register-panel">
                         <div className="register-block">
                             <div className="card">

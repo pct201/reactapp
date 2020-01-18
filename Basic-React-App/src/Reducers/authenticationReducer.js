@@ -7,7 +7,11 @@ export function authenticationReducer(state = initialState, action) {
 
   switch (action.type) {
     case userConstants.LOGIN_REQUEST:
-      return {};
+      return {
+        ...state,
+        loggedIn: true,
+        user: action.user
+      };;
     case userConstants.LOGIN_SUCCESS:
       return {
         ...state,
@@ -15,7 +19,7 @@ export function authenticationReducer(state = initialState, action) {
         user: action.user
       };
     case userConstants.LOGIN_FAILURE:
-      return state;
+      return {};
     case userConstants.LOGOUT:
       return {};
     default:

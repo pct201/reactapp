@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import SimpleReactValidator from 'simple-react-validator';
 import { authenticationService,alertService } from '../../Services'
 import { history } from '../../Helpers/history';
+import Loader from '../Common/Loader'
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -36,17 +38,19 @@ class Login extends Component {
     e.preventDefault();
     if (this.validator.allValid()) {
       const { username, password } = this.state;
-      this.props.login(username, password);
-    }
+      this.props.login(username, password)
+        }
     else {
       this.validator.showMessages();
     }
   }
 
-  render() {
-    const { alert } = this.props;
-    return (
+  render() {    
+    
+    const { alert,authentication } = this.props;
+    return (     
       <div className="wrapper login-page">
+          <Loader show={authentication.loggedIn} />
         <div className="login-panel">
           <div className="login-block">
             <a className="login-logo" href="#/" title="ProCare"><img src={require('../../images/logo.png')} alt="" /></a>
@@ -91,8 +95,10 @@ class Login extends Component {
 }
 
 function mapState(state) {
-  const { alert } = state;
-  return { alert };
+ 
+  const { authentication,alert } = state;
+ 
+  return {authentication,alert}; 
 }
 const actionCreators = {
   login: authenticationService.login,
