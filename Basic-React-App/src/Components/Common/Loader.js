@@ -5,8 +5,8 @@ const Loader = (props) => {
         <Fragment>
             {props.show ?
                 <div>
-                    <div class="loader"></div>
-                    <div class="loader-overlay"></div>  </div>
+                    <div className="loader"></div>
+                    <div className="loader-overlay"></div>  </div>
                 : ""}
         </Fragment>
     )
