@@ -7,7 +7,7 @@ import  HelpTip from '../Common/HelpTip'
 import MessagePopup from '../Popup/MessagePopup';
 import Loader from '../Common/Loader';
 
-export default class createPassword extends Component {
+export default class CreatePassword extends Component {
   constructor(props) {
     super(props);
 
@@ -151,7 +151,7 @@ export default class createPassword extends Component {
           </div>
         </div>
         <div>
-          <MessagePopup show={this.state.popupState.isshow} title={this.state.popupState.title} message={this.state.popupState.message} popupclose={() => this.handleModelHide()} />
+          <MessagePopup show={this.state.popupState.isshow} title={this.state.popupState.title} message={this.state.popupState.message} popupClose={() => this.handleModelHide()} />
         </div>
       </Fragment>
     );

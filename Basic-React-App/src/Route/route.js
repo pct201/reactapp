@@ -3,10 +3,11 @@ import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import { PrivateRoute } from './PrivateRoute';
 import { history } from '../Helpers/history';
 import Dashboard from '../Components/Home/Dashboard'
-import Login from '../Components/Login/login'
-import registration from '../Components/Login/registration'
-import createPassword from '../Components/Login/createPassword'
-import forgotPassword from '../Components/Login/forgotPassword'
+import Login from '../Components/Login/Login'
+import Registration from '../Components/Login/Registration'
+import CreatePassword from '../Components/Login/CreatePassword'
+import ForgotPassword from '../Components/Login/ForgotPassword'
+import ManageUsers from '../Components/User/ManageUsers'
 
 export default class Routes extends React.Component {   
     render() {
@@ -14,10 +15,11 @@ export default class Routes extends React.Component {
             <Router history={history}>
                 <Switch>                    
                     <PrivateRoute exact path="/" component={Dashboard} />
+                    <PrivateRoute exact path="/manageuser" component={ManageUsers} />                   
                     <Route path="/login" component={Login} />
-                    <Route path="/register" component={registration} />
-                    <Route path="/createpassword" component={createPassword} />
-                    <Route path="/forgotPassword" component={forgotPassword} />                    
+                    <Route path="/register" component={Registration} />
+                    <Route path="/createpassword" component={CreatePassword} />
+                    <Route path="/forgotPassword" component={ForgotPassword} />                    
                     {/* <Route path="/register" component={RegisterPage} /> */}
                     <Redirect from="*" to="/" />
                 </Switch>

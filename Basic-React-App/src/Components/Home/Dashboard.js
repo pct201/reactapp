@@ -20,7 +20,6 @@ const options = [{
 
 class Dashboard extends React.Component {
 
-
     render() {
         return (
             <main className="main-content">

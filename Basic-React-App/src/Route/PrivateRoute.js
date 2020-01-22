@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import SideNavBar from '../Components/Layout/sideNavBar';
-import TopHeader from '../Components/Layout/topHeader';
+import SideNavBar from '../Components/Layout/SideNavBar';
+import TopHeader from '../Components/Layout/TopHeader';
 
 
 export const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -11,4 +11,3 @@ export const PrivateRoute = ({ component: Component, ...rest }) => (
             : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
     )} />
 )
-{/* <TopHeader/><Navbar/> */}

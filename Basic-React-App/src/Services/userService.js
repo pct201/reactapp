@@ -1,7 +1,7 @@
 import { authHeader } from '../Helpers/authHeader';
 const axios = require('axios');
 
-export const userService = {   
+export const userService = {
     getAllUser,
     getUserById,
     updateUserDetail,
@@ -9,16 +9,16 @@ export const userService = {
     educationList
 };
 
-function getAllUser() {
-    return dispatch => {
-        axios.get(process.env.REACT_APP_API_URL + "Employee/AllEmployeeDetails", { headers: authHeader() })
+function getAllUser(page, perPage, sortDirection, sortBy) {
+    return (
+        axios.get(process.env.REACT_APP_API_URL + "Employee/AllEmployeeDetails?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: authHeader(), 'Content-Type': 'application/json' })
             .then(users => {
                 return users.data;
             },
                 error => {
                     return error;
                 })
-    };
+    );
 }
 
 function getUserById(id) {
@@ -50,15 +50,14 @@ function updateUserDetail(user) {
 }
 
 function deleteUser(userIds) {
-
-    return dispatch => {
-        axios.delete(process.env.REACT_APP_API_URL + "Employee/DeleteEmployee?ids=" + JSON.stringify(userIds), authHeader()).then(user => {
+    return (
+        axios.delete(process.env.REACT_APP_API_URL + "Employee/DeleteEmployee?ids=" + userIds, { headers: authHeader() }).then(user => {
             return user.data;
         },
             error => {
-                return error;
+                return false;
             })
-    };
+    );
 }
 
 function educationList() {

@@ -6,7 +6,7 @@ import { authenticationService, userService } from '../../Services';
 import MessagePopup from '../Popup/MessagePopup';
 import Loader from '../Common/Loader';
 
-export default class registration extends Component {
+export default class Registration extends Component {
 
     constructor(props) {
         super(props);
@@ -240,7 +240,7 @@ export default class registration extends Component {
                     </div>
                 </div>
                 <div>
-                    <MessagePopup show={this.state.popupState.isshow} title={this.state.popupState.title} message={this.state.popupState.message} popupclose={() => this.handleModelHide(this.state.popupState.redirect)} />
+                    <MessagePopup show={this.state.popupState.isshow} title={this.state.popupState.title} message={this.state.popupState.message} popupClose={() => this.handleModelHide(this.state.popupState.redirect)} />
                 </div>
             </Fragment>
         )

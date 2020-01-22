@@ -67,7 +67,7 @@ function register(user) {
 function createPassword(userId, token, password) {
 
     return (
-        axios.post(process.env.REACT_APP_Local_API_URL + "Auth/CreatePassword", { "userId": userId, "token": token, "password": password }, {
+        axios.post(process.env.REACT_APP_API_URL + "Auth/CreatePassword", { "userId": userId, "token": token, "password": password }, {
             'Content-Type': 'application/json'
         }).then(result => {
             return result.data;

@@ -54,7 +54,7 @@ hr, .hr {background:#d6d6d6; height:1px; width:100%; margin:30px 0;}
 .btn-sm span {font-size:14px;}
 
 .btn-primary:hover, .btn-primary{background-color:#0FB493 !important; border-color:#0FB493 !important;}
-.btn-secondary{background-color:transparent !important; border-color:#d6d6d6 !important;} 
+.btn-secondary{background-color:transparent !important; border-color:#d6d6d6 !important; margin-left: 10px;} 
 .btn-secondary span {color:#4f4f4f;}
 .btn-secondary:hover:after {background-color:#d6d6d6 !important;}
 
@@ -115,7 +115,7 @@ textarea.form-control {min-height:46px;}
 
 /* Header
 --------------------------------------------------------------------------------------------------------*/
-.header {background-color:#f0f0f0; padding:9px 0; box-shadow:0 3px 6px rgba(0,0,0, 0.15); position:fixed; left:0px; top:0px; width: 100%; z-index:100;}
+.header {background-color:#fbfbfb; padding:9px 0; box-shadow:0 3px 6px rgba(0,0,0, 0.15); position:fixed; left:0px; top:0px; width: 100%; z-index:100;}
 .logo {display:inline-block;}
 .logo img {max-height:48px; width:auto; display:block;}
 .header .profile-block {position: relative; padding-left:50px; padding-right:10px; min-height:40px;display:inline-block;vertical-align: middle;}
@@ -341,6 +341,7 @@ textarea.form-control {min-height:46px;}
 	animation: spin 1s linear infinite;
 	margin: auto; position: fixed; z-index: 10000; top: 49%; left: 49%; margin: -20px 0 0 -20px;
   }
+ 
   /* Safari */
 @-webkit-keyframes spin {
 	0% { -webkit-transform: rotate(0deg); }
@@ -361,6 +362,19 @@ textarea.form-control {min-height:46px;}
     z-index: 9999;
 }
 
+.rdt_TableHeadRow{background-color: #0FB493 !important;}
+.rdt_TableHeadRow .rdt_TableCol, .rdt_TableHeadRow .rdt_TableCol_Sortable{ font-weight: bold; color: #FFF;}
+.rdt_TableHeadRow .rdt_TableCol_Sortable:hover { color: rgba(255,255,255,.8);}
+.rdt_Table{ border: 1px solid #ddd;}
+.rdt_TableHeadRow .rdt_TableCol_Sortable:hover:not(:focus) {
+    color: rgba(255,255,255,.8);
+}
+
+
+.titlebtn{ overflow: hidden; margin-bottom: 20px;}
+.titlebtn .title{ float: left; }
+.titlebtn .title h1{  padding: 13px 0 0 0; margin:0;}
+.titlebtn .text-right{ float: right;}
 
 /* Responsive Media Queries
 --------------------------------------------------------------------------------------------------------*/

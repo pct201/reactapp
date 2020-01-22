@@ -29,9 +29,10 @@ namespace Services
         /// <param name="sortDirection"></param>
         /// <param name="userId"></param>     
         /// <returns></returns>
-        public virtual List<UserModel> GetUserList(int? pageNo, string sortExpression, string sortDirection, int userId = 0)
+        public virtual List<UserModel> GetUserList(int? pageNo, int?prePage,string sortExpression, string sortDirection, int userId = 0)
         {
-            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            this.PagingInformation.PageSize = prePage.HasValue ? prePage.Value : DefaultPageSize;
+            Collection <DBParameters> parameters = new Collection<DBParameters>();
             if (userId > 0)
             {
                 parameters.Add(new DBParameters() { Name = "user_id", Value = userId, DBType = DbType.Int32 });

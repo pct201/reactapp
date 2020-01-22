@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 
-export const MessagePopup = (props) => {
+const ActionPopup = (props) => {
 
     return (
         <Modal show={props.show} size="lg" aria-labelledby="contained-modal-title-vcenter" centered="true"  onHide={props.popupClose}>
@@ -12,12 +12,13 @@ export const MessagePopup = (props) => {
 
             </Modal.Body>
             <Modal.Footer>
-                <div className="text-right w-100">
-                    <input type="button" className="btn btn-primary" value="OK" onClick={props.popupClose} />
+                <div className="text-right w-100">                    
+                    <button className="btn btn-primary" value="Yes" onClick={props.popupAction} ><span>Yes</span></button>
+                    <button className="btn btn-secondary" value="No" onClick={props.popupClose} ><span>No</span></button>
                 </div>
 
             </Modal.Footer>
         </Modal>)
 }
 
-export default MessagePopup;
+export default ActionPopup;

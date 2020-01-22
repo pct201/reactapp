@@ -26,13 +26,13 @@ namespace WebAPI.Controllers
         // GET api/values
         [HttpGet]
         [Route("api/Employee/AllEmployeeDetails")]
-        public IList<UserModel> AllEmployeeDetails()
+        public IList<UserModel> AllEmployeeDetails(int page, int perPage,string sortBy, string sortDirection)
         {
             try
             {
                 using (var userService = new UserServices())
                 {
-                    IList<UserModel> userList = userService.GetUserList(0, "first_name", "Descending");
+                    IList<UserModel> userList = userService.GetUserList(page, perPage, sortBy, sortDirection);
                     return userList;
                 }
             }
@@ -51,7 +51,7 @@ namespace WebAPI.Controllers
             {
                 using (var userService = new UserServices())
                 {
-                    List<UserModel> userList = userService.GetUserList(0, null, null, id);
+                    List<UserModel> userList = userService.GetUserList(0, null,null, null, id);
                     if (userList.Count > 0)
                         return userList.FirstOrDefault();
                     else
@@ -105,7 +105,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        // DELETE api/values/5
+        // DELETE api/values/5        
         [HttpDelete]
         [Route("api/Employee/DeleteEmployee")]
         public bool DeleteEmaployee(string ids)
@@ -130,23 +130,7 @@ namespace WebAPI.Controllers
         }
 
 
-        // GET api/values
-        [HttpPost]
-        [Route("api/Employee/Login")]
-        public string Login([FromBody]JObject credentialObj)
-        {
-            try
-            {
-                string userName = Convert.ToString(credentialObj["userName"]);
-                string password = Convert.ToString(credentialObj["password"]);
-                var result = new { userId = 1, userName = userName, token = "ghdfvsderXffgsdf125fg" };
-                return JsonConvert.SerializeObject(result);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+        
 
       
 

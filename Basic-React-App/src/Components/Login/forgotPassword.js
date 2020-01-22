@@ -4,7 +4,7 @@ import SimpleReactValidator from 'simple-react-validator';
 import { authenticationService } from '../../Services'
 import MessagePopup from '../Popup/MessagePopup';
 
-export default class forgotPassword extends Component {
+export default class ForgotPassword extends Component {
   constructor(props) {
     super(props);
 
@@ -94,7 +94,7 @@ export default class forgotPassword extends Component {
           </div>
         </div>
         <div>
-          <MessagePopup show={this.state.popupState.isshow} title={this.state.popupState.title} message={this.state.popupState.message} popupclose={() => this.handleModelHide()} />
+          <MessagePopup show={this.state.popupState.isshow} title={this.state.popupState.title} message={this.state.popupState.message} popupClose={() => this.handleModelHide()} />
         </div>
       </Fragment>
     );
