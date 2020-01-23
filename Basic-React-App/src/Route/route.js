@@ -8,6 +8,8 @@ import Registration from '../Components/Login/Registration'
 import CreatePassword from '../Components/Login/CreatePassword'
 import ForgotPassword from '../Components/Login/ForgotPassword'
 import ManageUsers from '../Components/User/ManageUsers'
+import EditUser from '../Components/User/EditUser'
+import ManageEmailTemplate from '../Components/Email/ManageEmailTemplate'
 
 export default class Routes extends React.Component {   
     render() {
@@ -15,7 +17,9 @@ export default class Routes extends React.Component {
             <Router history={history}>
                 <Switch>                    
                     <PrivateRoute exact path="/" component={Dashboard} />
-                    <PrivateRoute exact path="/manageuser" component={ManageUsers} />                   
+                    <PrivateRoute exact path="/manageuser" component={ManageUsers} />   
+                    <PrivateRoute exact path="/edituser/:userId" component={EditUser} />   
+                    <PrivateRoute exact path="/manageemailtemplate" component={ManageEmailTemplate} />                 
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Registration} />
                     <Route path="/createpassword" component={CreatePassword} />

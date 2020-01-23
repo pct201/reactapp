@@ -23,30 +23,27 @@ function getAllUser(page, perPage, sortDirection, sortBy) {
 
 function getUserById(id) {
 
-    return dispatch => {
-        axios.get(process.env.REACT_APP_API_URL + "Employee/GetEmployeeDetailsById" + id, authHeader())
+    return (
+        axios.get(process.env.REACT_APP_API_URL + "Employee/GetEmployeeDetailsById/" + id, { headers: authHeader() })
             .then(user => {
                 return user.data;
             },
                 error => {
                     return error;
                 })
-    };
+    )
 }
 
 function updateUserDetail(user) {
-
-    return dispatch => {
+    return (
         axios.post(process.env.REACT_APP_API_URL + "Employee/UpdateEmployeeDetails", user,
-            {
-                ...authHeader(), 'Content-Type': 'application/json'
-            }).then(users => {
-                return user.data;
+            { headers :{...authHeader(), 'Content-Type': 'application/json'}}).then(users => {              
+                return users.data;
             },
                 error => {
-                    return error;
+                    return false;
                 })
-    };
+    )
 }
 
 function deleteUser(userIds) {

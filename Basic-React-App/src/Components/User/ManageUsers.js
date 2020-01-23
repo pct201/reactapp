@@ -3,6 +3,7 @@ import { userService } from '../../Services';
 import DataTable from 'react-data-table-component';
 import ActionPopup from '../Popup/ActionPopup';
 import MessagePopup from '../Popup/MessagePopup';
+import Loader from '../Common/Loader';
 
 const columns = [
     {
@@ -84,8 +85,8 @@ export default class ManageUsers extends React.Component {
             loading: false,
             totalRows: 0,
             page: 1,
-            perPage: 10,
-            sortDirection: 'asc',
+            perPage: process.env.REACT_APP_ROW_PER_Page,
+            sortDirection:  process.env.REACT_APP_DEFAULT_SORT_DIRECTION,
             sortBy: 'first_name',
             popupState: {
                 isActionPopup: false,
@@ -134,8 +135,8 @@ export default class ManageUsers extends React.Component {
         )
     }
 
-    editUser = (row) => {
-        console.log(row.userId);
+    editUser = (row) => {       
+        this.props.history.push(`/edituser/${row.userId}`,null)       
     }
 
     handleModelHide = () => {
@@ -202,19 +203,20 @@ export default class ManageUsers extends React.Component {
                             </div>
                         </div>
                         <div className="table-responsive grid-table">
-                            <DataTable refs="main"
+                            <DataTable
                                 noHeader
                                 keyField={'userId'}
+                                pointerOnHover
                                 columns={columns}
                                 data={this.state.rows}
                                 defaultSortField="first_name"
                                 highlightOnHover
                                 progressPending={this.state.loading}
+                                progressComponent={<Loader show={this.state.loading} />}
                                 onSort={this.handleSort}
                                 selectableRows
                                 selectableRowsHighlight
-                                noContextMenu
-                                //selectableRowSelected={this.handleRowSelected}
+                                noContextMenu                                
                                 onSelectedRowsChange={this.handleRowSelected}
                                 onRowClicked={this.editUser}
                                 sortServer

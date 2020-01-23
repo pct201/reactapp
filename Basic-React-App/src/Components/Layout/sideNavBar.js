@@ -21,6 +21,10 @@ export default class SideNavBar extends React.Component{
                                 <img className="icon" src={require('../../images/my-profile.svg')} alt="Manage User" />
                                 Manage User
                             </Nav.Link>
+                            <Nav.Link href="/manageemailtemplate">
+                                <img className="icon" src={require('../../images/my-profile.svg')} alt="Manage Email Template" />
+                                Manage Email Template
+                            </Nav.Link>
                             <NavDropdown title={<div> <img className="icon" src={require('../../images/billing.svg')} alt="user pic" />
                                 Billing
                                 </div>

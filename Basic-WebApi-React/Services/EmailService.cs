@@ -27,9 +27,88 @@ namespace Services
             this.PagingInformation = new Pagination() { PageSize = DefaultPageSize, PagerSize = DefaultPagerSize };
         }
 
+        #region Email Template
 
-        #region GET Email
+        /// <summary>
+        /// Fetch Email list from database
+        /// </summary>
+        /// <param name="pageNo"></param>
+        ///  /// <param name="prePage"></param>
+        /// <param name="sortExpression"></param>
+        /// <param name="sortDirection"></param>
+        /// <param name="languageCode"></param>     
+        /// <returns></returns>
+        public IList<EmailModel> GetEmailTemplateList(int? pageNo, int? perPage, string sortExpression, string sortDirection, string languageCode)
+        {
+            this.PagingInformation.PageSize = perPage.HasValue ? perPage.Value : DefaultPageSize;
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            if (this.StartRowIndex(pageNo) > 0 && this.EndRowIndex(pageNo) > 0)
+            {
+                parameters.Add(new DBParameters() { Name = "start_row_index", Value = this.StartRowIndex(pageNo), DBType = DbType.Int16 });
+                parameters.Add(new DBParameters() { Name = "end_row_index", Value = this.EndRowIndex(pageNo), DBType = DbType.Int16 });
+            }
 
+            if (!string.IsNullOrEmpty(sortExpression) && !string.IsNullOrEmpty(sortDirection))
+            {
+                parameters.Add(new DBParameters() { Name = "sort_expression", Value = sortExpression, DBType = DbType.AnsiString });
+                parameters.Add(new DBParameters() { Name = "sort_direction", Value = sortDirection, DBType = DbType.AnsiString });
+            }
+            parameters.Add(new DBParameters() { Name = "language_code", Value = languageCode, DBType = DbType.AnsiString });
+            return this.ExecuteProcedure<EmailModel>("[doc].[email_list_get]", parameters).ToList();
+
+        }
+
+        /// <summary>
+        /// Get Email details inputed from the database.        
+        /// </summary>
+        /// <param name="objEmailModel"></param>
+        /// <param name="productUid"></param>
+        /// <returns></returns>
+        public virtual EmailModel GetEmailTemplateById(string emailUid, string languageCode)
+        {
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+
+            parameters.Add(new DBParameters() { Name = "@email_uid", Value = emailUid, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@language_code", Value = languageCode, DBType = DbType.AnsiString });
+            return this.ExecuteProcedureWithPerameterwithoutPagination<EmailModel>("[doc].[email_get]", parameters).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Update the Email details into the database.        
+        /// </summary>
+        /// <param name="objEmailModel"></param>
+        /// <param name="productUid"></param>
+        /// <returns></returns>
+        public virtual bool UpdateEmailTemplate(EmailModel objEmailModel)
+        {
+            System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "@email_uid", Value = objEmailModel.email_uid, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@to_address", Value = objEmailModel.to_address, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@cc_list", Value = objEmailModel.cc_list, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@bcc_list", Value = objEmailModel.bcc_list, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@language_code", Value = objEmailModel.language_code, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@subject_text", Value = objEmailModel.subject_text, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@friendly_email_name", Value = objEmailModel.friendly_email_name, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@body_text", Value = objEmailModel.body_text, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@updated_by", Value = objEmailModel.updated_by, DBType = DbType.String });
+
+            return Convert.ToBoolean(this.ExecuteProcedure("[doc].[email_update]", ExecuteType.ExecuteScalar, parameters));
+        }
+
+        /// <summary>
+        /// Get Email details inputed from the database.        
+        /// </summary>
+        /// <param name="objEmailModel"></param>
+        /// <param name="productUid"></param>
+        /// <returns></returns>
+        public virtual List<PlaceholderModel> GetPlaceHolderList()
+        {
+            return this.ExecuteProcedurewithoutPagination<PlaceholderModel>("[doc].[placeholders_get]").ToList();
+        }
+
+        #endregion
+
+        #region Send Mail & Save Email Log Utility
 
         /// <summary>
         /// get user creation email details
@@ -38,20 +117,18 @@ namespace Services
         /// <param name="emailAddress"></param>
         /// <param name="languageCode"></param>
         /// <returns></returns>
-        public EmailModel GetEmailDetailByEmailName(string emailName,string emailAddress, string languageCode,string confirmPasswordLink)
+        public EmailModel GetEmailDetailByEmailName(string emailName, string emailAddress, string languageCode, string confirmPasswordLink)
         {
             Collection<DBParameters> parameters = new Collection<DBParameters>();
             parameters.Add(new DBParameters() { Name = "@email_name", Value = emailName, DBType = DbType.AnsiString });
             parameters.Add(new DBParameters() { Name = "@language_code", Value = languageCode, DBType = DbType.AnsiString });
             parameters.Add(new DBParameters() { Name = "@email_address", Value = emailAddress, DBType = DbType.String });
 
-            if(!string.IsNullOrEmpty(confirmPasswordLink))
-            parameters.Add(new DBParameters() { Name = "@confirm_password_link", Value = confirmPasswordLink, DBType = DbType.AnsiString });
+            if (!string.IsNullOrEmpty(confirmPasswordLink))
+                parameters.Add(new DBParameters() { Name = "@confirm_password_link", Value = confirmPasswordLink, DBType = DbType.AnsiString });
 
             return this.ExecuteProcedureWithPerameterwithoutPagination<EmailModel>("[doc].[email_details_get]", parameters).FirstOrDefault();
         }
-
-        #endregion
 
         /// <summary>
         /// record the emails that got send out by the system for the proposal (versions)
@@ -65,7 +142,7 @@ namespace Services
         /// <param name="createdBy"></param>     
         public int SaveEmailDetails(string to, string from, string cc, string bcc, string subject, string body, int createdBy, string email_uid)
         {
-            Collection<DBParameters> parameters = new Collection<DBParameters>();           
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
             parameters.Add(new DBParameters() { Name = "@email_uid", Value = email_uid, DBType = DbType.AnsiString });
             parameters.Add(new DBParameters() { Name = "@subject_text", Value = subject, DBType = DbType.String });
             parameters.Add(new DBParameters() { Name = "@to_address", Value = to, DBType = DbType.String });
@@ -73,7 +150,7 @@ namespace Services
             parameters.Add(new DBParameters() { Name = "@cc_list", Value = cc, DBType = DbType.String });
             parameters.Add(new DBParameters() { Name = "@bcc_list", Value = bcc, DBType = DbType.String });
             parameters.Add(new DBParameters() { Name = "@body_text", Value = body, DBType = DbType.String });
-            parameters.Add(new DBParameters() { Name = "@created_by", Value = createdBy, DBType = DbType.Int32 });      
+            parameters.Add(new DBParameters() { Name = "@created_by", Value = createdBy, DBType = DbType.Int32 });
             return Convert.ToInt32(this.ExecuteProcedure("doc.emails_log_add", ExecuteType.ExecuteScalar, parameters));
         }
 
@@ -93,7 +170,7 @@ namespace Services
             this.ExecuteProcedure("doc.emails_log_update", ExecuteType.ExecuteScalar, parameters);
         }
 
-        #region Email Utility
+
         /// <summary>
         /// Sending An Email with master mail template
         /// </summary>
@@ -111,10 +188,11 @@ namespace Services
                 mailTo = mailTo.Replace(';', ',');
 
             if (ValidateEmail(mailFrom, mailTo) && (string.IsNullOrEmpty(mailBCC) || IsEmail(mailBCC)))
+            {
+                MailMessage mailMesg = new MailMessage();
+                SmtpClient objSMTP = new SmtpClient()
                 {
-                MailMessage mailMesg = new MailMessage();              
-                SmtpClient objSMTP = new SmtpClient(){                   
-                    Host = configuration["Email:Smtp:Host"],                  
+                    Host = configuration["Email:Smtp:Host"],
                     Port = Convert.ToInt32(configuration["Email:Smtp:Port"]),
                     Credentials = new NetworkCredential(
                         configuration["Email:Smtp:Username"],

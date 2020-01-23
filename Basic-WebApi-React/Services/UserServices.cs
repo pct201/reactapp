@@ -29,9 +29,9 @@ namespace Services
         /// <param name="sortDirection"></param>
         /// <param name="userId"></param>     
         /// <returns></returns>
-        public virtual List<UserModel> GetUserList(int? pageNo, int?prePage,string sortExpression, string sortDirection, int userId = 0)
+        public virtual List<UserModel> GetUserList(int? pageNo, int? perPage, string sortExpression, string sortDirection, int userId = 0)
         {
-            this.PagingInformation.PageSize = prePage.HasValue ? prePage.Value : DefaultPageSize;
+            this.PagingInformation.PageSize = perPage.HasValue ? perPage.Value : DefaultPageSize;
             Collection <DBParameters> parameters = new Collection<DBParameters>();
             if (userId > 0)
             {
@@ -72,8 +72,10 @@ namespace Services
 
             if (!string.IsNullOrEmpty(objUserModel.Document))
             {
+                var documentContent = objUserModel.Document.Split(',');
                 parameters.Add(new DBParameters() { Name = "@document_name", Value = objUserModel.Document_Name, DBType = DbType.AnsiString });
-                parameters.Add(new DBParameters() { Name = "@document", Value = objUserModel.Document.Contains("base64") ? Convert.FromBase64String(objUserModel.Document.Split(',')[1]) : Convert.FromBase64String(objUserModel.Document), DBType = DbType.Binary });
+                parameters.Add(new DBParameters() { Name = "@document_detail", Value = documentContent[0]+",", DBType = DbType.AnsiString });
+                parameters.Add(new DBParameters() { Name = "@document", Value = Convert.FromBase64String(documentContent[1]), DBType = DbType.Binary });
             }
 
             parameters.Add(new DBParameters() { Name = "@email", Value = objUserModel.Email, DBType = DbType.String });
@@ -94,7 +96,7 @@ namespace Services
                 parameters.Add(new DBParameters() { Name = "@blog", Value = objUserModel.Blog, DBType = DbType.AnsiString });
 
             parameters.Add(new DBParameters() { Name = "@created_by", Value = objUserModel.Updated_by, DBType = DbType.Int32 });
-            return Convert.ToInt32(this.ExecuteProcedure("dbo.add_edit_user", ExecuteType.ExecuteScalar, parameters));
+            return Convert.ToInt32(this.ExecuteProcedure("dbo.user_add_edit", ExecuteType.ExecuteScalar, parameters));
         }
 
 

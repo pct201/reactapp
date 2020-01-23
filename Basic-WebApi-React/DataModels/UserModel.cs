@@ -35,6 +35,8 @@ namespace DataModels
 
         public decimal Salary { get; set; }
 
+        public bool Is_Active { get; set; }
+
         public DateTime Birth_Date { get; set; }
 
         public bool Is_Married { get; set; }

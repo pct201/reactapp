@@ -88,7 +88,7 @@ namespace WebAPI.Controllers
        
 
         // PUT api/values
-        [HttpPut]
+        [HttpPost]
         [Route("api/Employee/UpdateEmployeeDetails")]
         public int UpdateEmployeeDetails(UserModel model)
         {
@@ -96,6 +96,7 @@ namespace WebAPI.Controllers
             {
                 using (var userService = new UserServices())
                 {
+                  
                     return userService.AddEditUser(model);
                 }
             }

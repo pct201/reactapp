@@ -5,19 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataModels
 {
-
-    /// <summary>
-    /// This class is used to Define Model for Emails
-    /// </summary>
-    /// <CreatedBy>Nishant</CreatedBy>
-    /// <CreatedDate>26-April-2018</CreatedDate>
-    /// <ModifiedBy></ModifiedBy>
-    /// <ModifiedDate></ModifiedDate>
-    /// <ReviewBy></ReviewBy>
-    /// <ReviewDate></ReviewDate>
-    
     public class EmailModel
     {
+      
+        public EmailModel()
+        {
+            language_code = "en-us";
+            updated_by = 1;
+        }
+
+        #region Properties
         /// <summary>
         /// Gets or sets the to_address value.
         /// </summary>  
@@ -76,9 +73,7 @@ namespace DataModels
         /// Gets or sets the updated_by value.
         /// </summary>  
         public int? updated_by { get; set; }
-       
-
-        [NotMapped]
+              
         public DateTime created_date { get; set; }
 
         [NotMapped]
@@ -93,6 +88,9 @@ namespace DataModels
         [NotMapped]
         public int email_id { get; set; }
 
+        public int total_records { get; set; }
+
+        #endregion
 
 
     }
