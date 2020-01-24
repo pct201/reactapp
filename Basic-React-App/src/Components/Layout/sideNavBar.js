@@ -20,18 +20,14 @@ export default class SideNavBar extends React.Component{
                             <Nav.Link href="/manageuser">
                                 <img className="icon" src={require('../../images/my-profile.svg')} alt="Manage User" />
                                 Manage User
-                            </Nav.Link>
-                            <Nav.Link href="/manageemailtemplate">
-                                <img className="icon" src={require('../../images/my-profile.svg')} alt="Manage Email Template" />
-                                Manage Email Template
-                            </Nav.Link>
+                            </Nav.Link>   
                             <NavDropdown title={<div> <img className="icon" src={require('../../images/billing.svg')} alt="user pic" />
-                                Billing
+                                Email
                                 </div>
                             }
                                 id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1"> Payment Status </NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2"> Submit an Invoice </NavDropdown.Item>
+                                <NavDropdown.Item href="/manageemailtemplate"> Manage Email Template </NavDropdown.Item>
+                                <NavDropdown.Item href="/emaillog"> Email Log</NavDropdown.Item>
                             </NavDropdown>
                             {/* <Nav.Link href="#documentation">
                                 <img className="icon" src={require('../../images/documentation.svg')} alt="Documentation" />

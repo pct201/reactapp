@@ -108,6 +108,51 @@ namespace Services
 
         #endregion
 
+        #region Email Log
+
+        public IList<EmailModel> GetEmailLogList(int? pageNo, int? perPage, string sortExpression, string sortDirection, string date = null, string emailTitle = null)
+        {
+            this.PagingInformation.PageSize = perPage.HasValue ? perPage.Value : DefaultPageSize;
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+
+            if (this.StartRowIndex(pageNo) > 0 && this.EndRowIndex(pageNo) > 0)
+            {
+                parameters.Add(new DBParameters() { Name = "start_row_index", Value = this.StartRowIndex(pageNo), DBType = DbType.Int16 });
+                parameters.Add(new DBParameters() { Name = "end_row_index", Value = this.EndRowIndex(pageNo), DBType = DbType.Int16 });
+            }
+
+            if (!string.IsNullOrEmpty(sortExpression) && !string.IsNullOrEmpty(sortDirection))
+            {
+                parameters.Add(new DBParameters() { Name = "sort_expression", Value = sortExpression, DBType = DbType.AnsiString });
+                parameters.Add(new DBParameters() { Name = "sort_direction", Value = sortDirection, DBType = DbType.AnsiString });
+            }
+            if (!string.IsNullOrEmpty(emailTitle))
+                parameters.Add(new DBParameters() { Name = "@email_name", Value = emailTitle, DBType = DbType.AnsiString });
+
+            if (!string.IsNullOrEmpty(date))
+            {              
+                parameters.Add(new DBParameters() { Name = "@create_date", Value = DateTime.ParseExact(date.Split('T')[0], "yyyy/mm/dd", null), DBType = DbType.DateTime });
+            }
+
+            return this.ExecuteProcedure<EmailModel>("doc.emails_log_list_get", parameters).ToList();          
+
+        }
+        public virtual EmailModel GetEmailLogById(int emailId)
+        {
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "email_id", Value = emailId, DBType = DbType.Int32 });           
+            return this.ExecuteProcedure<EmailModel>("[doc].[emails_log_get]", parameters).FirstOrDefault();
+        }
+
+        public virtual int ResendEmail(int emailId, int createdBy)
+        {
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "email_id", Value = emailId, DBType = DbType.Int32 });
+            parameters.Add(new DBParameters() { Name = "created_by", Value = createdBy, DBType = DbType.Int32 });
+            return Convert.ToInt32(this.ExecuteProcedure("[doc].[emails_log_resend]", ExecuteType.ExecuteScalar, parameters));
+        }
+        #endregion
+
         #region Send Mail & Save Email Log Utility
 
         /// <summary>

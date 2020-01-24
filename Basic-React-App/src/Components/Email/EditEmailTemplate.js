@@ -13,15 +13,15 @@ class EditEmailTemplate extends React.Component {
 
         this.state = {
             mainState: {
-                bcc_list: null,
-                body_text: null,
-                cc_list: null,
-                from_address: null,
-                to_address: null,
-                email_name: null,
+                bcc_list: "",
+                body_text: "",
+                cc_list: "",
+                from_address: "",
+                to_address: "",
+                email_name: "",
                 email_uid: this.props.emailUid,
-                friendly_email_name: null,
-                subject_text: null,
+                friendly_email_name: "",
+                subject_text: "",
             },
             otherState: {
                 showLoader: false

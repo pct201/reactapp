@@ -212,7 +212,7 @@ export default class Registration extends Component {
                                 <h1>Manage Users</h1>
                             </div>
                             <div className="text-right">
-                                <span>Status: {this.state.mainState.is_active?"Active":"In-Active"}</span>
+                                <h2>Status: {this.state.mainState.is_active?"Active":"In-Active"}</h2>
                             </div>
                         </div>
                     </div>

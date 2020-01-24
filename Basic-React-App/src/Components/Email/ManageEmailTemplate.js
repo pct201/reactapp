@@ -49,8 +49,7 @@ export default class ManageEmailTemplate extends React.Component {
         super(props);      
 
         this.state = {
-            emailUid:null,
-            selected: [],
+            emailUid:"",          
             rows: [],
             loading: false,
             totalRows: 0,
@@ -123,8 +122,8 @@ export default class ManageEmailTemplate extends React.Component {
         this.setState({
             popupState: {              
                 isEditShow: false,
-                message:null,
-                title:null,
+                message:"",
+                title:"",
                 msgPopupShow:false
             }
         })  
@@ -134,8 +133,8 @@ export default class ManageEmailTemplate extends React.Component {
         await this.setState({
             popupState: {              
                 isEditShow: false,
-                message:null,
-                title:null,
+                message:"",
+                title:"",
                 msgPopupShow:false
             }
         })  

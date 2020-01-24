@@ -5,9 +5,12 @@ export const emailService = {
     getAllEmailTemplate,
     getEmailTemplateById,
     updateEmailTemplate,
-    getPlaceholderList   
+    getPlaceholderList,
+    getAllEmailLog ,
+    resendEmail  
 };
 
+//------------------------------ Email Template Service Region Start -----------------------------//
 function getAllEmailTemplate(page, perPage, sortDirection, sortBy) {
     return (
         axios.get(process.env.REACT_APP_API_URL + "Email/AllEmailTemplate?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: authHeader(), 'Content-Type': 'application/json' })
@@ -28,7 +31,7 @@ function getEmailTemplateById(emailUid) {
                 return result.data;
             },
                 error => {
-                    return error;
+                    return null;
                 })
     )
 }
@@ -57,6 +60,37 @@ function getPlaceholderList() {
             })
     )
 }
+
+//------------------------------ Email Template Service Region END -----------------------------//
+
+//------------------------------ Email Log Service Region Start -----------------------------//
+
+function getAllEmailLog(page, perPage, sortDirection, sortBy,date,emailTitle) {
+    return (
+        axios.get(process.env.REACT_APP_Local_API_URL + "Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy+"&date="+date+"&emailTitle="+emailTitle, { headers: authHeader(), 'Content-Type': 'application/json' })
+            .then(result => {
+                return result.data;
+            },
+                error => {
+                    return error;
+                })
+    );
+}
+
+function resendEmail(emailId) {
+    return (
+        axios.post(process.env.REACT_APP_Local_API_URL + "Email/ResendMail?emailId=" + emailId ,null,   { headers :{...authHeader(), 'Content-Type': 'application/json'}}).then(result => {
+                return result.data;
+            },
+                error => {
+                    return false;
+                })
+    );
+}
+
+
+
+//------------------------------ Email Log Service Region END -----------------------------//
 
 
 
