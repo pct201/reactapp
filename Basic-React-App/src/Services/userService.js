@@ -36,7 +36,7 @@ function getUserById(id) {
 
 function updateUserDetail(user) {
     return (
-        axios.post(process.env.REACT_APP_Local_API_URL + "User/UpdateUserDetails", user,
+        axios.post(process.env.REACT_APP_API_URL + "User/UpdateUserDetails", user,
             { headers :{...authHeader(), 'Content-Type': 'application/json'}}).then(users => {              
                 return users.data;
             },

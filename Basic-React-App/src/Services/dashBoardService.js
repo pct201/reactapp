@@ -7,7 +7,7 @@ export const dashBoardService = {
 
 function dashboardDetail() {
     return (
-        axios.get(process.env.REACT_APP_Local_API_URL + "Home/DashboardDetail", { headers :authHeader()}).then(
+        axios.get(process.env.REACT_APP_API_URL + "Home/DashboardDetail", { headers :authHeader()}).then(
             result => {               
                 return result.data;
             },

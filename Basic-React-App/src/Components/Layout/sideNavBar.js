@@ -5,42 +5,29 @@ import { NavDropdown } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 export default class SideNavBar extends React.Component{
-  
+    handleLinkClick=()=>{}
     render() {
         return (
             <div className="main-navigation">
-                <Navbar collapseOnSelect stackedbg="light" variant="dark" string="navbar-collapse">
-                    {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
+                 <Navbar collapseOnSelect stackedbg="light" variant="dark" string="navbar-collapse">                   
                     <Navbar.Collapse>
                         <Nav className="mr-auto">
-                            <Nav.Link href="/dashboard">
+                            <Link to="/" className="nav-link" activeClassName="active"  onClick={this.handleLinkClick()}>
                                 <img className="icon" src={require('../../images/dashboard.svg')} alt="Dashboard" />
                                 Dashboard
-                            </Nav.Link>
-                            <Nav.Link href="/manageuser">
+                            </Link>
+                            <Link to="/manageuser" className="nav-link" activeClassName="active">
                                 <img className="icon" src={require('../../images/my-profile.svg')} alt="Manage User" />
                                 Manage User
-                            </Nav.Link>   
+                            </Link>   
                             <NavDropdown title={<div> <img className="icon" src={require('../../images/billing.svg')} alt="user pic" />
                                 Email
                                 </div>
                             }
                                 id="basic-nav-dropdown">
-                                <NavDropdown.Item href="/manageemailtemplate"> Manage Email Template </NavDropdown.Item>
-                                <NavDropdown.Item href="/emaillog"> Email Log</NavDropdown.Item>
+                                <Link to="/manageemailtemplate" className="dropdown-item"  activeClassName="active"> Manage Email Template </Link>
+                                <Link to="/emaillog" className="dropdown-item"  activeClassName="active"> Email Log</Link>
                             </NavDropdown>
-                            {/* <Nav.Link href="#documentation">
-                                <img className="icon" src={require('../../images/documentation.svg')} alt="Documentation" />
-                                Documentation
-                            </Nav.Link>
-                            <Nav.Link href="#my-profile">
-                                <img className="icon" src={require('../../images/my-profile.svg')} alt="My Profile" />
-                                Documentation
-                            </Nav.Link>
-                            <Nav.Link href="#Feedback">
-                                <img className="icon" src={require('../../images/feedback.svg')} alt="Feedback" />
-                                Feedback
-                            </Nav.Link> */}
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>

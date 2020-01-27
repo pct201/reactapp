@@ -363,6 +363,28 @@ textarea.form-control {min-height:46px;}
 	animation: spin 1s linear infinite;
 	margin: auto; position: fixed; z-index: 10000; top: 49%; left: 49%; margin: -20px 0 0 -20px;
   }
+/* Dashboard
+--------------------------------------------------------------------------------------------------------*/
+  .widget-box{
+	  padding: 1em;
+	  border-color: #0FB493 !important;
+	  border-bottom: transparent solid 4px;
+	  box-shadow: 0 0.46875rem 2.1875rem rgba(58, 196, 125, 0.03), 0 0.9375rem 1.40625rem rgba(58, 196, 125, 0.03), 0 0.25rem 0.53125rem rgba(58, 196, 125, 0.05), 0 0.125rem 0.1875rem rgba(58, 196, 125, 0.03);
+  }
+
+  
+  .ct-tile{ padding: 25px; margin-bottom: 30px; height: 140px; position: relative; color: #FFF; }
+  .ct-tile p{ letter-spacing: 1px; text-shadow: 0px 1px 1px rgba(0,0,0,0.2); margin: 0; padding: 0 0 5px 0; font-size: 18px; line-height: 1; text-transform: uppercase; }
+  .ct-tile h3{text-shadow: 0px 1px 1px rgba(0,0,0,0.2); margin: 0; padding: 0; font-size: 32px; font-weight: bold; }
+  .ct-tile img{ width: 54px; height: 54px; position: absolute; right: 25px; top:25px; }
+  .ct-tile span{ height: 26px; padding: 3px 0 0 8px; display: block; width: 100%; background: rgba(0,0,0, 0.3); position: absolute; left: 0; bottom: 0; font-size: 14px; }
+  
+  .ct-sales{ background: #28b6f6;  }
+  .ct-views{background: #f16663; }
+  .ct-users{ background: #0FB493;  }
+  
+
+
  
   /* Safari */
 @-webkit-keyframes spin {
