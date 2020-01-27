@@ -11,7 +11,7 @@ export const userService = {
 
 function getAllUser(page, perPage, sortDirection, sortBy) {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Employee/AllEmployeeDetails?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: authHeader(), 'Content-Type': 'application/json' })
+        axios.get(process.env.REACT_APP_API_URL + "User/AllUserDetails?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: authHeader(), 'Content-Type': 'application/json' })
             .then(users => {
                 return users.data;
             },
@@ -24,7 +24,7 @@ function getAllUser(page, perPage, sortDirection, sortBy) {
 function getUserById(id) {
 
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Employee/GetEmployeeDetailsById/" + id, { headers: authHeader() })
+        axios.get(process.env.REACT_APP_API_URL + "User/GetUserDetailsById?id=" + id, { headers: authHeader() })
             .then(user => {
                 return user.data;
             },
@@ -36,7 +36,7 @@ function getUserById(id) {
 
 function updateUserDetail(user) {
     return (
-        axios.post(process.env.REACT_APP_API_URL + "Employee/UpdateEmployeeDetails", user,
+        axios.post(process.env.REACT_APP_Local_API_URL + "User/UpdateUserDetails", user,
             { headers :{...authHeader(), 'Content-Type': 'application/json'}}).then(users => {              
                 return users.data;
             },
@@ -48,7 +48,7 @@ function updateUserDetail(user) {
 
 function deleteUser(userIds) {
     return (
-        axios.delete(process.env.REACT_APP_API_URL + "Employee/DeleteEmployee?ids=" + userIds, { headers: authHeader() }).then(user => {
+        axios.delete(process.env.REACT_APP_API_URL + "User/DeleteUsers?ids=" + userIds, { headers: authHeader() }).then(user => {
             return user.data;
         },
             error => {
@@ -59,7 +59,7 @@ function deleteUser(userIds) {
 
 function educationList() {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Employee/GetEducationList").then(
+        axios.get(process.env.REACT_APP_API_URL + "User/GetEducationList").then(
             result => {
                 return result.data;
             },

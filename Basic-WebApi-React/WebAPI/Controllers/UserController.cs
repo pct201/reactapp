@@ -13,20 +13,20 @@ using Microsoft.Extensions.Configuration;
 
 namespace WebAPI.Controllers
 {
+    [Route("api/[controller]/[action]")]
     [Authorize]
     [ApiController]
-    public class EmployeeController : ControllerBase
+    public class UserController : ControllerBase
     {
         private IConfiguration configuration;
         private EmailService emailService;
-        public EmployeeController(IConfiguration configuration)
+        public UserController(IConfiguration configuration)
         {
             this.emailService = new EmailService(configuration);
         }
         // GET api/values
-        [HttpGet]
-        [Route("api/Employee/AllEmployeeDetails")]
-        public IList<UserModel> AllEmployeeDetails(int page, int perPage,string sortBy, string sortDirection)
+        [HttpGet]        
+        public IList<UserModel> AllUserDetails(int page, int perPage,string sortBy, string sortDirection)
         {
             try
             {
@@ -43,9 +43,8 @@ namespace WebAPI.Controllers
         }
 
         // GET api/values/5
-        [HttpGet]
-        [Route("api/Employee/GetEmployeeDetailsById/{id}")]
-        public ActionResult<UserModel> GetEmployeeDetailsById(int id)
+        [HttpGet]       
+        public ActionResult<UserModel> GetUserDetailsById(int id)
         {
             try
             {
@@ -68,8 +67,7 @@ namespace WebAPI.Controllers
 
         // GET api/values
         [AllowAnonymous]
-        [HttpGet]
-        [Route("api/Employee/GetEducationList")]
+        [HttpGet]       
         public IList<EducationModel> GetEducationList()
         {
             try
@@ -88,9 +86,8 @@ namespace WebAPI.Controllers
        
 
         // PUT api/values
-        [HttpPost]
-        [Route("api/Employee/UpdateEmployeeDetails")]
-        public int UpdateEmployeeDetails(UserModel model)
+        [HttpPost]       
+        public int UpdateUserDetails(UserModel model)
         {
             try
             {
@@ -107,9 +104,8 @@ namespace WebAPI.Controllers
         }
 
         // DELETE api/values/5        
-        [HttpDelete]
-        [Route("api/Employee/DeleteEmployee")]
-        public bool DeleteEmaployee(string ids)
+        [HttpDelete]      
+        public bool DeleteUsers(string ids)
         {
             if (!string.IsNullOrEmpty(ids))
             {

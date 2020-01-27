@@ -26,8 +26,7 @@ export default class Routes extends React.Component {
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Registration} />
                     <Route path="/createpassword" component={CreatePassword} />
-                    <Route path="/forgotPassword" component={ForgotPassword} />                    
-                    {/* <Route path="/register" component={RegisterPage} /> */}
+                    <Route path="/forgotPassword" component={ForgotPassword} /> 
                     <Redirect from="*" to="/" />
                 </Switch>
             </Router>

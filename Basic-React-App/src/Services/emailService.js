@@ -67,7 +67,7 @@ function getPlaceholderList() {
 
 function getAllEmailLog(page, perPage, sortDirection, sortBy,date,emailTitle) {
     return (
-        axios.get(process.env.REACT_APP_Local_API_URL + "Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy+"&date="+date+"&emailTitle="+emailTitle, { headers: authHeader(), 'Content-Type': 'application/json' })
+        axios.get(process.env.REACT_APP_API_URL + "Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy+"&date="+date+"&emailTitle="+emailTitle, { headers: authHeader(), 'Content-Type': 'application/json' })
             .then(result => {
                 return result.data;
             },
@@ -79,7 +79,7 @@ function getAllEmailLog(page, perPage, sortDirection, sortBy,date,emailTitle) {
 
 function resendEmail(emailId) {
     return (
-        axios.post(process.env.REACT_APP_Local_API_URL + "Email/ResendMail?emailId=" + emailId ,null,   { headers :{...authHeader(), 'Content-Type': 'application/json'}}).then(result => {
+        axios.post(process.env.REACT_APP_API_URL + "Email/ResendMail?emailId=" + emailId ,null,   { headers :{...authHeader(), 'Content-Type': 'application/json'}}).then(result => {
                 return result.data;
             },
                 error => {
