@@ -150,7 +150,7 @@ namespace WebAPI.Controllers
                         issuer: configuration["TokenAuthentication:Issuer"],
                         audience: configuration["TokenAuthentication:Audience"],
                         claims: claims,
-                        expires: DateTime.UtcNow.AddMinutes(60),
+                        expires: DateTime.UtcNow.AddHours(2),
                         signingCredentials: signingCredentials
                     );
                 return Ok(new

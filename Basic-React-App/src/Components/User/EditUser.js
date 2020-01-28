@@ -54,7 +54,8 @@ export default class Registration extends Component {
 
     componentWillMount = async () => {
         let educationList = await userService.educationList();
-        let user = await userService.getUserById(this.state.mainState.userId);  
+        let user = await userService.getUserById(this.state.mainState.userId);         
+        if(user !== undefined){
         await this.setState({
             mainState: {
                 userId: user.userId,
@@ -79,6 +80,7 @@ export default class Registration extends Component {
                 isDeleteShow: (user.document_Name === null || user.document_Name === '') ? false : true
             }
         })
+    }
     }
 
     uploadFile = (event) => {

@@ -1,4 +1,5 @@
 import { authHeader } from '../Helpers/authHeader';
+import { history } from '../Helpers/history';
 const axios = require('axios');
 
 export const userService = {
@@ -16,7 +17,9 @@ function getAllUser(page, perPage, sortDirection, sortBy) {
                 return users.data;
             },
                 error => {
-                    return error;
+                    if(error.response.status===401)
+                         history.push('/login',null)
+                    else return error;
                 })
     );
 }
@@ -29,7 +32,9 @@ function getUserById(id) {
                 return user.data;
             },
                 error => {
-                    return error;
+                    if(error.response.status===401)
+                         history.push('/login',null)
+                    else return error;
                 })
     )
 }

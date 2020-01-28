@@ -66,7 +66,7 @@ const columns = [
             var dt = new Date(row.updated_date);
             const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
             ];
-            return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear() + " " + dt.getHours() + ":" + (dt.getMinutes() < 10 ? "0" + dt.getMinutes() : dt.getMinutes()) + ":" + (dt.getSeconds() < 10 ? "0" + dt.getSeconds() : dt.getSeconds()));
+            return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear());
         }
     }];
 
@@ -103,13 +103,15 @@ export default class ManageUsers extends React.Component {
 
     getAllUserDetail = async () => {
         await this.setState({ ...this.state, loading: true });
-        await userService.getAllUser(this.state.page, this.state.perPage, this.state.sortDirection, this.state.sortBy).then(result => {
+        await userService.getAllUser(this.state.page, this.state.perPage, this.state.sortDirection, this.state.sortBy).then(result => {           
+            if(result !== undefined){
             this.setState({
                 ...this.state,
                 rows: result,
                 totalRows: (result.length > 0) ? result[0].total_records : 0,
                 loading: false,
             })
+        }
         })
     }
 

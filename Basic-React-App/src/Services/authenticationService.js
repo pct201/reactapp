@@ -33,7 +33,8 @@ function login(userName, password) {
                     dispatch(alertService.error("Username or password is incorrect"));
                     break
                 default:
-                    localStorage.setItem('user', JSON.stringify(user.data));
+                    localStorage.setItem('user', JSON.stringify(user.data)); 
+                    //userName                  
                     dispatch(success(user.data));
                     history.push('/');
             }
