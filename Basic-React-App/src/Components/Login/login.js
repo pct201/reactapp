@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import SimpleReactValidator from 'simple-react-validator';
 import { authenticationService,alertService } from '../../Services'
 import { history } from '../../Helpers/history';
-import Loader from '../Common/Loader'
+import {Loader} from '../Common';
 
 class Login extends Component {
   constructor(props) {

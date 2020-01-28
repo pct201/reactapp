@@ -1,9 +1,8 @@
 import React, { Fragment } from 'react';
 import { userService } from '../../Services';
 import DataTable from 'react-data-table-component';
-import ActionPopup from '../Popup/ActionPopup';
-import MessagePopup from '../Popup/MessagePopup';
-import Loader from '../Common/Loader';
+import {MessagePopup,ActionPopup} from '../Popup';
+import {Loader} from '../Common';
 
 const columns = [
     {

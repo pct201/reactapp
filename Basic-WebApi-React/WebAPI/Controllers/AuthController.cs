@@ -157,6 +157,7 @@ namespace WebAPI.Controllers
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(securityToken),
                     expiration = securityToken.ValidTo,
+                    userName= userDetail.First_name+" "+userDetail.Last_name,
                     isvalidUser = true,
                     errorCode=200,
                 });

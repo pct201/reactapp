@@ -4,8 +4,8 @@ import { emailService } from '../../Services';
 import SimpleReactValidator from 'simple-react-validator';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
-import Loader from '../Common/Loader';
-import PopOver from '../Common/PopOver';
+import {Loader,PopOver} from '../Common';
+
 
 class EditEmailTemplate extends React.Component {
     constructor(props) {

@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import { emailService } from '../../Services';
 import DataTable from 'react-data-table-component';
-import EditEmailTemplate from '../Email/EditEmailTemplate';
-import Loader from '../Common/Loader';
-import MessagePopup from '../Popup/MessagePopup';
+import {EditEmailTemplate} from '../Email'
+import {Loader} from '../Common';
+import {MessagePopup} from '../Popup';
 
 const columns = [
     {

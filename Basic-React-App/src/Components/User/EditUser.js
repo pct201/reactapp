@@ -5,8 +5,8 @@ import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
 import { DatePickerInput } from 'rc-datepicker';
 import { userService } from '../../Services';
-import MessagePopup from '../Popup/MessagePopup';
-import Loader from '../Common/Loader';
+import {MessagePopup} from '../Popup';
+import {Loader} from '../Common';
 
 export default class Registration extends Component {
 

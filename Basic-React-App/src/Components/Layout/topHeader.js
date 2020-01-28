@@ -35,8 +35,9 @@ class TopHeader extends React.Component {
 }
 
 
-const mapStateToProps=(state)=>{   
-    return{
+const mapStateToProps=(state)=>{  
+   
+    return{       
         userName:(state.authentication.user)?state.authentication.user.userName:""
     };
 }

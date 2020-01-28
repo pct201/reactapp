@@ -3,8 +3,8 @@ import 'rc-datepicker/lib/style.css';
 import SimpleReactValidator from 'simple-react-validator';
 import { DatePickerInput } from 'rc-datepicker';
 import { authenticationService, userService } from '../../Services';
-import MessagePopup from '../Popup/MessagePopup';
-import Loader from '../Common/Loader';
+import {MessagePopup} from '../Popup';
+import {Loader} from '../Common';
 
 export default class Registration extends Component {
 

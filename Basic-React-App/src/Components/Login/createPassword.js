@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import SimpleReactValidator from 'simple-react-validator';
 import { authenticationService } from '../../Services'
 import queryString from 'query-string';
-import  HelpTip from '../Common/HelpTip'
-import MessagePopup from '../Popup/MessagePopup';
-import Loader from '../Common/Loader';
+import {Loader,HelpTip} from '../Common';
+import {MessagePopup} from '../Popup';
+
 
 export default class CreatePassword extends Component {
   constructor(props) {

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Link } from "react-router-dom";
 import SimpleReactValidator from 'simple-react-validator';
 import { authenticationService } from '../../Services'
-import MessagePopup from '../Popup/MessagePopup';
+import {MessagePopup} from '../Popup';
 
 export default class ForgotPassword extends Component {
   constructor(props) {

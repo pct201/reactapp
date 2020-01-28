@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { emailService } from '../../Services';
 import DataTable from 'react-data-table-component';
-import Loader from '../Common/Loader';
-import MessagePopup from '../Popup/MessagePopup';
+import {Loader} from '../Common';
+import {MessagePopup} from '../Popup';
 import 'rc-datepicker/lib/style.css';
 import { DatePickerInput } from 'rc-datepicker';
 

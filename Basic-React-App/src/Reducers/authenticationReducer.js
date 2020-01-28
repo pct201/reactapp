@@ -11,7 +11,7 @@ export function authenticationReducer(state = initialState, action) {
         ...state,
         loggedIn: true,
         user: action.user
-      };;
+      };
     case userConstants.LOGIN_SUCCESS:
       return {
         ...state,
