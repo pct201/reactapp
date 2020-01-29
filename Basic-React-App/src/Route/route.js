@@ -13,10 +13,10 @@ export default class Routes extends React.Component {
             <Router history={history}>
                 <Switch>                    
                     <PrivateRoute exact path="/" component={Dashboard} />
-                    <PrivateRoute exact path="/manageuser" component={ManageUsers} />   
-                    <PrivateRoute exact path="/edituser/:userId" component={EditUser} />   
-                    <PrivateRoute exact path="/manageemailtemplate" component={ManageEmailTemplate} />
-                    <PrivateRoute exact path="/emaillog" component={EmailLogList} />                                     
+                    <PrivateRoute exact path="/manageuser" component={ManageUsers} permission ="ViewUserList" />   
+                    <PrivateRoute exact path="/edituser/:userId" component={EditUser} permission ="EditUser"  />   
+                    <PrivateRoute exact path="/manageemailtemplate" component={ManageEmailTemplate} permission ="EmailTemplateList" />
+                    <PrivateRoute exact path="/emaillog" component={EmailLogList} permission ="ViewEmailLog"/>                                     
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Registration} />
                     <Route path="/createpassword" component={CreatePassword} />

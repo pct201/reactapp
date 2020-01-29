@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import { emailService } from '../../Services';
 import DataTable from 'react-data-table-component';
-import {EditEmailTemplate} from '../Email'
-import {Loader} from '../Common';
-import {MessagePopup} from '../Popup';
+import { EditEmailTemplate } from '../Email'
+import { Loader } from '../Common';
+import { MessagePopup } from '../Popup';
 
 const columns = [
     {
@@ -15,12 +15,12 @@ const columns = [
         selector: "friendly_email_name",
         name: "Friendly Name",
         sortable: true
-    },  
+    },
     {
         selector: "to_address",
         name: "To",
         sortable: true
-    },  
+    },
     // {
     //     selector: "cc_list",
     //     name: "CC",
@@ -39,35 +39,40 @@ const columns = [
     },
     {
         selector: "language_code",
-        name: "Language"        
+        name: "Language"
     }];
 
-
+var canEdit = false;
 export default class ManageEmailTemplate extends React.Component {
 
     constructor(props) {
-        super(props);      
+        super(props);
+
+        if (localStorage.getItem('user')) {
+            let permissionList = JSON.parse(JSON.parse(localStorage.getItem('user')).permissions);
+            canEdit = permissionList.includes("DeleteUser");
+        }
 
         this.state = {
-            emailUid:"",          
+            emailUid: "",
             rows: [],
             loading: false,
             totalRows: 0,
             page: 1,
             perPage: process.env.REACT_APP_ROW_PER_Page,
-            sortDirection:  process.env.REACT_APP_DEFAULT_SORT_DIRECTION,
+            sortDirection: process.env.REACT_APP_DEFAULT_SORT_DIRECTION,
             sortBy: 'to_address',
-            popupState: { 
+            popupState: {
                 isEditShow: false,
-                msgPopupShow:false,
-                title:"",
+                msgPopupShow: false,
+                title: "",
                 message: "",
             }
         };
-        this.getAllEmailTemplate = this.getAllEmailTemplate.bind(this);      
-        this.handleModelHide = this.handleModelHide.bind(this);  
-        this.handleModelSave = this.handleModelSave.bind(this);  
-           
+        this.getAllEmailTemplate = this.getAllEmailTemplate.bind(this);
+        this.handleModelHide = this.handleModelHide.bind(this);
+        this.handleModelSave = this.handleModelSave.bind(this);
+
     }
 
     getAllEmailTemplate = async () => {
@@ -97,47 +102,49 @@ export default class ManageEmailTemplate extends React.Component {
         await this.getAllEmailTemplate();
     };
 
-    editEmailTemplate = (row) => {   
+    editEmailTemplate = (row) => {
+        if (canEdit) {
+            this.setState({
+                ...this.state,
+                emailUid: row.email_uid,
+                popupState: {
+                    isEditShow: true
+                }
+            })
+        }
+    }
+
+    handleModelSave = (result) => {
         this.setState({
-            ...this.state,
-            emailUid:row.email_uid,
-            popupState: {              
-                isEditShow: true
+            popupState: {
+                isEditShow: false,
+                message: (result) ? "Email template saved successfully." : "Somthing went wrong please try again later.",
+                title: (result) ? "Success" : "Error",
+                msgPopupShow: true
             }
         })
     }
 
-    handleModelSave = (result) => {           
+    handleModelHide = () => {
         this.setState({
-            popupState: {              
+            popupState: {
                 isEditShow: false,
-                message:(result)?"Email template saved successfully.":"Somthing went wrong please try again later.",
-                title:(result)?"Success":"Error",
-                msgPopupShow:true
+                message: "",
+                title: "",
+                msgPopupShow: false
             }
         })
     }
 
-    handleModelHide=()=>{
-        this.setState({
-            popupState: {              
-                isEditShow: false,
-                message:"",
-                title:"",
-                msgPopupShow:false
-            }
-        })  
-    }
-
-    hideMessagePopup=async ()=>{       
+    hideMessagePopup = async () => {
         await this.setState({
-            popupState: {              
+            popupState: {
                 isEditShow: false,
-                message:"",
-                title:"",
-                msgPopupShow:false
+                message: "",
+                title: "",
+                msgPopupShow: false
             }
-        })  
+        })
         await this.getAllEmailTemplate();
     }
 
@@ -152,7 +159,7 @@ export default class ManageEmailTemplate extends React.Component {
                         <div className="titlebtn">
                             <div className="title">
                                 <h1>Manage Email Template</h1>
-                            </div>                           
+                            </div>
                         </div>
                         <div className="table-responsive grid-table">
                             <DataTable
@@ -165,8 +172,8 @@ export default class ManageEmailTemplate extends React.Component {
                                 highlightOnHover
                                 progressPending={this.state.loading}
                                 progressComponent={<Loader show={this.state.loading} />}
-                                onSort={this.handleSort}                               
-                                noContextMenu   
+                                onSort={this.handleSort}
+                                noContextMenu
                                 onRowClicked={this.editEmailTemplate}
                                 sortServer
                                 pagination
@@ -180,13 +187,13 @@ export default class ManageEmailTemplate extends React.Component {
                     </div>
                 </main>
                 <div>
-                    { this.state.popupState.isEditShow &&
-                <EditEmailTemplate show={this.state.popupState.isEditShow} emailUid={this.state.emailUid} popupClose={this.handleModelHide} popupSave={this.handleModelSave}  />
-                    }  
+                    {this.state.popupState.isEditShow &&
+                        <EditEmailTemplate show={this.state.popupState.isEditShow} emailUid={this.state.emailUid} popupClose={this.handleModelHide} popupSave={this.handleModelSave} />
+                    }
                     {
                         this.state.popupState.msgPopupShow &&
                         <MessagePopup show={this.state.popupState.msgPopupShow} title={this.state.popupState.title} message={this.state.popupState.message} popupClose={() => this.hideMessagePopup()} />
-                    }              
+                    }
                 </div>
             </Fragment>
         );

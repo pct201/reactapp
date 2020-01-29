@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Dashboard> DashboardDetail()
+        public ActionResult<DashboardModel> DashboardDetail()
         {
             using (var dashboardService = new DashboardService())
             {

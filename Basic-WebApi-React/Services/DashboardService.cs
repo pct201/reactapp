@@ -24,9 +24,9 @@ namespace Services
         /// <summary>
         /// Get Active,In Active and Total User Count For Dashboard.
         /// </summary>    
-        public virtual Dashboard GetDashboardUserCount()
+        public virtual DashboardModel GetDashboardUserCount()
         {
-            return this.ExecuteProcedure<Dashboard>("[dbo].[dashboard_count_get]", null).FirstOrDefault();
+            return this.ExecuteProcedure<DashboardModel>("[dbo].[dashboard_count_get]", null).FirstOrDefault();
         }
 
 

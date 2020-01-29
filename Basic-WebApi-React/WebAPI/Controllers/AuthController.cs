@@ -8,9 +8,11 @@ using DataModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Services;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -135,7 +137,14 @@ namespace WebAPI.Controllers
                 else if (userDetail == null || userDetail.UserId <= 0 || !(password == this.Decrypt(userDetail.Password)))
                     return Ok(new { isvalidUser = false, errorCode = 202 });
 
-                var claims = new[]
+                using (var permissionService = new PermissionService())
+                {
+                    string[] permissions = null;
+                    IList<PermissionModel> permissionList = permissionService.GetPermissionListByUserId(userDetail.UserId);
+                    if (permissionList.Count > 0)
+                        permissions = permissionList.Select(x => x.permission_code).ToArray();
+
+                    var claims = new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, userDetail.First_name + " " + userDetail.Last_name),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -143,24 +152,26 @@ namespace WebAPI.Controllers
                       new Claim(ClaimTypes.Role, "Admin")
                 };
 
-                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenAuthentication:SecretKey"]));
-                var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenAuthentication:SecretKey"]));
+                    var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                    var securityToken = new JwtSecurityToken(
+                            issuer: configuration["TokenAuthentication:Issuer"],
+                            audience: configuration["TokenAuthentication:Audience"],
+                            claims: claims,
+                            expires: DateTime.UtcNow.AddHours(2),
+                            signingCredentials: signingCredentials
+                        );
 
-                var securityToken = new JwtSecurityToken(
-                        issuer: configuration["TokenAuthentication:Issuer"],
-                        audience: configuration["TokenAuthentication:Audience"],
-                        claims: claims,
-                        expires: DateTime.UtcNow.AddHours(2),
-                        signingCredentials: signingCredentials
-                    );
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(securityToken),
-                    expiration = securityToken.ValidTo,
-                    userName= userDetail.First_name+" "+userDetail.Last_name,
-                    isvalidUser = true,
-                    errorCode=200,
-                });
+                    return Ok(new
+                    {
+                        token = new JwtSecurityTokenHandler().WriteToken(securityToken),
+                        expiration = securityToken.ValidTo,
+                        userName = userDetail.First_name + " " + userDetail.Last_name,
+                        permissions = JsonConvert.SerializeObject(permissions),
+                        isvalidUser = true,
+                        errorCode = 200,
+                    });
+                }
             }
         }
 

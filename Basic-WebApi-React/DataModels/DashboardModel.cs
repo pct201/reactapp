@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace DataModels
 {
 
-    public class Dashboard
+    public class DashboardModel
     {
         #region Properties
 

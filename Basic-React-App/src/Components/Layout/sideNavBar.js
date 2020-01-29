@@ -12,11 +12,11 @@ export default class SideNavBar extends React.Component{
                  <Navbar collapseOnSelect stackedbg="light" variant="dark" string="navbar-collapse">                   
                     <Navbar.Collapse>
                         <Nav className="mr-auto">
-                            <Link to="/" className="nav-link" activeClassName="active"  onClick={this.handleLinkClick()}>
+                            <Link to="/" className="nav-link" onClick={this.handleLinkClick()}>
                                 <img className="icon" src={require('../../images/dashboard.svg')} alt="Dashboard" />
                                 Dashboard
                             </Link>
-                            <Link to="/manageuser" className="nav-link" activeClassName="active">
+                            <Link to="/manageuser" className="nav-link" >
                                 <img className="icon" src={require('../../images/my-profile.svg')} alt="Manage User" />
                                 Manage User
                             </Link>   
@@ -25,8 +25,8 @@ export default class SideNavBar extends React.Component{
                                 </div>
                             }
                                 id="basic-nav-dropdown">
-                                <Link to="/manageemailtemplate" className="dropdown-item"  activeClassName="active"> Manage Email Template </Link>
-                                <Link to="/emaillog" className="dropdown-item"  activeClassName="active"> Email Log</Link>
+                                <Link to="/manageemailtemplate" className="dropdown-item" > Manage Email Template </Link>
+                                <Link to="/emaillog" className="dropdown-item" > Email Log</Link>
                             </NavDropdown>
                         </Nav>
                     </Navbar.Collapse>

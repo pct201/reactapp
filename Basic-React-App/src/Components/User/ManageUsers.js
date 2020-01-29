@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
 import { userService } from '../../Services';
 import DataTable from 'react-data-table-component';
-import {MessagePopup,ActionPopup} from '../Popup';
-import {Loader} from '../Common';
+import { MessagePopup, ActionPopup } from '../Popup';
+import { Loader } from '../Common';
+
 
 const columns = [
     {
@@ -70,11 +71,17 @@ const columns = [
     }];
 
 var selectedUserId = [];
-
+var canDelete = false;
+var canEdit= false;
 export default class ManageUsers extends React.Component {
 
     constructor(props) {
         super(props);
+        if (localStorage.getItem('user')) {
+            let permissionList = JSON.parse(JSON.parse(localStorage.getItem('user')).permissions);
+            canDelete = permissionList.includes("DeleteUser");
+            canEdit = permissionList.includes("EditUser");
+        }
 
         selectedUserId = [];
 
@@ -85,7 +92,7 @@ export default class ManageUsers extends React.Component {
             totalRows: 0,
             page: 1,
             perPage: process.env.REACT_APP_ROW_PER_Page,
-            sortDirection:  process.env.REACT_APP_DEFAULT_SORT_DIRECTION,
+            sortDirection: process.env.REACT_APP_DEFAULT_SORT_DIRECTION,
             sortBy: 'first_name',
             popupState: {
                 isActionPopup: false,
@@ -102,15 +109,15 @@ export default class ManageUsers extends React.Component {
 
     getAllUserDetail = async () => {
         await this.setState({ ...this.state, loading: true });
-        await userService.getAllUser(this.state.page, this.state.perPage, this.state.sortDirection, this.state.sortBy).then(result => {           
-            if(result !== undefined){
-            this.setState({
-                ...this.state,
-                rows: result,
-                totalRows: (result.length > 0) ? result[0].total_records : 0,
-                loading: false,
-            })
-        }
+        await userService.getAllUser(this.state.page, this.state.perPage, this.state.sortDirection, this.state.sortBy).then(result => {
+            if (result !== undefined) {
+                this.setState({
+                    ...this.state,
+                    rows: result,
+                    totalRows: (result.length > 0) ? result[0].total_records : 0,
+                    loading: false,
+                })
+            }
         })
     }
 
@@ -136,8 +143,9 @@ export default class ManageUsers extends React.Component {
         )
     }
 
-    editUser = (row) => {       
-        this.props.history.push(`/edituser/${row.userId}`,null)       
+    editUser = (row) => {
+        if(canEdit)
+        this.props.history.push(`/edituser/${row.userId}`, null)
     }
 
     handleModelHide = () => {
@@ -152,7 +160,7 @@ export default class ManageUsers extends React.Component {
     }
 
     deleteConfirmation = (event) => {
-      event.preventDefault();     
+        event.preventDefault();
         if (selectedUserId.length <= 0) {
             this.setState({
                 popupState: {
@@ -176,21 +184,20 @@ export default class ManageUsers extends React.Component {
     }
     deleteUser = (selectedUserId) => {
         this.handleModelHide()
-        userService.deleteUser(selectedUserId.toString()).then(result => {  
-                this.setState({
-                    popupState: {
-                        isActionPopup: false,
-                        message: (result)? "Selected user deleted Successfully.":"Somthing went wrong please try again later.",
-                        title: (result)?"Success":"Error",
-                        isshow: true
-                    }
-                })  
-                this.getAllUserDetail()           
+        userService.deleteUser(selectedUserId.toString()).then(result => {
+            this.setState({
+                popupState: {
+                    isActionPopup: false,
+                    message: (result) ? "Selected user deleted Successfully." : "Somthing went wrong please try again later.",
+                    title: (result) ? "Success" : "Error",
+                    isshow: true
+                }
+            })
+            this.getAllUserDetail()
         })
     }
     componentWillMount = () => this.getAllUserDetail();
-    render() {
-        console.log('come')
+    render() {       
         return (
             <Fragment>
                 <main className="main-content">
@@ -200,7 +207,8 @@ export default class ManageUsers extends React.Component {
                                 <h1>Manage Users</h1>
                             </div>
                             <div className="text-right">
-                                <button className="btn btn-primary mr-2" onClick={this.deleteConfirmation}><span>Delete</span></button>
+                                {canDelete &&
+                                    <button className="btn btn-primary mr-2" onClick={this.deleteConfirmation}><span>Delete</span></button>}
                             </div>
                         </div>
                         <div className="table-responsive grid-table">
@@ -215,9 +223,9 @@ export default class ManageUsers extends React.Component {
                                 progressPending={this.state.loading}
                                 progressComponent={<Loader show={this.state.loading} />}
                                 onSort={this.handleSort}
-                                selectableRows
+                                selectableRows={canDelete}
                                 selectableRowsHighlight
-                                noContextMenu                                
+                                noContextMenu
                                 onSelectedRowsChange={this.handleRowSelected}
                                 onRowClicked={this.editUser}
                                 sortServer
