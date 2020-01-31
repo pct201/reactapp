@@ -6,6 +6,10 @@ namespace DataModels
 {
     public sealed class PermissionModel
     {
+        public PermissionModel()
+        {
+            Role_List = new List<UserRolesModel>();
+        }
         /// <summary>
         /// Gets or sets permission id
         /// </summary>
@@ -32,9 +36,9 @@ namespace DataModels
         public string page_name { get; set; }
 
         /// <summary>
-        /// Gets or sets permission assigned
+        /// Gets or sets list of assign role with permission
         /// </summary>
-        public string permission_assigned { get; set; }
+        public string Assign_role_list { get; set; }
 
         [NotMapped]
         public bool Is_assigned { get; set; }
@@ -67,6 +71,8 @@ namespace DataModels
 
         [NotMapped]
         public int total_records { get; set; }
+
+        public IList<UserRolesModel> Role_List { get; set; }
 
     }
 }

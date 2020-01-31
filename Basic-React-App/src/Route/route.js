@@ -6,6 +6,7 @@ import Dashboard from '../Components/Home/Dashboard';
 import {Login,Registration,CreatePassword,ForgotPassword} from '../Components/Login';
 import {ManageUsers,EditUser} from '../Components/User';
 import {ManageEmailTemplate,EmailLogList} from '../Components/Email';
+import {ManagePermissions} from '../Components/Permission';
 
 export default class Routes extends React.Component {   
     render() {
@@ -16,7 +17,8 @@ export default class Routes extends React.Component {
                     <PrivateRoute exact path="/manageuser" component={ManageUsers} permission ="ViewUserList" />   
                     <PrivateRoute exact path="/edituser/:userId" component={EditUser} permission ="EditUser"  />   
                     <PrivateRoute exact path="/manageemailtemplate" component={ManageEmailTemplate} permission ="EmailTemplateList" />
-                    <PrivateRoute exact path="/emaillog" component={EmailLogList} permission ="ViewEmailLog"/>                                     
+                    <PrivateRoute exact path="/emaillog" component={EmailLogList} permission ="ViewEmailLog"/>   
+                    <PrivateRoute exact path="/managepermissions" component={ManagePermissions} permission ="ViewPermission"/>                                    
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Registration} />
                     <Route path="/createpassword" component={CreatePassword} />

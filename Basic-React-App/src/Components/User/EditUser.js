@@ -5,8 +5,8 @@ import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
 import { DatePickerInput } from 'rc-datepicker';
 import { userService } from '../../Services';
-import {MessagePopup} from '../Popup';
-import {Loader} from '../Common';
+import { MessagePopup } from '../Popup';
+import { Loader } from '../Common';
 
 export default class Registration extends Component {
 
@@ -20,9 +20,10 @@ export default class Registration extends Component {
                 last_name: "",
                 email: "",
                 mobile_number: "",
+                role_Id: "",
                 education_id: "",
                 salary: "",
-                is_active:false,
+                is_active: false,
                 birth_date: new Date().toISOString(),
                 is_married: false,
                 address: "",
@@ -34,6 +35,7 @@ export default class Registration extends Component {
                 fileName: "No file selected",
                 isDeleteShow: false,
                 educationData: null,
+                userRoleData: null,
                 showLoader: true,
             }, popupState: {
                 title: "",
@@ -54,33 +56,36 @@ export default class Registration extends Component {
 
     componentWillMount = async () => {
         let educationList = await userService.educationList();
-        let user = await userService.getUserById(this.state.mainState.userId);         
-        if(user !== undefined){
-        await this.setState({
-            mainState: {
-                userId: user.userId,
-                is_active:user.is_Active,
-                first_name: user.first_name,
-                last_name: user.last_name,
-                email: user.email,
-                mobile_number: user.mobile_number,
-                education_id: user.education_Id,
-                salary: user.salary,
-                is_married: user.is_Married,
-                address: user.address,
-                document: user.document,
-                document_name: user.document_Name,
-                blog: user.blog,
-                birth_date: user.birth_Date
-            },
-            otherState: {
-                showLoader: false,
-                educationData: educationList,
-                fileName: (user.document_Name === null || user.document_Name === '') ? "No file selected" : user.document_Name,
-                isDeleteShow: (user.document_Name === null || user.document_Name === '') ? false : true
-            }
-        })
-    }
+        let userRoleList = await userService.userRoleList();
+        let user = await userService.getUserById(this.state.mainState.userId);
+        if (user !== undefined) {
+            await this.setState({
+                mainState: {
+                    userId: user.userId,
+                    is_active: user.is_Active,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email: user.email,
+                    mobile_number: user.mobile_number,
+                    education_id: user.education_Id,
+                    role_Id: user.role_Id,
+                    salary: user.salary,
+                    is_married: user.is_Married,
+                    address: user.address,
+                    document: user.document,
+                    document_name: user.document_Name,
+                    blog: user.blog,
+                    birth_date: user.birth_Date
+                },
+                otherState: {
+                    showLoader: false,
+                    educationData: educationList,
+                    userRoleData: userRoleList,
+                    fileName: (user.document_Name === null || user.document_Name === '') ? "No file selected" : user.document_Name,
+                    isDeleteShow: (user.document_Name === null || user.document_Name === '') ? false : true
+                }
+            })
+        }
     }
 
     uploadFile = (event) => {
@@ -214,14 +219,14 @@ export default class Registration extends Component {
                                 <h1>Manage Users</h1>
                             </div>
                             <div className="text-right">
-                                <h2>Status: {this.state.mainState.is_active?"Active":"In-Active"}</h2>
+                                <h2>Status: {this.state.mainState.is_active ? "Active" : "In-Active"}</h2>
                             </div>
                         </div>
                     </div>
                     <div className="formContainer">
                         <form>
                             <div className="container-fluid user-info">
-                                <div className="row">
+                                <div className="row ">
                                     <div className="col-md-4 ">
                                         <div className="form-group">
                                             <input type="text" className="form-control" id="first_name" ref="first_name" value={this.state.mainState.first_name} placeholder="First Name" onChange={this.handleInputChange} error_msg="First Name" />
@@ -259,6 +264,16 @@ export default class Registration extends Component {
                                     </div>
                                     <div className="col-md-4 ">
                                         <div className="form-group">
+                                            <select className="form-control" id="role_Id" ref="role_Id" value={this.state.mainState.role_Id} placeholder="User Role" onChange={this.handleInputChange}>
+                                                {this.state.otherState.userRoleData !== null ? this.state.otherState.userRoleData.map(key => (
+                                                    <option value={key.role_Id} key={key.role_Id}>{key.role_Name}</option>
+                                                )) : null}
+                                            </select>
+                                            <span className="errorfont">{this.validator.message('role_Id', this.state.mainState.role_Id, 'required')}</span>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-4 ">
+                                        <div className="form-group">
                                             <input type="text" className="form-control" id="salary" ref="salary" additional_validation="salary" placeholder="Salary" value={this.state.mainState.salary} onChange={this.handleInputChange} error_msg="Salary" />
                                             <span className="errorfont">{this.validator.message('salary', this.state.mainState.salary, 'required|numeric')}</span>
                                         </div>
@@ -281,6 +296,8 @@ export default class Registration extends Component {
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div className="row">
                                     <div className="col-md-4">
                                         <div className="form-group cus-file-select">
                                             <div className="file-select-button" id="fileName">CHOOSE FILE</div>
@@ -292,6 +309,8 @@ export default class Registration extends Component {
                                             <input type="file" name="1" id="document" ref="document" onChange={this.handleInputChange} />
                                         </div>
                                     </div>
+                                </div>
+                                <div className="row">
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <textarea className="form-control" rows="5" id="address" ref="address" value={this.state.mainState.address} onChange={this.handleInputChange} style={{ height: '251px', resize: 'none' }} placeholder="Address"></textarea>
@@ -302,6 +321,7 @@ export default class Registration extends Component {
                                             <SunEditor setContents={this.state.mainState.blog} setOptions={{ "placeholder": "Blog" }} onChange={this.handleSunEditorChange} />
                                         </div>
                                     </div>
+
                                 </div>
                                 <div className="mt-3 text-right">
                                     <input type="button" className="btn btn-primary mr-2 mb-0" value="Save" onClick={this.handleOnSubmit} />

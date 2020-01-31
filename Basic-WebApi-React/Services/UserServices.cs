@@ -32,7 +32,7 @@ namespace Services
         public virtual List<UserModel> GetUserList(int? pageNo, int? perPage, string sortExpression, string sortDirection, int userId = 0)
         {
             this.PagingInformation.PageSize = perPage.HasValue ? perPage.Value : DefaultPageSize;
-            Collection <DBParameters> parameters = new Collection<DBParameters>();
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
             if (userId > 0)
             {
                 parameters.Add(new DBParameters() { Name = "user_id", Value = userId, DBType = DbType.Int32 });
@@ -65,7 +65,11 @@ namespace Services
             System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
 
             if (objUserModel.UserId > 0)
+            {
                 parameters.Add(new DBParameters() { Name = "@user_id", Value = objUserModel.UserId, DBType = DbType.Int32 });
+                if (objUserModel.Role_Id > 0) /*only pass role in edit user*/
+                    parameters.Add(new DBParameters() { Name = "@role_id", Value = objUserModel.Role_Id, DBType = DbType.Int32 });
+            }
 
             if (!string.IsNullOrEmpty(objUserModel.Profile_Picture))
                 parameters.Add(new DBParameters() { Name = "@profile_picture", Value = Convert.FromBase64String(objUserModel.Profile_Picture.Split(',')[1]), DBType = DbType.Binary });
@@ -74,7 +78,7 @@ namespace Services
             {
                 var documentContent = objUserModel.Document.Split(',');
                 parameters.Add(new DBParameters() { Name = "@document_name", Value = objUserModel.Document_Name, DBType = DbType.AnsiString });
-                parameters.Add(new DBParameters() { Name = "@document_detail", Value = documentContent[0]+",", DBType = DbType.AnsiString });
+                parameters.Add(new DBParameters() { Name = "@document_detail", Value = documentContent[0] + ",", DBType = DbType.AnsiString });
                 parameters.Add(new DBParameters() { Name = "@document", Value = Convert.FromBase64String(documentContent[1]), DBType = DbType.Binary });
             }
 
@@ -167,6 +171,18 @@ namespace Services
             return this.ExecuteProcedureWithPerameterwithoutPagination<EducationModel>("[dbo].[education_dropdown_get]", parameters).ToList();
         }
 
+        /// <summary>
+        /// Get EducationList.
+        /// </summary>
+        /// <param name="objUserModel"></param>    
+        /// <returns></returns>
+        public IList<UserRolesModel> GetUserRoleList()
+        {
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            return this.ExecuteProcedureWithPerameterwithoutPagination<UserRolesModel>("[auth].[role_dropdown_get]", parameters).ToList();
+        }
+
+        
         public virtual UserModel GetUserByEmail(string emailId)
         {
             System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();

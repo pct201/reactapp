@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { emailService } from '../../Services';
 import DataTable from 'react-data-table-component';
-import {Loader} from '../Common';
-import {MessagePopup} from '../Popup';
+import { Loader } from '../Common';
+import { MessagePopup } from '../Popup';
 import 'rc-datepicker/lib/style.css';
 import { DatePickerInput } from 'rc-datepicker';
 
@@ -152,7 +152,7 @@ export default class EmailLogList extends React.Component {
         await this.getAllEmailLog();
     }
 
-    filterData = async() => {
+    filterData = async () => {
         await this.setState({
             ...this.state,
             showClear: true
@@ -163,7 +163,7 @@ export default class EmailLogList extends React.Component {
     clearFilter = async () => {
         await this.setState({
             ...this.state,
-            showClear:false,
+            showClear: false,
             emailTitle: "",
             date: ""
         })
@@ -185,7 +185,7 @@ export default class EmailLogList extends React.Component {
                                 <h1>Email Logs</h1>
                             </div>
                         </div>
-                        <div>  <div className="container-fluid user-info">
+                        <div>
                             <div className="row justify-content-start">
                                 <div className="col-md-2 ">
                                     <div className="form-group">
@@ -207,7 +207,7 @@ export default class EmailLogList extends React.Component {
                                     <button type="button" className="btn btn-secondary" style={clearBtnStyle} onClick={this.clearFilter}><span>Clear</span></button>
                                 </div>
                             </div>
-                        </div>
+
                         </div>
                         <div className="table-responsive grid-table">
                             <DataTable

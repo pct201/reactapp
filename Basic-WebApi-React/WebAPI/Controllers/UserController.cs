@@ -24,9 +24,9 @@ namespace WebAPI.Controllers
         {
             this.emailService = new EmailService(configuration);
         }
-        // GET api/values
-        [HttpGet]        
-        public IList<UserModel> AllUserDetails(int page, int perPage,string sortBy, string sortDirection)
+
+        [HttpGet]
+        public IList<UserModel> AllUserDetails(int page, int perPage, string sortBy, string sortDirection)
         {
             try
             {
@@ -42,15 +42,14 @@ namespace WebAPI.Controllers
             }
         }
 
-        // GET api/values/5
-        [HttpGet]       
+        [HttpGet]
         public ActionResult<UserModel> GetUserDetailsById(int id)
         {
             try
             {
                 using (var userService = new UserServices())
                 {
-                    List<UserModel> userList = userService.GetUserList(0, null,null, null, id);
+                    List<UserModel> userList = userService.GetUserList(0, null, null, null, id);
                     if (userList.Count > 0)
                         return userList.FirstOrDefault();
                     else
@@ -65,9 +64,8 @@ namespace WebAPI.Controllers
             }
         }
 
-        // GET api/values
         [AllowAnonymous]
-        [HttpGet]       
+        [HttpGet]
         public IList<EducationModel> GetEducationList()
         {
             try
@@ -83,17 +81,31 @@ namespace WebAPI.Controllers
             }
         }
 
-       
+        [AllowAnonymous]
+        [HttpGet]
+        public IList<UserRolesModel> GetUserRoleList()
+        {
+            try
+            {
+                using (var userService = new UserServices())
+                {
+                    return userService.GetUserRoleList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-        // PUT api/values
-        [HttpPost]       
+        [HttpPost]
         public int UpdateUserDetails(UserModel model)
         {
             try
             {
                 using (var userService = new UserServices())
                 {
-                  
+
                     return userService.AddEditUser(model);
                 }
             }
@@ -103,8 +115,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        // DELETE api/values/5        
-        [HttpDelete]      
+        [HttpDelete]
         public bool DeleteUsers(string ids)
         {
             if (!string.IsNullOrEmpty(ids))
@@ -127,9 +138,9 @@ namespace WebAPI.Controllers
         }
 
 
-        
 
-      
+
+
 
     }
 }

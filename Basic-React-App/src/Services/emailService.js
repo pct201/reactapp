@@ -6,8 +6,8 @@ export const emailService = {
     getEmailTemplateById,
     updateEmailTemplate,
     getPlaceholderList,
-    getAllEmailLog ,
-    resendEmail  
+    getAllEmailLog,
+    resendEmail
 };
 
 //------------------------------ Email Template Service Region Start -----------------------------//
@@ -18,7 +18,7 @@ function getAllEmailTemplate(page, perPage, sortDirection, sortBy) {
                 return result.data;
             },
                 error => {
-                    return error;
+                    handleError(error)
                 })
     );
 }
@@ -31,7 +31,7 @@ function getEmailTemplateById(emailUid) {
                 return result.data;
             },
                 error => {
-                    return null;
+                    handleError(error, null)
                 })
     )
 }
@@ -39,11 +39,11 @@ function getEmailTemplateById(emailUid) {
 function updateEmailTemplate(emailTemplate) {
     return (
         axios.post(process.env.REACT_APP_API_URL + "Email/UpdateEmailTemplateDetail", emailTemplate,
-            { headers :{...authHeader(), 'Content-Type': 'application/json'}}).then(result => {    
-              return result.data;
+            { headers: { ...authHeader(), 'Content-Type': 'application/json' } }).then(result => {
+                return result.data;
             },
                 error => {
-                    return false;
+                    handleError(error, false)
                 })
     )
 }
@@ -51,12 +51,12 @@ function updateEmailTemplate(emailTemplate) {
 
 function getPlaceholderList() {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Email/AllPlaceHolderList", { headers :authHeader()}).then(
-            result => {               
+        axios.get(process.env.REACT_APP_API_URL + "Email/AllPlaceHolderList", { headers: authHeader() }).then(
+            result => {
                 return result.data;
             },
-            error => {                
-                return null
+            error => {
+                handleError(error, null)
             })
     )
 }
@@ -65,26 +65,26 @@ function getPlaceholderList() {
 
 //------------------------------ Email Log Service Region Start -----------------------------//
 
-function getAllEmailLog(page, perPage, sortDirection, sortBy,date,emailTitle) {
+function getAllEmailLog(page, perPage, sortDirection, sortBy, date, emailTitle) {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy+"&date="+date+"&emailTitle="+emailTitle, { headers: authHeader(), 'Content-Type': 'application/json' })
+        axios.get(process.env.REACT_APP_API_URL + "Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy + "&date=" + date + "&emailTitle=" + emailTitle, { headers: authHeader(), 'Content-Type': 'application/json' })
             .then(result => {
                 return result.data;
             },
                 error => {
-                    return error;
+                    handleError(error)
                 })
     );
 }
 
 function resendEmail(emailId) {
     return (
-        axios.post(process.env.REACT_APP_API_URL + "Email/ResendMail?emailId=" + emailId ,null,   { headers :{...authHeader(), 'Content-Type': 'application/json'}}).then(result => {
-                return result.data;
-            },
-                error => {
-                    return false;
-                })
+        axios.post(process.env.REACT_APP_API_URL + "Email/ResendMail?emailId=" + emailId, null, { headers: { ...authHeader(), 'Content-Type': 'application/json' } }).then(result => {
+            return result.data;
+        },
+            error => {
+                handleError(error, false)
+            })
     );
 }
 
@@ -93,7 +93,13 @@ function resendEmail(emailId) {
 //------------------------------ Email Log Service Region END -----------------------------//
 
 
-
+function handleError(error, response = '') {
+    debugger;
+    if (error.response !== undefined && error.response.status === 401)
+        window.location.href = "/login";
+    else
+        return (response !== '') ? response : error
+}
 
 
 

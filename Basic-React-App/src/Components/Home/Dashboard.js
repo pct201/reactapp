@@ -52,6 +52,33 @@ class Dashboard extends React.Component {
                     </div>                   
                 </div>
 
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className="db-box">
+                            <h3>Energy usage for Air Conditioning</h3>
+                            <div className="db-box-body"><img src={require('../../images/graph1.png')} alt="" width="100%"/></div>
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                    <div className="db-box">
+                            <h3>Customer Satisfaction</h3>
+                            <div className="db-box-body"><img src={require('../../images/graph2.png')} alt="" width="100%"/></div>
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                    <div className="db-box">
+                            <h3>Social Network</h3>
+                            <div className="db-box-body"><img src={require('../../images/graph3.png')} alt="" width="100%"/></div>
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                    <div className="db-box">
+                            <h3>Order Summary</h3>
+                            <div className="db-box-body"><img src={require('../../images/graph4.png')} alt="" width="100%"/></div>
+                        </div>
+                    </div>
+                </div>
+
 
 
             </main>

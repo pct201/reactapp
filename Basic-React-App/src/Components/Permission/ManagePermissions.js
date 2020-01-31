@@ -1,67 +1,62 @@
 import React, { Fragment } from 'react';
-import { emailService } from '../../Services';
+import { permissionService } from '../../Services';
 import DataTable from 'react-data-table-component';
-import { EditEmailTemplate } from '../Email'
+import { EditPermission } from '../Permission'
 import { Loader } from '../Common';
 import { MessagePopup } from '../Popup';
 
-const columns = [
-    {
-        selector: "email_name",
-        name: "Email Name",
-        sortable: true
-    },
-    {
-        selector: "friendly_email_name",
-        name: "Friendly Name",
-        sortable: true
-    },
-    {
-        selector: "to_address",
-        name: "To",
-        sortable: true
-    },
-    // {
-    //     selector: "cc_list",
-    //     name: "CC",
-    //     sortable: true
-    // }, 
-    // {
-    //     selector: "bcc_list",
-    //     name: "BCC",
-    //     sortable: true
-    // }, 
-    {
-        selector: "subject_text",
-        name: "Subject",
-        sortable: true,
-        grow: 3,
-    },
-    {
-        selector: "language_code",
-        name: "Language"
-    }];
 
+var columns = [];
 var canEdit = false;
-export default class ManageEmailTemplate extends React.Component {
+export default class ManagePermissions extends React.Component {
 
     constructor(props) {
         super(props);
 
         if (localStorage.getItem('user')) {
             let permissionList = JSON.parse(JSON.parse(localStorage.getItem('user')).permissions);
-            canEdit = permissionList.includes("DeleteUser");
+            canEdit = permissionList.includes("EditPermission");
         }
 
+         columns = [   
+            {
+                selector: "permission_code",
+                name: "Permission Code",
+                sortable: true
+            },
+            {
+                selector: "permission_name",
+                name: "Permission Name"      
+            },
+            {
+                selector: "permission_description",
+                name: "Description",       
+                grow: 3
+            }, 
+            {
+                selector: "page_name",
+                name: "Page Name",
+                sortable: true,
+               
+            },           
+            {  
+                cell: row => { return  <button type="button" className="btn btn-primary btn-sm" onClick={() => { this.editPermission(row.permission_uid) }}><span>View</span></button> },
+                ignoreRowClick: true,
+                allowOverflow: true,
+                button: true
+            }];
+
+       
+
         this.state = {
-            emailUid: "",
+            permissionUid: "",
             rows: [],
             loading: false,
             totalRows: 0,
             page: 1,
             perPage: process.env.REACT_APP_ROW_PER_Page,
             sortDirection: process.env.REACT_APP_DEFAULT_SORT_DIRECTION,
-            sortBy: 'to_address',
+            sortBy: 'permission_code',
             popupState: {
                 isEditShow: false,
                 msgPopupShow: false,
@@ -69,15 +64,15 @@ export default class ManageEmailTemplate extends React.Component {
                 message: "",
             }
         };
-        this.getAllEmailTemplate = this.getAllEmailTemplate.bind(this);
+        this.getAllPermissions = this.getAllPermissions.bind(this);
         this.handleModelHide = this.handleModelHide.bind(this);
         this.handleModelSave = this.handleModelSave.bind(this);
 
     }
 
-    getAllEmailTemplate = async () => {
+    getAllPermissions = async () => {
         await this.setState({ ...this.state, loading: true });
-        await emailService.getAllEmailTemplate(this.state.page, this.state.perPage, this.state.sortDirection, this.state.sortBy).then(result => {
+        await permissionService.getAllPermissionList(this.state.page, this.state.perPage, this.state.sortDirection, this.state.sortBy).then(result => {
             this.setState({
                 ...this.state,
                 rows: result,
@@ -89,36 +84,37 @@ export default class ManageEmailTemplate extends React.Component {
 
     handlePageChange = async (page) => {
         await this.setState({ ...this.state, page: page });
-        await this.getAllEmailTemplate();
+        await this.getAllPermissions();
     }
 
     handlePerRowsChange = async (perPage, page) => {
         await this.setState({ ...this.state, page: page, perPage: perPage })
-        await this.getAllEmailTemplate();
+        await this.getAllPermissions();
     }
 
     handleSort = async (column, sortDirection) => {
         await this.setState({ ...this.state, sortBy: column.selector, sortDirection: sortDirection });
-        await this.getAllEmailTemplate();
+        await this.getAllPermissions();
     };
 
-    editEmailTemplate = (row) => {
-        if (canEdit) {
+    editPermission = (permissionUid) => {   
+       
+        // if (canEdit) {            
             this.setState({
                 ...this.state,
-                emailUid: row.email_uid,
+                permissionUid: permissionUid,
                 popupState: {
                     isEditShow: true
                 }
             })
-        }
+        // }
     }
 
-    handleModelSave = (result) => {
+    handleModelSave = (result) => {      
         this.setState({
             popupState: {
                 isEditShow: false,
-                message: (result) ? "Email template saved successfully." : "Somthing went wrong please try again later.",
+                message: (result) ? "Permission detail updated successfully." : "Somthing went wrong please try again later.",
                 title: (result) ? "Success" : "Error",
                 msgPopupShow: true
             }
@@ -145,35 +141,34 @@ export default class ManageEmailTemplate extends React.Component {
                 msgPopupShow: false
             }
         })
-        await this.getAllEmailTemplate();
+        await this.getAllPermissions();
     }
 
-    componentWillMount = () => this.getAllEmailTemplate();
+    componentWillMount = () => this.getAllPermissions();
 
-    render() {      
+    render() {       
         return (
             <Fragment>
                 <main className="main-content">
                     <div className="container-fluid">
                         <div className="titlebtn">
                             <div className="title">
-                                <h1>Manage Email Template</h1>
+                                <h1>Manage Permissions</h1>
                             </div>
                         </div>
                         <div className="table-responsive grid-table">
                             <DataTable
                                 noHeader
-                                keyField={'email_uid'}
+                                keyField={'permission_uid'}
                                 pointerOnHover
                                 columns={columns}
                                 data={this.state.rows}
-                                defaultSortField="to_address"
+                                defaultSortField="permission_code"
                                 highlightOnHover
                                 progressPending={this.state.loading}
                                 progressComponent={<Loader show={this.state.loading} />}
                                 onSort={this.handleSort}
-                                noContextMenu
-                                onRowClicked={this.editEmailTemplate}
+                                noContextMenu                               
                                 sortServer
                                 pagination
                                 paginationServer
@@ -186,8 +181,8 @@ export default class ManageEmailTemplate extends React.Component {
                     </div>
                 </main>
                 <div>
-                    {this.state.popupState.isEditShow &&
-                        <EditEmailTemplate show={this.state.popupState.isEditShow} emailUid={this.state.emailUid} popupClose={this.handleModelHide} popupSave={this.handleModelSave} />
+                    {this.state.popupState.isEditShow &&                    
+                        <EditPermission show={this.state.popupState.isEditShow} permissionUid={this.state.permissionUid} popupClose={this.handleModelHide} popupSave={this.handleModelSave} />
                     }
                     {
                         this.state.popupState.msgPopupShow &&

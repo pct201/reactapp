@@ -1,5 +1,5 @@
 import { authHeader } from '../Helpers/authHeader';
-import { history } from '../Helpers/history';
+
 const axios = require('axios');
 
 export const userService = {
@@ -7,7 +7,8 @@ export const userService = {
     getUserById,
     updateUserDetail,
     deleteUser,
-    educationList
+    educationList,
+    userRoleList
 };
 
 function getAllUser(page, perPage, sortDirection, sortBy) {
@@ -17,9 +18,7 @@ function getAllUser(page, perPage, sortDirection, sortBy) {
                 return users.data;
             },
                 error => {
-                    if(error.response.status===401)
-                         history.push('/login',null)
-                    else return error;
+                    handleError(error)
                 })
     );
 }
@@ -32,9 +31,7 @@ function getUserById(id) {
                 return user.data;
             },
                 error => {
-                    if(error.response.status===401)
-                         history.push('/login',null)
-                    else return error;
+                    handleError(error)
                 })
     )
 }
@@ -42,11 +39,11 @@ function getUserById(id) {
 function updateUserDetail(user) {
     return (
         axios.post(process.env.REACT_APP_API_URL + "User/UpdateUserDetails", user,
-            { headers :{...authHeader(), 'Content-Type': 'application/json'}}).then(users => {              
+            { headers: { ...authHeader(), 'Content-Type': 'application/json' } }).then(users => {
                 return users.data;
             },
                 error => {
-                    return false;
+                    handleError(error)
                 })
     )
 }
@@ -57,7 +54,7 @@ function deleteUser(userIds) {
             return user.data;
         },
             error => {
-                return false;
+                handleError(error)
             })
     );
 }
@@ -69,7 +66,27 @@ function educationList() {
                 return result.data;
             },
             error => {
-                return error
+                handleError(error)
             })
     )
+}
+
+
+function userRoleList() {
+    return (
+        axios.get(process.env.REACT_APP_API_URL + "User/GetUserRoleList").then(
+            result => {
+                return result.data;
+            },
+            error => {
+                handleError(error)
+            })
+    )
+}
+
+function handleError(error) {    
+    if (error.response !== undefined &&error.response.status === 401)
+        window.location.href = "/login";
+    else
+        return error
 }
