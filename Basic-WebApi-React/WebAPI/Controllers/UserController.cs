@@ -17,9 +17,8 @@ namespace WebAPI.Controllers
     [Authorize]
     [ApiController]
     public class UserController : ControllerBase
-    {
-        private IConfiguration configuration;
-        private EmailService emailService;
+    {    
+        private readonly EmailService emailService;
         public UserController(IConfiguration configuration)
         {
             this.emailService = new EmailService(configuration);
@@ -36,9 +35,9 @@ namespace WebAPI.Controllers
                     return userList;
                 }
             }
-            catch (Exception e)
+            catch 
             {
-                throw e;
+                return null;
             }
         }
 
@@ -58,9 +57,9 @@ namespace WebAPI.Controllers
                     }
                 }
             }
-            catch (Exception)
+            catch
             {
-                throw;
+                return null;
             }
         }
 
@@ -75,9 +74,9 @@ namespace WebAPI.Controllers
                     return userService.GetEducationList();
                 }
             }
-            catch (Exception)
+            catch
             {
-                throw;
+                return null;
             }
         }
 
@@ -92,9 +91,9 @@ namespace WebAPI.Controllers
                     return userService.GetUserRoleList();
                 }
             }
-            catch (Exception)
+            catch
             {
-                throw;
+                return null;
             }
         }
 
@@ -109,9 +108,9 @@ namespace WebAPI.Controllers
                     return userService.AddEditUser(model);
                 }
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                return 0;
             }
         }
 
@@ -128,19 +127,13 @@ namespace WebAPI.Controllers
                         return true;
                     }
                 }
-                catch (Exception e)
+                catch
                 {
-                    throw e;
+                    return false;
                 }
             }
             else
                 return false;
         }
-
-
-
-
-
-
     }
 }

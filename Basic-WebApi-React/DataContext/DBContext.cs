@@ -27,24 +27,11 @@ namespace DataContext
     /// <ReviewDate></ReviewDate>
     public abstract class DBContext : DBExecute, IDBContext, IDisposable
     {
-        //private readonly IConfiguration configuration;
-        //public DBContext(IConfiguration config):base(config)
-        //{
-        //    this.configuration = config;
-        //}
-
-        /// <summary>
-        /// dispose status
-        /// </summary>
-        private bool disposed;
 
         /// <summary>
         /// Finalizes an instance of the DBContext class.
         /// </summary>
-        ~DBContext()
-        {
-            this.Dispose(false);
-        }
+        ~DBContext(){}
 
         #region Property Declaration
 
@@ -93,9 +80,8 @@ namespace DataContext
         /// The dispose method that implements IDisposable.
         /// </summary>
         public void Dispose()
-        {
-            this.Dispose(true);
-            /*GC.SuppressFinalize(this);        */
+        {          
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -337,29 +323,7 @@ namespace DataContext
         }
 
         #endregion
-
-        #region Protected Methods
-
-        /// <summary>
-        /// The virtual dispose method that allows
-        /// classes inherited from this one to dispose their resources.
-        /// </summary>
-        /// <param name="disposing">Is Dispose</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    // Dispose managed resources here.
-                }
-
-                // Dispose unmanaged resources here.
-            }
-
-            this.disposed = true;
-        }
-        #endregion
+            
 
         #region static methods
 

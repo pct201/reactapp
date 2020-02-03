@@ -64,16 +64,14 @@ namespace DataContext
         /// <summary>
         /// Prevents a default instance of the DBClient class from being created.
         /// </summary>
-        private DBClient()
+        public DBClient()
         {
             var configurationBuilder = new ConfigurationBuilder();
             var path = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
             configurationBuilder.AddJsonFile(path, false);
             var root = configurationBuilder.Build();
             _appSetting = Convert.ToInt32(root.GetSection("ApplicationSettings").GetSection("CommandTimeOut").Value);
-        }
-
-
+        }       
       
         #endregion
 
@@ -142,9 +140,7 @@ namespace DataContext
         /// <returns>return execute procedure </returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "This will only return predefined Procedure Name, not user inputs")]
         public static IList<T> ExecuteProcedure<T>(string procedureName, System.Collections.ObjectModel.Collection<DBParameters> parameters, string databaseConnection)
-        {
-            List<T> returnValue = new List<T>();
-
+        {           
             // Create a suitable command type and add the required parameter
             using (SqlConnection sqlConnection = new System.Data.SqlClient.SqlConnection(databaseConnection))
             {
@@ -159,10 +155,8 @@ namespace DataContext
                 }
 
                 /*Execute Procedure from supplied Execution type*/
-                returnValue = DataReaderToList<T>(sqlCommand.ExecuteReader());
-            }
-
-            return returnValue;
+                return DataReaderToList<T>(sqlCommand.ExecuteReader());
+            }           
         }
 
 
@@ -254,21 +248,6 @@ namespace DataContext
             return list;
         }
 
-        /// <summary>
-        /// Set Pagination Properties
-        /// </summary>
-        /// <param name="totalRecords">Total Records</param>
-        /// <param name="pages">Pagination Objects</param>
-        private static void SetPaginationInformation(int totalRecords, ref Pagination pages)
-        {
-            pages.total_records = totalRecords;
-            pages.TotalPages = (pages.total_records / pages.PageSize) + ((pages.total_records % pages.PageSize > 0) ? 1 : 0);
-            pages.HasPreviousPage = pages.PageNo > pages.PagerSize;
-            int currentPagerNo = pages.PageNo / (pages.PagerSize + (pages.PageNo % pages.PagerSize > 0 ? 1 : 0));
-            int currentPagerRecords = currentPagerNo * pages.PagerSize;
-            pages.HasNextPage = pages.TotalPages > pages.PagerSize ? ((pages.TotalPages % pages.PagerSize) == 0 ? (currentPagerRecords < pages.TotalPages - (pages.TotalPages % pages.PagerSize)) : (currentPagerRecords <= pages.TotalPages - (pages.TotalPages % pages.PagerSize))) : false;
-        }
-
         // <summary>
         /// Executes the procedurewith out value.
         /// </summary>
@@ -282,7 +261,7 @@ namespace DataContext
         public static IList<T> ExecuteProcedurewithOutParameter<T>(string procedureName, System.Collections.ObjectModel.Collection<DBParameters> parameters, string databaseConnection, out Dictionary<string, string> dic)
         {
             dic = new Dictionary<string, string>();
-            List<T> returnValue = new List<T>();
+            List<T> returnValue;
 
             // Create a suitable command type and add the required parameter
             using (SqlConnection sqlConnection = new System.Data.SqlClient.SqlConnection(databaseConnection))

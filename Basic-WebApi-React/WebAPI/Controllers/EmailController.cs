@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using DataModels;
-using System.Linq;
-using Microsoft.AspNetCore.Cors;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
-using WebAPI.Email;
 using Microsoft.Extensions.Configuration;
 
 namespace WebAPI.Controllers
@@ -18,9 +12,8 @@ namespace WebAPI.Controllers
     [ApiController]
     public class EmailController : ControllerBase
     {
-        public string languageCode = "en-us";
-        private IConfiguration configuration;
-        private EmailService emailService;
+        private string languageCode = "en-us";        
+        private readonly EmailService emailService;
         public EmailController(IConfiguration configuration)
         {
             this.emailService = new EmailService(configuration);
@@ -36,9 +29,9 @@ namespace WebAPI.Controllers
                 IList<EmailModel> emailTemplateList = emailService.GetEmailTemplateList(page, perPage, sortBy, sortDirection, languageCode);
                 return emailTemplateList;
             }
-            catch (Exception e)
+            catch 
             {
-                throw e;
+                return null;
             }
         }
 
@@ -49,9 +42,9 @@ namespace WebAPI.Controllers
             {
                 return emailService.GetEmailTemplateById(emailUid, languageCode);
             }
-            catch (Exception)
+            catch
             {
-                throw;
+                return null;
             }
         }
 
@@ -62,9 +55,9 @@ namespace WebAPI.Controllers
             {
                 return emailService.UpdateEmailTemplate(model);
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                return false;
             }
         }
 
@@ -76,9 +69,9 @@ namespace WebAPI.Controllers
                 IList<PlaceholderModel> placeholderList = emailService.GetPlaceHolderList();
                 return placeholderList;
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                return null;
             }
         }
 
@@ -93,9 +86,9 @@ namespace WebAPI.Controllers
                 IList<EmailModel> emailTemplateList = emailService.GetEmailLogList(page, perPage, sortBy, sortDirection, date, emailTitle);
                 return emailTemplateList;
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                return null;
             }
         }
 

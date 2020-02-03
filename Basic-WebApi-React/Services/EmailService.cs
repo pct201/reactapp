@@ -7,11 +7,7 @@ using System.Collections.ObjectModel;
 using System.Net.Mail;
 using NLog;
 using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using Services;
 using System.Data;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using System.Net;
 
@@ -20,7 +16,7 @@ namespace Services
     public class EmailService : ServiceContext
     {
 
-        private IConfiguration configuration;
+        private readonly IConfiguration configuration;
         public EmailService(IConfiguration configuration)
         {
             this.configuration = configuration;

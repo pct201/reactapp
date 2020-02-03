@@ -1,10 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: WebAPI.Controllers.AuthController
-// Assembly: WebAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 9065BE5E-29FE-4791-BBEE-3E03B2B7F879
-// Assembly location: D:\DemoPublish\WebAPI.dll
-
-using DataModels;
+﻿using DataModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -29,7 +23,7 @@ namespace WebAPI.Controllers
     {
 
 
-        private IConfiguration configuration;
+        private readonly IConfiguration configuration;
         private EmailService emailService;
         public AuthController(IConfiguration configuration)
         {
@@ -78,7 +72,8 @@ namespace WebAPI.Controllers
                 using (var userServices = new UserServices())
                 {
                     int resultCode = userServices.SetPassword(emailId, token, Encrypt(password));
-                    return Ok(new { success = (resultCode == 200) ? true : false, errorCode = resultCode });//Password Created Successfully.                   
+                    bool isSuccess = (resultCode == 200) ? true : false;
+                    return Ok(new { success = isSuccess, errorCode = resultCode });//Password Created Successfully.                   
                 }
             }
             else
@@ -134,7 +129,7 @@ namespace WebAPI.Controllers
 
                 if (userDetail != null && string.IsNullOrEmpty(userDetail.Password))
                     return Ok(new { isvalidUser = false, errorCode = 201 });
-                else if (userDetail == null || userDetail.UserId <= 0 || !(password == this.Decrypt(userDetail.Password)))
+                else if (userDetail == null || userDetail.UserId <= 0 || (password != this.Decrypt(userDetail.Password)))
                     return Ok(new { isvalidUser = false, errorCode = 202 });
 
                 using (var permissionService = new PermissionService())
@@ -234,7 +229,8 @@ namespace WebAPI.Controllers
         {
             byte[] data = Convert.FromBase64String(token);
             DateTime generateTime = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
-            return (generateTime < DateTime.UtcNow.AddMinutes(Convert.ToInt32(configuration["EmailLink:TimeToLiveHour"]) * -1)) ? true : false;
+            bool isValid = (generateTime < DateTime.UtcNow.AddMinutes(Convert.ToInt32(configuration["EmailLink:TimeToLiveHour"]) * -1)) ? true : false;
+            return isValid;
         }
     }
 }

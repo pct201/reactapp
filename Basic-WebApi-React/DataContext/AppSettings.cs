@@ -6,7 +6,7 @@ namespace DataContext
     public class AppSettings
     {       
         protected const string MasterDatabaseName = "DBConnectionString";    
-        public readonly string _appSetting = string.Empty;
+        public readonly string _appSetting;
         
         public AppSettings(string settingName = null)
         {            

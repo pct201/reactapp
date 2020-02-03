@@ -22,8 +22,7 @@ namespace DataContext
         public int DefaultPageSize
         {
             get
-            {
-                //return 5;
+            {               
                 return 10;
             }
         }
@@ -82,12 +81,10 @@ namespace DataContext
         {
             AppConfiguration appSettings = new AppConfiguration(productUid);
             var list = DBClient.ExecuteProcedure<TEntity>(procedureName, parameters, appSettings.GetConnectionString);
-            if (list != null && list.Any())
-            {
-                if(!string.IsNullOrEmpty(GetPropertyValue(list[0], "total_records")))
-                this.SetPaginationInformation(Convert.ToInt32(GetPropertyValue(list[0], "total_records"), CultureInfo.InvariantCulture));
+            if (list != null && list.Any() && !string.IsNullOrEmpty(GetPropertyValue(list[0], "total_records")))
+            {              
+                    this.SetPaginationInformation(Convert.ToInt32(GetPropertyValue(list[0], "total_records"), CultureInfo.InvariantCulture));
             }
-
             return list;
         }
         

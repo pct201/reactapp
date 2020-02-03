@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
-using WebAPI.Email;
-using Microsoft.Extensions.Configuration;
+
 
 namespace WebAPI.Controllers
 {
@@ -17,15 +16,7 @@ namespace WebAPI.Controllers
     [Authorize]
     [ApiController]
     public class PermissionController : ControllerBase
-    {
-        public string languageCode = "en-us";
-        private IConfiguration configuration;
-        private EmailService emailService;
-        public PermissionController(IConfiguration configuration)
-        {
-            this.emailService = new EmailService(configuration);
-        }
-
+    {     
         #region Permissions
 
         [HttpGet]
@@ -38,9 +29,9 @@ namespace WebAPI.Controllers
                     return permissionService.GetPermissionsList(page, perPage, sortBy, sortDirection);
                 }
             }
-            catch (Exception e)
+            catch 
             {
-                throw e;
+                throw null;
             }
         }
 
@@ -62,9 +53,9 @@ namespace WebAPI.Controllers
                     return permissionObject;
                 }
             }
-            catch (Exception)
+            catch
             {
-                throw;
+                throw null;
             }
         }
 
@@ -80,9 +71,9 @@ namespace WebAPI.Controllers
                     return permissionService.UpdatePermissionDetail(permissionModel, string.Join(",", roleList));
                 }
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                return false;
             }
         }
        
