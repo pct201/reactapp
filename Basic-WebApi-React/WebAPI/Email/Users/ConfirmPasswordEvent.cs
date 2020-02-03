@@ -13,7 +13,7 @@ namespace WebAPI.Email
         public ConfirmPasswordEvent(EmailService emailService,string confirmPasswordLink,string emailAddress,string languageCode)
         {
             this.EmailService = emailService;
-            EmailModel EmailObj = this.EmailService.GetEmailDetailByEmailName(Emails.ConfirmPwd, emailAddress, languageCode, confirmPasswordLink);
+            EmailModel EmailObj = this.EmailService.GetEmailDetailByEmailName(Emails.ConfirmPwrd, emailAddress, languageCode, confirmPasswordLink);
             if(EmailObj != null)
             {
                 this.Intialize(EmailObj);

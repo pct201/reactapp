@@ -23,8 +23,8 @@ namespace DataModel.Utilities
         public class Emails
         {
             public const string UserCreation = "UserCreation";          
-            public const string ForgotPwd = "ForgotPassword";
-            public const string ConfirmPwd = "ConfirmPassword";
+            public const string ForgotPwrd = "ForgotPassword";
+            public const string ConfirmPwrd = "ConfirmPassword";
         }
 
         public class DateFormat
