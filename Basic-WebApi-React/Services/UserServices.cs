@@ -66,6 +66,8 @@ namespace Services
 
             if (objUserModel.UserId > 0)
             {
+                parameters.Add(new DBParameters() { Name = "@is_active", Value = objUserModel.Is_Active, DBType = DbType.Boolean });
+
                 parameters.Add(new DBParameters() { Name = "@user_id", Value = objUserModel.UserId, DBType = DbType.Int32 });
                 if (objUserModel.Role_Id > 0) /*only pass role in edit user*/
                     parameters.Add(new DBParameters() { Name = "@role_id", Value = objUserModel.Role_Id, DBType = DbType.Int32 });

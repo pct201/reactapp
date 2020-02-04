@@ -55,8 +55,10 @@ const columns = [
         cell: row => <span>{row.is_Married ? "Yes" : "No"}</span>,
     },
     {
-        selector: "address",
-        name: "Address"
+        selector: "is_Active",
+        name: "Status",
+        sortable: true,
+        cell: row => <span>{row.is_Active ? "Active" : "In-Active"}</span>,
     },
     {
         selector: "updated_date",

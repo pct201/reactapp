@@ -171,7 +171,7 @@ export default class Registration extends Component {
             this.setState({
                 mainState: {
                     ...this.state.mainState,
-                    [event.target.id]: (event.target.id === "is_married") ? event.target.checked : event.target.value
+                    [event.target.id]: (event.target.id === "is_married" || event.target.id === "is_active") ? event.target.checked : event.target.value
                 }
             });
         }
@@ -217,10 +217,7 @@ export default class Registration extends Component {
                         <div className="titlebtn">
                             <div className="title">
                                 <h1>Manage Users</h1>
-                            </div>
-                            <div className="text-right">
-                                <h2>Status: {this.state.mainState.is_active ? "Active" : "In-Active"}</h2>
-                            </div>
+                            </div>                           
                         </div>
                     </div>
                     <div className="formContainer">
@@ -307,6 +304,14 @@ export default class Registration extends Component {
                                                 <a className="fileiconbtn" href={this.state.mainState.document} download={this.state.mainState.document_name} style={deleteStyle} ><img src={require('../../images/install-icon.svg')} alt="Download" /></a>
                                             </div>
                                             <input type="file" name="1" id="document" ref="document" onChange={this.handleInputChange} />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-4">
+                                    <div className="form-group">
+                                            <div className="custom-control custom-switch">
+                                                <input type="checkbox" className="custom-control-input" id="is_active" ref="is_active" value={this.state.mainState.is_active} onClick={this.handleInputChange} checked={this.state.mainState.is_active} />
+                                                <label className="custom-control-label" htmlFor="is_active">Active</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
