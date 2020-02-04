@@ -79,7 +79,7 @@ class Login extends Component {
                     <Link className="forgot float-left" to="/forgotPassword">Forgot password?</Link>
                   </div>
                 </div>
-                <input type="button" className="btn btn-primary w-100" value="Log in" onClick={this.handleSubmit} />
+                <button className="btn btn-primary w-100" value="Log in" onClick={this.handleSubmit} ><span>Log in</span></button>
 
               </form>
               <p className="sign-up p-0">

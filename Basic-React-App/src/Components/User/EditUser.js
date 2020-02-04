@@ -324,8 +324,8 @@ export default class Registration extends Component {
 
                                 </div>
                                 <div className="mt-3 text-right">
-                                    <input type="button" className="btn btn-primary mr-2 mb-0" value="Save" onClick={this.handleOnSubmit} />
-                                    <input type="button" className="btn btn-primary mb-0" value="Cancel" onClick={() => this.props.history.push('/manageuser/', null)} />
+                                    <button className="btn btn-primary mr-2 mb-0" value="Save" onClick={this.handleOnSubmit}><span>Save</span></button>
+                                    <button className="btn btn-primary mb-0" value="Cancel" onClick={() => this.props.history.push('/manageuser/', null)}><span>Cancel</span></button>
                                 </div>
                             </div>
                         </form>

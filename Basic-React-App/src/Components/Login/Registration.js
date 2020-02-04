@@ -230,8 +230,8 @@ export default class Registration extends Component {
                                             </div>
                                         </div>
                                         <div className="mt-3 text-right">
-                                            <input type="button" className="btn btn-primary mr-2 mb-0" value="Sigh up" onClick={this.handleOnSubmit} />
-                                            <input type="button" className="btn btn-primary mb-0" value="Cancel" onClick={() => this.handleCancel()} />
+                                            <button className="btn btn-primary mr-2 mb-0" value="Sign up" onClick={this.handleOnSubmit} ><span>Sign up</span></button>
+                                            <button className="btn btn-primary mb-0" value="Cancel" onClick={() => this.handleCancel()} ><span>Cancel</span></button>
                                         </div>
                                     </div>
                                 </form>
