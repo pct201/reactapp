@@ -1,5 +1,4 @@
 import { authHeader } from '../Helpers/authHeader';
-
 const axios = require('axios');
 
 export const userService = {
@@ -8,7 +7,8 @@ export const userService = {
     updateUserDetail,
     deleteUser,
     educationList,
-    userRoleList
+    userRoleList,
+    updatePassword
 };
 
 function getAllUser(page, perPage, sortDirection, sortBy) {
@@ -48,6 +48,18 @@ function updateUserDetail(user) {
     )
 }
 
+function updatePassword(userId,oldPassword,newPassword) {
+    return (
+        axios.post(process.env.REACT_APP_API_URL + "User/UpdatePassword", { "userId": userId, "oldPassword": oldPassword ,"newPassword": newPassword},
+            { headers: { ...authHeader(), 'Content-Type': 'application/json' } }).then(result => {
+                return result.data;
+            },
+                error => {
+                    handleError(error)
+                })
+    )
+}
+
 function deleteUser(userIds) {
     return (
         axios.delete(process.env.REACT_APP_API_URL + "User/DeleteUsers?ids=" + userIds, { headers: authHeader() }).then(user => {
@@ -70,7 +82,6 @@ function educationList() {
             })
     )
 }
-
 
 function userRoleList() {
     return (

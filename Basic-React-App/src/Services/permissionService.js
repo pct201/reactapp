@@ -7,7 +7,6 @@ export const permissionService = {
     updatePermissionDetail  
 };
 
-
 function getAllPermissionList(page, perPage, sortDirection, sortBy) {
     return (
         axios.get(process.env.REACT_APP_API_URL + "Permission/AllPermissionList?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: authHeader(), 'Content-Type': 'application/json' })
@@ -50,6 +49,3 @@ function handleError(error, response = '') {
     else
         return (response !== '') ? response : error
 }
-
-
-

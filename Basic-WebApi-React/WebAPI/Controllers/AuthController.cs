@@ -13,6 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using WebAPI.Common;
 using WebAPI.Email;
 
 namespace WebAPI.Controllers
@@ -24,11 +25,13 @@ namespace WebAPI.Controllers
 
 
         private readonly IConfiguration configuration;
-        private EmailService emailService;
+        private readonly CommonClass commonClass;
+        private readonly EmailService emailService;
         public AuthController(IConfiguration configuration)
         {
             this.configuration = configuration;
             this.emailService = new EmailService(configuration);
+            this.commonClass = new CommonClass(configuration);
         }
 
         [HttpPost]
@@ -49,7 +52,7 @@ namespace WebAPI.Controllers
                     emailEvent.Send();
 
                     //Trigger confirm email                                       
-                    ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + model.Token + "&uid=" + Encrypt(model.Email)), model.Email, model.Language_code);
+                    ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + model.Token + "&uid=" + commonClass.Encrypt(model.Email)), model.Email, model.Language_code);
                     EmailEvent.Send();
 
                     return Ok(new { success = true, errorCode = 200 });//User Registered Successfully.
@@ -64,14 +67,14 @@ namespace WebAPI.Controllers
         [HttpPost]
         public ActionResult CreatePassword([FromBody] JObject credentialObj)
         {
-            string emailId = Decrypt(Convert.ToString(credentialObj["userId"]));
+            string emailId = commonClass.Decrypt(Convert.ToString(credentialObj["userId"]));
             string token = (Convert.ToString(credentialObj["token"])).Replace(" ", "+");
             string password = Convert.ToString(credentialObj["password"]);
             if (!string.IsNullOrEmpty(token) && isLatestToken(token))
             {
                 using (var userServices = new UserServices())
                 {
-                    int resultCode = userServices.SetPassword(emailId, token, Encrypt(password));
+                    int resultCode = userServices.SetPassword(emailId, token, commonClass.Encrypt(password));
                     bool isSuccess = (resultCode == 200) ? true : false;
                     return Ok(new { success = isSuccess, errorCode = resultCode });//Password Created Successfully.                   
                 }
@@ -86,7 +89,7 @@ namespace WebAPI.Controllers
                     if (userServices.UpdateTokenInDatabase(emailId, token, newToken))
                     {
                         //Trigger confirm email for expired link                                     
-                        ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + Encrypt(emailId)), emailId, "en-us");
+                        ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + commonClass.Encrypt(emailId)), emailId, "en-us");
                         EmailEvent.Send();
                         return Ok(new { success = false, errorCode = 204 });//Link Expired Sent New Link.
                     }
@@ -107,7 +110,7 @@ namespace WebAPI.Controllers
                 {
                     userServices.UpdateTokenInDatabase(emailId, null, newToken);
                     //Trigger confirm email for expired link                                     
-                    ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + Encrypt(emailId)), emailId, "en-us");
+                    ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + commonClass.Encrypt(emailId)), emailId, "en-us");
                     EmailEvent.Send();
                 }
                 return Ok(new { success = true });
@@ -129,7 +132,7 @@ namespace WebAPI.Controllers
 
                 if (userDetail != null && string.IsNullOrEmpty(userDetail.Password))
                     return Ok(new { isvalidUser = false, errorCode = 201 });
-                else if (userDetail == null || userDetail.UserId <= 0 || (password != this.Decrypt(userDetail.Password)))
+                else if (userDetail == null || userDetail.UserId <= 0 || (password != commonClass.Decrypt(userDetail.Password)))
                     return Ok(new { isvalidUser = false, errorCode = 202 });
 
                 using (var permissionService = new PermissionService())
@@ -170,52 +173,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [NonAction]
-        private string Encrypt(string clearText)
-        {
-            string EncryptionKey = configuration["EncryptionKey"];
-            byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
-            using (Aes encryptor = Aes.Create())
-            {
-                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
-                encryptor.Key = pdb.GetBytes(32);
-                encryptor.IV = pdb.GetBytes(16);
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
-                    {
-                        cs.Write(clearBytes, 0, clearBytes.Length);
-                        cs.Close();
-                    }
-                    clearText = Convert.ToBase64String(ms.ToArray());
-                }
-            }
-            return clearText;
-        }
-
-        [NonAction]
-        private string Decrypt(string cipherText)
-        {
-            string EncryptionKey = configuration["EncryptionKey"];
-            byte[] cipherBytes = Convert.FromBase64String(cipherText);
-            using (Aes encryptor = Aes.Create())
-            {
-                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
-                encryptor.Key = pdb.GetBytes(32);
-                encryptor.IV = pdb.GetBytes(16);
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
-                    {
-                        cs.Write(cipherBytes, 0, cipherBytes.Length);
-                        cs.Close();
-                    }
-                    cipherText = Encoding.Unicode.GetString(ms.ToArray());
-                }
-            }
-            return cipherText;
-        }
-
+      
         [NonAction]
         public string GenerateEmailToken()
         {

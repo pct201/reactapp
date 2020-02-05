@@ -17,7 +17,6 @@ function dashboardDetail() {
     )
 }
 
-
 function handleError(error) {
     if (error.response !== undefined &&error.response.status === 401)
         window.location.href = "/login";

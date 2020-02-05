@@ -56,7 +56,6 @@ class EditPermission extends React.Component {
     }
 
     handleInputChange = event => {
-
         if (event.currentTarget.attributes.type.value === "checkbox") {
             if (event.target.checked) {
                 selectedRole.push(event.target.value);
@@ -75,16 +74,13 @@ class EditPermission extends React.Component {
                     [event.target.id]: event.target.value
                 }
             });
-        }
-        console.log(selectedRole)
+        }      
     }
+    
     componentWillMount = async () => this.getPermissionDetail();
 
 
     updatePermission = (e) => {
-
-
-
         e.preventDefault();
         if (this.validator.allValid()) {
 

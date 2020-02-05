@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
 using WebAPI.Email;
 using Microsoft.Extensions.Configuration;
+using WebAPI.Common;
 
 namespace WebAPI.Controllers
 {
@@ -19,9 +20,11 @@ namespace WebAPI.Controllers
     public class UserController : ControllerBase
     {    
         private readonly EmailService emailService;
+        private readonly CommonClass commonClass;
         public UserController(IConfiguration configuration)
         {
             this.emailService = new EmailService(configuration);
+            this.commonClass = new CommonClass(configuration);
         }
 
         [HttpGet]
@@ -111,6 +114,22 @@ namespace WebAPI.Controllers
             catch
             {
                 return 0;
+            }
+        }
+
+        [HttpPost]
+        public int UpdatePassword([FromBody] JObject pwrdDetailObj)
+        {          
+            try
+            {                
+                using (var userService = new UserServices())
+                {
+                    return userService.UpdatePassword(Convert.ToInt32(pwrdDetailObj["userId"]), commonClass.Encrypt(Convert.ToString(pwrdDetailObj["oldPassword"])), commonClass.Encrypt(Convert.ToString(pwrdDetailObj["newPassword"])));
+                }
+            }
+            catch
+            {
+                return 202;
             }
         }
 

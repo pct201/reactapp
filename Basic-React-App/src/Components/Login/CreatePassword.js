@@ -140,8 +140,7 @@ export default class CreatePassword extends Component {
                       {this.validator.message('confirm_password', this.state.confirm_password, `required|in:${this.state.password}`, { messages: { in: 'Passwords need to match!' } })}
                     </span>
                   </div>
-                  <input type="button" className="btn btn-primary w-100" value="Set Password" onClick={this.handleSubmit} />
-
+                  <button className="btn btn-primary w-100" value="Set Password" onClick={this.handleSubmit} ><span>Set Password</span></button>
                 </form>
                 <p className="sign-up p-0">
                   Any issue then go <Link to="/login">Back to login.</Link>

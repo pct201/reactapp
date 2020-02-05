@@ -2,79 +2,84 @@ import React, { Fragment } from 'react';
 import { userService } from '../../Services';
 import DataTable from 'react-data-table-component';
 import { MessagePopup, ActionPopup } from '../Popup';
-import { Loader } from '../Common';
+import { Loader,MultiSectionCheckbox } from '../Common';
 
+const columns = [{
+    selector: "first_name",
+    name: "First Name",
+    sortable: true
+},
+{
+    selector: "last_name",
+    name: "Last Name",
+    sortable: true
 
-const columns = [
-    {
-        selector: "first_name",
-        name: "First Name",
-        sortable: true
-    },
-    {
-        selector: "last_name",
-        name: "Last Name",
-        sortable: true
+},
+{
+    selector: "email",
+    name: "Email Address",
+    sortable: true
+},
+{
+    selector: "mobile_number",
+    name: "Contact Number",
+    sortable: true
+},
+{
+    selector: "education_Name",
+    name: "Education",
+    sortable: true
+},
+{
+    selector: "salary",
+    name: "Salary",
+    sortable: true
+},
+{
+    selector: "birth_Date",
+    name: "Birth Date",
+    sortable: true,
+    cell: row => {
+        var dt = new Date(row.birth_Date);
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear());
+    }
+},
+{
+    selector: "is_Married",
+    name: "Married",
+    sortable: true,
+    ignoreRowClick: false,
+    cell: row => { return (row.is_Married ? "Yes" : "No") },
+},
+{
+    selector: "role",
+    name: "Role",
+    sortable: true
+},
+{
+    selector: "is_Active",
+    name: "Status",
+    sortable: true,
+    ignoreRowClick: false,
+    cell: row => { return (row.is_Active ? "Active" : "In-Active") },
+},
+{
+    selector: "updated_date",
+    name: "Updated On",
+    sortable: true,
+    cell: row => {
+        var dt = new Date(row.updated_date);
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear());
+    }
+}];
 
-    },
-    {
-        selector: "email",
-        name: "Email Address",
-        sortable: true
-    },
-    {
-        selector: "mobile_number",
-        name: "Contact Number",
-        sortable: true
-    },
-    {
-        selector: "education_Name",
-        name: "Education",
-        sortable: true
-    },
-    {
-        selector: "salary",
-        name: "Salary",
-        sortable: true
-    },
-    {
-        selector: "birth_Date",
-        name: "Birth Date",
-        sortable: true,
-        cell: row => {
-            var dt = new Date(row.birth_Date);
-            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-            ];
-            return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear());
-        }
-    },
-    {
-        selector: "is_Married",
-        name: "Married",
-        sortable: true,
-        cell: row => <span>{row.is_Married ? "Yes" : "No"}</span>,
-    },
-    {
-        selector: "is_Active",
-        name: "Status",
-        sortable: true,
-        cell: row => <span>{row.is_Active ? "Active" : "In-Active"}</span>,
-    },
-    {
-        selector: "updated_date",
-        name: "Updated On",
-        sortable: true,
-        cell: row => {
-            var dt = new Date(row.updated_date);
-            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-            ];
-            return (dt.getDate() + "-" + (monthNames[dt.getMonth()]) + "-" + dt.getFullYear());
-        }
-    }];
-
-var selectedUserId = [];
+var selectedUserId;
 var canDelete = false;
-var canEdit= false;
+var canEdit = false;
 export default class ManageUsers extends React.Component {
 
     constructor(props) {
@@ -146,8 +151,8 @@ export default class ManageUsers extends React.Component {
     }
 
     editUser = (row) => {
-        if(canEdit)
-        this.props.history.push(`/edituser/${row.userId}`, null)
+        if (canEdit)
+            this.props.history.push(`/edituser/${row.userId}`, null)
     }
 
     handleModelHide = () => {
@@ -184,6 +189,7 @@ export default class ManageUsers extends React.Component {
             })
         }
     }
+    
     deleteUser = (selectedUserId) => {
         this.handleModelHide()
         userService.deleteUser(selectedUserId.toString()).then(result => {
@@ -198,8 +204,9 @@ export default class ManageUsers extends React.Component {
             this.getAllUserDetail()
         })
     }
+
     componentWillMount = () => this.getAllUserDetail();
-    render() {       
+    render() {
         return (
             <Fragment>
                 <main className="main-content">
@@ -226,6 +233,7 @@ export default class ManageUsers extends React.Component {
                                 progressComponent={<Loader show={this.state.loading} />}
                                 onSort={this.handleSort}
                                 selectableRows={canDelete}
+                                selectableRowsComponent={MultiSectionCheckbox}                                
                                 selectableRowsHighlight
                                 noContextMenu
                                 onSelectedRowsChange={this.handleRowSelected}

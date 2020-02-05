@@ -1,6 +1,5 @@
 import { authHeader } from '../Helpers/authHeader';
 const axios = require('axios');
-
 export const emailService = {
     getAllEmailTemplate,
     getEmailTemplateById,
@@ -24,7 +23,6 @@ function getAllEmailTemplate(page, perPage, sortDirection, sortBy) {
 }
 
 function getEmailTemplateById(emailUid) {
-
     return (
         axios.get(process.env.REACT_APP_API_URL + "Email/GetEmailTemplateById?emailUid=" + emailUid, { headers: authHeader() })
             .then(result => {
@@ -48,7 +46,6 @@ function updateEmailTemplate(emailTemplate) {
     )
 }
 
-
 function getPlaceholderList() {
     return (
         axios.get(process.env.REACT_APP_API_URL + "Email/AllPlaceHolderList", { headers: authHeader() }).then(
@@ -60,11 +57,9 @@ function getPlaceholderList() {
             })
     )
 }
-
 //------------------------------ Email Template Service Region END -----------------------------//
 
 //------------------------------ Email Log Service Region Start -----------------------------//
-
 function getAllEmailLog(page, perPage, sortDirection, sortBy, date, emailTitle) {
     return (
         axios.get(process.env.REACT_APP_API_URL + "Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy + "&date=" + date + "&emailTitle=" + emailTitle, { headers: authHeader(), 'Content-Type': 'application/json' })
@@ -87,14 +82,9 @@ function resendEmail(emailId) {
             })
     );
 }
-
-
-
 //------------------------------ Email Log Service Region END -----------------------------//
 
-
-function handleError(error, response = '') {
-    debugger;
+function handleError(error, response = '') {    
     if (error.response !== undefined && error.response.status === 401)
         window.location.href = "/login";
     else

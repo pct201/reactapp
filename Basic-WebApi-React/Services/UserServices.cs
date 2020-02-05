@@ -107,6 +107,22 @@ namespace Services
 
 
         /// <summary>
+        /// Update user password
+        /// </summary>   
+        /// <param name="userId"></param>   
+        /// <param name="oldPassword"></param>  
+        /// <param name="newPassword"></param>  
+        /// <returns></returns>
+        public virtual int UpdatePassword(int userId, string oldPassword, string newPassword)
+        {
+            System.Collections.ObjectModel.Collection<DBParameters> parameters = new System.Collections.ObjectModel.Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "@user_id", Value = userId, DBType = DbType.Int32 });
+            parameters.Add(new DBParameters() { Name = "@old_password", Value = oldPassword, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@new_password", Value = newPassword, DBType = DbType.AnsiString });            
+            return Convert.ToInt32(this.ExecuteProcedure("[dbo].[user_password_update]", ExecuteType.ExecuteScalar, parameters));
+        }
+
+        /// <summary>
         /// Fetch user list from database
         /// </summary>       
         /// <param name="userId"></param>       

@@ -33,12 +33,11 @@ function login(userName, password) {
                     dispatch(alertService.error("Username or password is incorrect"));
                     break
                 default:
-                    localStorage.setItem('user', JSON.stringify(user.data)); 
+                    localStorage.setItem('user', JSON.stringify(user.data));
                     //userName                  
                     dispatch(success(user.data));
                     history.push('/');
             }
-
         },
             error => {
                 dispatch(failure());
@@ -53,7 +52,6 @@ function logout() {
 }
 
 function register(user) {
-
     return (
         axios.post(process.env.REACT_APP_API_URL + "Auth/RegisterNewUser", user,
             {
@@ -66,7 +64,6 @@ function register(user) {
 
 
 function createPassword(userId, token, password) {
-
     return (
         axios.post(process.env.REACT_APP_API_URL + "Auth/CreatePassword", { "userId": userId, "token": token, "password": password }, {
             'Content-Type': 'application/json'
@@ -77,7 +74,6 @@ function createPassword(userId, token, password) {
 }
 
 function forgotPassword(email) {
-
     return (
         axios.post(process.env.REACT_APP_API_URL + "Auth/ForgotPassword/?emailId=" + email)
             .then(result => {

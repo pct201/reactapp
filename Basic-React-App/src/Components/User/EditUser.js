@@ -7,6 +7,7 @@ import { DatePickerInput } from 'rc-datepicker';
 import { userService } from '../../Services';
 import { MessagePopup } from '../Popup';
 import { Loader } from '../Common';
+import { ChangePassword } from '../User';
 
 export default class Registration extends Component {
 
@@ -202,7 +203,49 @@ export default class Registration extends Component {
             })
         }
         else { this.validator.showMessages(); }
-    };
+    }
+
+    openChangePasswordPopup = (e) => {
+        e.preventDefault();
+        this.setState({
+            popupState: {
+                isEditShow: true
+            }
+        })
+    }
+
+    handleModelSave = (result) => {   
+        this.setState({
+            popupState: {
+                isEditShow: false,
+                message: (result===200) ? "Password changed successfully." : ((result===201)? "You have enter wrong old password.":"Somthing went wrong please try again later."),
+                title: (result===200) ? "Success" : "Error",
+                msgPopupShow: true
+            }
+        })
+    }
+
+    handleModelHide = () => {
+        this.setState({
+            popupState: {
+                isEditShow: false,
+                message: "",
+                title: "",
+                msgPopupShow: false
+            }
+        })
+    }
+
+    hideMessagePopup = () => {
+        this.setState({
+            popupState: {
+                isEditShow: false,
+                message: "",
+                title: "",
+                msgPopupShow: false
+            }
+        })       
+    }
 
     render() {
 
@@ -217,7 +260,7 @@ export default class Registration extends Component {
                         <div className="titlebtn">
                             <div className="title">
                                 <h1>Manage Users</h1>
-                            </div>                           
+                            </div>
                         </div>
                     </div>
                     <div className="formContainer">
@@ -307,9 +350,9 @@ export default class Registration extends Component {
                                         </div>
                                     </div>
                                     <div className="col-md-4">
-                                    <div className="form-group">
+                                        <div className="form-group">
                                             <div className="custom-control custom-switch">
-                                                <input type="checkbox" className="custom-control-input" id="is_active" ref="is_active" value={this.state.mainState.is_active} onClick={this.handleInputChange} checked={this.state.mainState.is_active} />
+                                                <input type="checkbox" className="custom-control-input" id="is_active" ref="is_active" value={this.state.mainState.is_active} onClick={this.handleInputChange} defaultChecked={this.state.mainState.is_active} />
                                                 <label className="custom-control-label" htmlFor="is_active">Active</label>
                                             </div>
                                         </div>
@@ -329,15 +372,22 @@ export default class Registration extends Component {
 
                                 </div>
                                 <div className="mt-3 text-right">
+                                    <button className="btn btn-primary mr-2 mb-0" value="Change Password" onClick={this.openChangePasswordPopup}><span>Change Password</span></button>
                                     <button className="btn btn-primary mr-2 mb-0" value="Save" onClick={this.handleOnSubmit}><span>Save</span></button>
-                                    <button className="btn btn-primary mb-0" value="Cancel" onClick={() => this.props.history.push('/manageuser/', null)}><span>Cancel</span></button>
+                                    <button className="btn btn-secondary mb-0" value="Cancel" onClick={() => this.props.history.push('/manageuser/', null)}><span>Cancel</span></button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </main>
                 <div>
-                    <MessagePopup show={this.state.popupState.isshow} title={this.state.popupState.title} message={this.state.popupState.message} popupClose={() => this.props.history.push('/manageuser/', null)} />
+                    {this.state.popupState.isEditShow &&
+                        <ChangePassword show={this.state.popupState.isEditShow} userId={this.state.mainState.userId} popupClose={this.handleModelHide} popupSave={this.handleModelSave} />
+                    }
+                    {
+                        this.state.popupState.msgPopupShow &&
+                        <MessagePopup show={this.state.popupState.msgPopupShow} title={this.state.popupState.title} message={this.state.popupState.message} popupClose={() => this.hideMessagePopup()} />
+                    }
                 </div>
 
             </Fragment>

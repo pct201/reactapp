@@ -45,9 +45,7 @@ export default class ManagePermissions extends React.Component {
                 allowOverflow: true,
                 button: true
             }];
-
-       
-
+            
         this.state = {
             permissionUid: "",
             rows: [],

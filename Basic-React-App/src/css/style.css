@@ -365,6 +365,7 @@ textarea.form-control {min-height:46px;}
 	animation: spin 1s linear infinite;
 	position: fixed; z-index: 10000; top: 49%; left: 49%; margin: -20px 0 0 -20px;
   }
+  .modal-body{ margin-top: 15px;}
 /* Dashboard
 --------------------------------------------------------------------------------------------------------*/
   .widget-box{

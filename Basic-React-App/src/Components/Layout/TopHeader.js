@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 class TopHeader extends React.Component {
-    debugger;
+    
     render() {
     return (
         <header className="header">
