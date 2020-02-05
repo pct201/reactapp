@@ -1,5 +1,5 @@
 @charset "utf-8";
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font: inherit; vertical-align: baseline; }
 
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
@@ -131,7 +131,7 @@ textarea.form-control {min-height:46px;}
 .nav-icon span{display: block; height:3px; text-align:right; border-radius:3px; margin:6px 0 6px auto;  background:#fff; position:relative; transition: all 0.3s; top: 0;}
 .nav-icon span.three{width:60%;}
 
-.menu-overlay{display:block; position: fixed; left: 0; top: 0; width:100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9; opacity: 0; visibility: hidden; z-index:-1;}
+.menu-overlay{display:block; position: fixed; left: 0; top: 0; width:100%; height: 100%; background: rgba(0,0,0,0.5); opacity: 0; visibility: hidden; z-index:-1;}
 .main-navigation{padding-top:75px; position: fixed; z-index: 10; left: 0; top: 0; bottom: 0; overflow:hidden; width:260px; background: #208fc8; box-shadow:0 0 5px #999; margin-left: -280px;}
 .main-navigation .navbar {padding:0;} 
 .main-navigation ul li a{color:#fff; font-size:16px; display:block; padding:16px 15px 16px 45px; position: relative; }
@@ -162,7 +162,7 @@ textarea.form-control {min-height:46px;}
 .main-navigation .navbar-nav .dropdown-menu .dropdown-item.active:after {background-color: #fccd29;}
 .main-navigation .navbar-nav .dropdown-menu .dropdown-item.active {background-color: transparent;color:#fccd29;}
 .main-navigation .navbar-nav .dropdown-menu .dropdown-item:hover, .main-navigation .navbar-nav .dropdown-menu .dropdown-item:focus {background-color:rgba(0,0,0,0.25);} 
-.main-navigation .navbar-nav .nav-link {color:#fff !important; font-size:16px; display:block; padding:16px 15px 16px 45px; position: relative; display:block; cursor: pointer;}
+.main-navigation .navbar-nav .nav-link {color:#fff !important; font-size:16px; padding:16px 15px 16px 45px; position: relative; display:block; cursor: pointer;}
 .main-navigation .navbar-nav .nav-link .icon {width: 24px; height: 24px; display:block; position: absolute; left:10px; top:50%; margin-top:-13px;}
 .main-navigation .navbar-nav .active {background-color: rgba(0,0,0,0.10);}
 .navbar-expand .navbar-collapse {display:block;}
@@ -226,7 +226,7 @@ textarea.form-control {min-height:46px;}
 
 /* grid-table
 --------------------------------------------------------------------------------------------------------*/
-.grid-table.table-responsive {border:0px; margin-bottom:0px; border:0;}
+.grid-table.table-responsive { margin-bottom:0px; border:0;}
 .grid-table .table {margin-bottom:0px; min-width:700px;}
 .grid-table .table>thead>tr>th,  
 .grid-table .table>tbody>tr>th, 
@@ -234,7 +234,7 @@ textarea.form-control {min-height:46px;}
 .grid-table .table>thead>tr>td, 
 .grid-table .table>tbody>tr>td, 
 .grid-table .table>tfoot>tr>td {color:#4f4f4f; font-size:14px; font-weight:400; vertical-align: middle; font-family:'Roboto', sans-serif; padding:5px 10px; border-top:0px; border-bottom:0; white-space:nowrap; height:47px;}
-.grid-table .table>thead>tr>th {font-size:16px; font-weight:700; font-family:'Roboto', sans-serif; white-space: nowrap; padding:12px 10px; white-space:nowrap; }
+.grid-table .table>thead>tr>th {font-size:16px; font-weight:700; font-family:'Roboto', sans-serif; padding:12px 10px; white-space:nowrap; }
 
 .grid-table .table.table-border>thead>tr>th,  
 .grid-table .table.table-border>tbody>tr>th, 
@@ -244,13 +244,15 @@ textarea.form-control {min-height:46px;}
 .grid-table .table.table-border>tfoot>tr>td {border-top:0px; border-bottom:1px solid #e7e7e7;}
 
 .grid-table .table th.actions, .grid-table .table td.actions {white-space: nowrap;}
-.grid-table .table .actions a {padding:7px; margin:0 2px; vertical-align:middle; border-radius:32px; display:inline-block; padding:6px; }
+.grid-table .table .actions a { margin:0 2px; vertical-align:middle; border-radius:32px; display:inline-block; padding:6px; }
 .grid-table .table .actions a img {width:24px; height:24px; display: block;}
 .grid-table .table>tbody>tr>td a {color:#8f8f8f; font-size:14px; font-weight:400; }
 .grid-table .table>tbody>tr>td a:hover {color:#000;} 
 .grid-table .table .actions a:hover, .grid-table .table .actions a:focus {background-color:#eceef1;}
 .grid-table .table-hover>tbody>tr:hover {background-color:#f9f9f9;}
 .grid-table td.center, th.center {text-align:center;}
+
+
 
 /* paginetion ----------------------*/
 .grid-bottom{background:#fff;padding-top:15px; padding-bottom:15px;}
@@ -273,7 +275,7 @@ textarea.form-control {min-height:46px;}
 /* FileUpload
 --------------------------------------------------------------------------------------------------------*/
 
-.cus-file-select {cursor: pointer; font-size: 16px; border-radius: 4px; background: #FFFFFF; border: 1px solid #d6d6d6; color: #000; cursor: pointer; height: 46px; overflow: hidden; position: relative; }
+.cus-file-select { font-size: 16px; border-radius: 4px; background: #FFFFFF; border: 1px solid #d6d6d6; color: #000; cursor: pointer; height: 46px; overflow: hidden; position: relative; }
 .cus-file-select .file-select-button {cursor: pointer; background-color: #208fc8 ; position: absolute !important;  height: 46px; left: 0; top: 0; margin-right: 0 !important; color: #fff; display: inline-block; font-size: 14px; font-weight:bold; line-height: 46px; padding: 0 10px; text-align: center; width: 150px; z-index: 5; }
 .cus-file-select input[type=file] { cursor: pointer; height: 100%; left: 0; opacity: 0; position: absolute; top: 0; width: 150px; z-index: 10; }
 .cus-file-select .file-select-name {  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: auto !important; display: block !important; padding: 14px 70px 0 165px !important; line-height: 1.2 !important; font-size: 16px; font-weight:normal; }
@@ -361,7 +363,7 @@ textarea.form-control {min-height:46px;}
 	height: 90px;
 	-webkit-animation: spin 1s linear infinite; /* Safari */
 	animation: spin 1s linear infinite;
-	margin: auto; position: fixed; z-index: 10000; top: 49%; left: 49%; margin: -20px 0 0 -20px;
+	position: fixed; z-index: 10000; top: 49%; left: 49%; margin: -20px 0 0 -20px;
   }
 /* Dashboard
 --------------------------------------------------------------------------------------------------------*/
