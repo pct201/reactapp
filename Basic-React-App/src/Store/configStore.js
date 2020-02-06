@@ -5,20 +5,8 @@ import  {authenticationReducer} from '../Reducers/authenticationReducer';
 import  {alertReducer} from '../Reducers/alertReducer';
 
 
-export default function configureStore(initialState,history) {  
-
-    // const middleware = [
-    //     thunk     
-    // ];   
-
-    // const rootReducer = combineReducers({
-    //     authenticationReducer
-    // });
-
-    // return createStore(
-    //     rootReducer,       
-    //     compose(applyMiddleware(...middleware))
-    // );
+export default function configureStore(history,initialState) {  
+   
     const reducers = {
         authentication: authenticationReducer,  
         alert:alertReducer

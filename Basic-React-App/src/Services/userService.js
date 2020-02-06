@@ -17,14 +17,13 @@ function getAllUser(page, perPage, sortDirection, sortBy) {
             .then(users => {
                 return users.data;
             },
-                error => {
+                error => {                   
                     handleError(error)
                 })
     );
 }
 
 function getUserById(id) {
-
     return (
         axios.get(process.env.REACT_APP_API_URL + "User/GetUserDetailsById?id=" + id, { headers: authHeader() })
             .then(user => {
