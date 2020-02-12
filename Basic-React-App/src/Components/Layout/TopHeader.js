@@ -1,11 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const { userName } = JSON.parse(localStorage.getItem('user'));
-
 export default class TopHeader extends React.Component {
-
-    render() {
+    render() {       
         return (
             <header className="header">
                 <div className="container-fluid">
@@ -16,9 +13,9 @@ export default class TopHeader extends React.Component {
                             </a>
                         </div>
                         <div className="col-auto">
-                            <a href="#" title={userName} className="profile-block">
+                            <a href="#" title={this.props.userName} className="profile-block">
                                 <img className="profile-img" src={require('../../images/profile.svg')} alt="User" />
-                                <span className="name text-truncate">{userName}</span>
+                                <span className="name text-truncate">{this.props.userName}</span>
                             </a>
                             <NavLink to="/login" title="Logout" className="logout"><img src={require('../../images/logout.svg')} alt="" /></NavLink>
 

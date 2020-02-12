@@ -12,38 +12,7 @@ export default class SideNavBar extends React.Component {
             permissionList = JSON.parse(JSON.parse(localStorage.getItem('user')).permissions);
         }
     }
-
-
-    // handleLinkClick = event => {
-    //     let element = document.querySelectorAll('.active');
-    //     for (var i = 0; i < element.length; i++) {
-    //         element[i].classList.remove('active')
-    //     }
-    //     event.target.classList.add("active");
-    // }
-    // componentDidMount = () => {
-    //     const currentActive = this.props.props.pathname
-
-    //     if (document.querySelectorAll('.main-navigation .active').length === 0) {
-
-    //         document.querySelectorAll('.main-navigation a').forEach((tag) => {
-    //             if (currentActive === "/") {
-    //                 if (tag.attributes.href.nodeValue === "/") { tag.classList.add("active"); }
-    //             }
-    //             else {                    
-    //                 if (tag.attributes.href.nodeValue === "#") {
-    //                     if (currentActive === '/manageemailtemplate' || currentActive === '/emaillog') {
-    //                         tag.classList.add("active");
-    //                     }
-    //                 }
-    //                 else if (tag.attributes.href.nodeValue.indexOf(currentActive) >= 0) {
-    //                     tag.classList.add("active");
-    //                 }
-    //             }
-    //         });
-    //     }
-    // }
-
+    
     render() {
        // alert(permissionList)
         return (
