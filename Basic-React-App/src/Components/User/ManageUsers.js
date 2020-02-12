@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { userService } from '../../Services';
 import DataTable from 'react-data-table-component';
 import { MessagePopup, ActionPopup } from '../Popup';
-import { Loader,MultiSectionCheckbox } from '../Common';
+import { MultiSectionCheckbox } from '../Common';
 
 const columns = [{
     selector: "first_name",
@@ -229,8 +229,7 @@ export default class ManageUsers extends React.Component {
                                 data={this.state.rows}
                                 defaultSortField="first_name"
                                 highlightOnHover
-                                progressPending={this.state.loading}
-                                progressComponent={<Loader show={this.state.loading} />}
+                                progressPending={this.state.loading}                              
                                 onSort={this.handleSort}
                                 selectableRows={canDelete}
                                 selectableRowsComponent={MultiSectionCheckbox}                                

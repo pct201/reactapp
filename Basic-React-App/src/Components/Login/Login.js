@@ -2,16 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import SimpleReactValidator from 'simple-react-validator';
-import { authenticationService,alertService } from '../../Services'
+import { authenticationService, alertService } from '../../Services'
 import { history } from '../../Helpers/history';
-import {Loader} from '../Common';
 
 class Login extends Component {
   constructor(props) {
     super(props);
 
     // reset login status
-    this.props.logout();
+    authenticationService.logout();
 
     this.state = {
       username: '',
@@ -38,29 +37,42 @@ class Login extends Component {
     e.preventDefault();
     if (this.validator.allValid()) {
       const { username, password } = this.state;
-      this.props.login(username, password)
+      authenticationService.login(username, password).then(user => {        
+        switch (user.errorCode) {
+          case 201:
+            this.props.errorAlerts("You have not set password.Please check your email");
+            break
+          case 202:
+            this.props.errorAlerts("Username or password is incorrect");
+            break
+          default:
+            localStorage.setItem('user', JSON.stringify(user));
+            history.push('/dashboard');
         }
+      }, error => {
+        this.props.errorAlerts("Somthing wrong!")
+      })
+    }
     else {
       this.validator.showMessages();
     }
   }
 
-  render() {    
-    
-    const { alert,authentication } = this.props;
-    return (     
+  render() {
+
+    const { alert } = this.props;
+    return (
       <div className="wrapper login-page">
-          <Loader show={authentication.loggedIn} />
         <div className="login-panel">
           <div className="login-block">
             <a className="login-logo" href="#/" title="ProCare"><img src={require('../../images/logo.png')} alt="" /></a>
             <div className="card">
               <span className="login-icon"><span><img src={require('../../images/login-icon.svg')} alt="" /></span></span>
               <h2>Welcome, Provider!</h2>
-               {alert.message &&
+              {alert.message &&
                 <div className={`alert ${alert.type}`}>{alert.message}</div>
               }
-              
+
               <form>
                 <div className="form-group">
                   <input type="text" className="form-control" id="username" name="username" placeholder="User ID" value={this.state.username} onChange={this.handleChange} />
@@ -95,17 +107,13 @@ class Login extends Component {
 }
 
 function mapState(state) {
- 
-  const { authentication,alert } = state;
- 
-  return {authentication,alert}; 
+  const { alert } = state;
+  return { alert };
 }
 const actionCreators = {
-  login: authenticationService.login,
-  logout: authenticationService.logout,
+  errorAlerts: alertService.error,
   clearAlerts: alertService.clear
 }
-
 export default connect(mapState, actionCreators)(Login);
 
 

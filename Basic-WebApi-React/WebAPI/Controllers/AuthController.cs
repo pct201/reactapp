@@ -159,10 +159,11 @@ namespace WebAPI.Controllers
                             expires: DateTime.UtcNow.AddHours(2),
                             signingCredentials: signingCredentials
                         );
-
+                    
                     return Ok(new
                     {
-                        token = new JwtSecurityTokenHandler().WriteToken(securityToken),
+                        jwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken),
+                        //refreshToken= commonClass.GenerateRefreshToken(),
                         expiration = securityToken.ValidTo,
                         userName = userDetail.First_name + " " + userDetail.Last_name,
                         permissions = JsonConvert.SerializeObject(permissions),
@@ -190,5 +191,6 @@ namespace WebAPI.Controllers
             bool isValid = (generateTime < DateTime.UtcNow.AddMinutes(Convert.ToInt32(configuration["EmailLink:TimeToLiveHour"]) * -1)) ? true : false;
             return isValid;
         }
+
     }
 }

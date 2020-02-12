@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { emailService } from '../../Services';
 import DataTable from 'react-data-table-component';
-import { Loader } from '../Common';
 import { MessagePopup } from '../Popup';
 import 'rc-datepicker/lib/style.css';
 import { DatePickerInput } from 'rc-datepicker';
@@ -217,8 +216,7 @@ export default class EmailLogList extends React.Component {
                                 data={this.state.rows}
                                 defaultSortField="created_date"
                                 highlightOnHover
-                                progressPending={this.state.loading}
-                                progressComponent={<Loader show={this.state.loading} />}
+                                progressPending={this.state.loading}                              
                                 onSort={this.handleSort}
                                 noContextMenu
                                 sortServer

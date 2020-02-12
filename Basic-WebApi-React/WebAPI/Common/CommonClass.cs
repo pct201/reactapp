@@ -13,6 +13,17 @@ namespace WebAPI.Common
         {
             this.configuration = configuration;         
         }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var randomNumberGenerator = RandomNumberGenerator.Create())
+            {
+                randomNumberGenerator.GetBytes(randomNumber);
+            }
+            return Convert.ToBase64String(randomNumber);
+        }
+
         public string Encrypt(string clearText)
         {
             string EncryptionKey = configuration["EncryptionKey"];

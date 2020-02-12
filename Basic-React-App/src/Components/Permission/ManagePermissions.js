@@ -2,9 +2,7 @@ import React, { Fragment } from 'react';
 import { permissionService } from '../../Services';
 import DataTable from 'react-data-table-component';
 import { EditPermission } from '../Permission'
-import { Loader } from '../Common';
 import { MessagePopup } from '../Popup';
-
 
 var columns = [];
 var canEdit = false;
@@ -163,8 +161,7 @@ export default class ManagePermissions extends React.Component {
                                 data={this.state.rows}
                                 defaultSortField="permission_code"
                                 highlightOnHover
-                                progressPending={this.state.loading}
-                                progressComponent={<Loader show={this.state.loading} />}
+                                progressPending={this.state.loading}                               
                                 onSort={this.handleSort}
                                 noContextMenu                               
                                 sortServer

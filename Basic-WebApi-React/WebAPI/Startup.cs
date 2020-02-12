@@ -20,7 +20,7 @@ namespace WebAPI
 {
     public class Startup
     {
-       
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,7 +31,7 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-        
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -42,13 +42,19 @@ namespace WebAPI
                        .AllowAnyHeader();
             }));
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(jwtBearerOptions =>
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(jwtBearerOptions =>
                 {
+                    jwtBearerOptions.RequireHttpsMetadata = false;
+                    jwtBearerOptions.SaveToken = true;
                     jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters()
                     {
+                        ClockSkew = TimeSpan.Zero,
                         ValidateActor = true,
-                        ValidateAudience = true,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["TokenAuthentication:Issuer"],
@@ -71,8 +77,8 @@ namespace WebAPI
             {
                 app.UseHsts();
             }
-            app.UseHttpsRedirection(); 
-            
+            app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseCookiePolicy();

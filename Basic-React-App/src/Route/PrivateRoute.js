@@ -12,7 +12,7 @@ export const PrivateRoute = ({ component: Component, permission: Permission, ...
     return (
         <Route {...rest} render={props => (
             localStorage.getItem('user')
-                ? <div className="wrapper"> <TopHeader /><SideNavBar props={props.location} />{hasPermission ? <Component {...props} /> : <UnAuthorize />} </div>
+                ? <div className="wrapper"> <TopHeader /> <SideNavBar />{hasPermission ? <Component {...props} /> : <UnAuthorize />} </div>
                 : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
         )} />)
 }

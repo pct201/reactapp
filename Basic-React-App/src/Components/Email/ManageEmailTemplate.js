@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import { emailService } from '../../Services';
 import DataTable from 'react-data-table-component';
 import { EditEmailTemplate } from '../Email'
-import { Loader } from '../Common';
 import { MessagePopup } from '../Popup';
 
 const columns = [
@@ -169,8 +168,7 @@ export default class ManageEmailTemplate extends React.Component {
                                 data={this.state.rows}
                                 defaultSortField="to_address"
                                 highlightOnHover
-                                progressPending={this.state.loading}
-                                progressComponent={<Loader show={this.state.loading} />}
+                                progressPending={this.state.loading}                               
                                 onSort={this.handleSort}
                                 noContextMenu
                                 onRowClicked={this.editEmailTemplate}

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SimpleReactValidator from 'simple-react-validator';
 import { authenticationService } from '../../Services'
 import queryString from 'query-string';
-import {Loader,HelpTip} from '../Common';
+import {HelpTip} from '../Common';
 import {MessagePopup} from '../Popup';
 
 
@@ -119,8 +119,7 @@ export default class CreatePassword extends Component {
 
   render() {
     return (
-      <Fragment>
-        <Loader show={this.state.showLoader} />
+      <Fragment>       
         <div className="wrapper login-page">        
           <div className="login-panel">
             <div className="login-block">

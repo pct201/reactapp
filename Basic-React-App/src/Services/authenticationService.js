@@ -1,6 +1,4 @@
-import { userConstants } from '../Constants/userConstants';
-import { history } from '../Helpers/history';
-import { alertService } from './alertService'
+
 const axios = require('axios');
 
 export const authenticationService = {
@@ -11,44 +9,22 @@ export const authenticationService = {
     forgotPassword
 };
 
-const request = user => { return { type: userConstants.LOGIN_REQUEST, user } }
-const success = user => { return { type: userConstants.LOGIN_SUCCESS, user } }
-const failure = () => { return { type: userConstants.LOGIN_FAILURE } }
-
-function login(userName, password) {
-    return dispatch => {
-        dispatch(request({ userName }));
-
+function login(userName, password) {    
+    return (       
         axios.post(process.env.REACT_APP_API_URL + "Auth/Login", { "userName": userName, "password": password }, {
             'Content-Type': 'application/json'
-        }).then(user => {
-            switch (user.data.errorCode) {
-                case 201:
-                    dispatch(failure());
-                    dispatch(alertService.error("You have not set password.Please check your email"));
-
-                    break
-                case 202:
-                    dispatch(failure());
-                    dispatch(alertService.error("Username or password is incorrect"));
-                    break
-                default:
-                    localStorage.setItem('user', JSON.stringify(user.data));
-                    //userName                  
-                    dispatch(success(user.data));
-                    history.push('/');
-            }
+        }).then(user => {           
+           return user.data;          
         },
-            error => {
-                dispatch(failure());
-                dispatch(alertService.error("Somthing wrong!"));
+            error => {    
+                return error;          
+                // dispatch(alertService.error("Somthing wrong!"));
             })
-    };
+    )
 }
 
 function logout() {
-    localStorage.removeItem('user');
-    return { type: userConstants.LOGOUT };
+    localStorage.removeItem('user');  
 }
 
 function register(user) {

@@ -4,7 +4,6 @@ import SimpleReactValidator from 'simple-react-validator';
 import { DatePickerInput } from 'rc-datepicker';
 import { authenticationService, userService } from '../../Services';
 import {MessagePopup} from '../Popup';
-import {Loader} from '../Common';
 
 export default class Registration extends Component {
 
@@ -149,8 +148,7 @@ export default class Registration extends Component {
     render() {
         return (
             <Fragment>
-                <div className="wrapper register-page">
-                    <Loader show={this.state.showLoader} />
+                <div className="wrapper register-page">                    
                     <div className="register-panel">
                         <div className="register-block">
                             <div className="card">

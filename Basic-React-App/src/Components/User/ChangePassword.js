@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Modal } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import { userService } from '../../Services';
-import { Loader, HelpTip } from '../Common';
+import { HelpTip } from '../Common';
 
 export default class ChangePassword extends Component {
 
@@ -50,8 +50,7 @@ export default class ChangePassword extends Component {
                 </Modal.Header>
                 <div className="formContainer">
                     <div className="container-fluid user-info">
-                        <Modal.Body>
-                            <Loader show={this.state.showLoader} />
+                        <Modal.Body>                           
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="form-group">

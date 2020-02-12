@@ -6,7 +6,6 @@ import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
 import { DatePickerInput } from 'rc-datepicker';
 import { userService } from '../../Services';
 import { MessagePopup } from '../Popup';
-import { Loader } from '../Common';
 import { ChangePassword } from '../User';
 
 export default class Registration extends Component {
@@ -253,8 +252,7 @@ export default class Registration extends Component {
             display: this.state.otherState.isDeleteShow ? "inline-block" : "none"
         }
         return (
-            <Fragment>
-                <Loader show={this.state.otherState.showLoader} />
+            <Fragment>                
                 <main className="main-content">
                     <div className="container-fluid">
                         <div className="titlebtn">

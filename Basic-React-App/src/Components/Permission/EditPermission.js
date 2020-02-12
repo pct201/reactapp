@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal } from 'react-bootstrap';
 import { permissionService } from '../../Services';
 import SimpleReactValidator from 'simple-react-validator';
-import { Loader } from '../Common';
 
 var selectedRole;
 class EditPermission extends React.Component {
@@ -114,8 +113,7 @@ class EditPermission extends React.Component {
 
                 <div className="formContainer">
                     <div className="container-fluid user-info">
-                        <Modal.Body>
-                            <Loader show={this.state.otherState.showLoader} />
+                        <Modal.Body>                            
                             <div className="row">
 
                                 <div className="col-md-6 ">

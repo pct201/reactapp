@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import Routes from './Route/route'
-import { ErrorBoundary } from './Components/Common';
+import { ErrorBoundary,GlobalLoader } from './Components/Common';
 
-export default function App() {
-  return (
-    <ErrorBoundary>
-    <div className="App">     
-        <Routes />     
-    </div>
-    </ErrorBoundary>
-  );
+class App extends Component {
+  render() {   
+    return (          
+        <ErrorBoundary>
+          <div className="App">         
+            <Routes /> 
+            <GlobalLoader/>
+          </div>
+        </ErrorBoundary>     
+    )
+  }
 }
+export default App;

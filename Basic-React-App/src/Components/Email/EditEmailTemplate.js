@@ -4,7 +4,7 @@ import { emailService } from '../../Services';
 import SimpleReactValidator from 'simple-react-validator';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
-import {Loader,PopOver} from '../Common';
+import {PopOver} from '../Common';
 
 
 class EditEmailTemplate extends React.Component {
@@ -121,8 +121,7 @@ class EditEmailTemplate extends React.Component {
                
                     <div className="formContainer">
                         <div className="container-fluid user-info">
-                        <Modal.Body>
-                    <Loader show={this.state.otherState.showLoader} />
+                        <Modal.Body>                   
                             <div className="row">
                            
                                 <div className="col-md-6 ">

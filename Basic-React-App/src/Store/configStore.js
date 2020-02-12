@@ -1,15 +1,13 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
-import  {authenticationReducer} from '../Reducers/authenticationReducer';
-import  {alertReducer} from '../Reducers/alertReducer';
+import  {alertReducer} from '../Reducers';
 
 
 export default function configureStore(history,initialState) {  
    
-    const reducers = {
-        authentication: authenticationReducer,  
-        alert:alertReducer
+    const reducers = {      
+        alert:alertReducer    
     };
 
     const middleware = [
