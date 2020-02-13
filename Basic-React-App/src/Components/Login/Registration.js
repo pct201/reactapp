@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react'
-import 'rc-datepicker/lib/style.css';
 import SimpleReactValidator from 'simple-react-validator';
-import { DatePickerInput } from 'rc-datepicker';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { authenticationService, userService } from '../../Services';
-import {MessagePopup} from '../Popup';
+import { MessagePopup } from '../Popup';
 
 export default class Registration extends Component {
 
@@ -24,7 +24,7 @@ export default class Registration extends Component {
             mobile_number: "",
             education_id: "",
             salary: "",
-            birth_date: new Date().toISOString(),
+            birth_date: null,
             is_married: false
         },
         showLoader: false,
@@ -48,11 +48,11 @@ export default class Registration extends Component {
         });
     }
 
-    handleDatepickerChange = (value, formattedValue) => {
+    handleDatepickerChange = (date) => {              
         this.setState({
             mainState: {
                 ...this.state.mainState,
-                birth_date: formattedValue
+                 birth_date: date
             }
         });
     }
@@ -148,7 +148,7 @@ export default class Registration extends Component {
     render() {
         return (
             <Fragment>
-                <div className="wrapper register-page">                    
+                <div className="wrapper register-page">
                     <div className="register-panel">
                         <div className="register-block">
                             <div className="card">
@@ -201,12 +201,18 @@ export default class Registration extends Component {
                                             </div>
                                             <div className="col-md-6 ">
                                                 <div className="form-group">
-                                                    <DatePickerInput
+                                                    <DatePicker
+                                                    className="form-control"
                                                         onChange={this.handleDatepickerChange}
-                                                        value={this.state.mainState.birth_date}
-                                                        displayFormat='YYYY-MM-DD'
-                                                        ref="birth_date"
-                                                        id="birth_date" placeholder="Birth Date" readOnly />
+                                                        selected={this.state.mainState.birth_date }
+                                                        minDate={new Date('1960/01/01')}
+                                                        maxDate={new Date('2000/12/31')}
+                                                        showMonthDropdown
+                                                        showYearDropdown
+                                                        dropdownMode="select"                                                       
+                                                        dateFormat="yyyy/MM/dd"
+                                                        placeholderText="Birth Date"
+                                                    />                                                    
                                                 </div>
                                             </div>
                                             <div className="col-md-6 ">

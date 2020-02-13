@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 import { emailService } from '../../Services';
 import DataTable from 'react-data-table-component';
 import { MessagePopup } from '../Popup';
-import 'rc-datepicker/lib/style.css';
-import { DatePickerInput } from 'rc-datepicker';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 var columns = [];
 
@@ -115,10 +115,10 @@ export default class EmailLogList extends React.Component {
         });
     }
 
-    handleDatepickerChange = (value, formattedValue) => {
+    handleDatepickerChange = (date) => {
         this.setState({
             ...this.state,
-            date: formattedValue
+            date: date
         });
     }
 
@@ -193,12 +193,21 @@ export default class EmailLogList extends React.Component {
                                 </div>
                                 <div className="col-md-2 ">
                                     <div className="form-group">
-                                        <DatePickerInput placeholder='Date'
-                                            onChange={this.handleDatepickerChange}
-                                            value={this.state.date}
-                                            displayFormat='YYYY-MM-DD'
+                                    <DatePicker
+                                                    className="form-control"
+                                                        onChange={this.handleDatepickerChange}
+                                                        selected={this.state.date}                                                       
+                                                        maxDate={new Date()}
+                                                        showMonthDropdown
+                                                        showYearDropdown
+                                                        dropdownMode="select"                                                       
+                                                        dateFormat="yyyy/MM/dd"
+                                                        placeholderText="Date"
+                                                        id="date"
+                                                        autoComplete="off"
+                                                        isClearable={this.state.date!==""?"true":""}
+                                                           />     
 
-                                            id="date" />
                                     </div>
                                 </div>
                                 <div className="col-md-2 ">

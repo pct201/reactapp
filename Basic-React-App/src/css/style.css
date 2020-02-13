@@ -346,6 +346,8 @@ textarea.form-control {min-height:46px;}
     box-shadow: none !important;
 }
 .react-datepicker-component .react-datepicker-input input{font-weight: 400 !important;}
+.react-datepicker__day--keyboard-selected, .react-datepicker__month-text--keyboard-selected, .react-datepicker__quarter-text--keyboard-selected{background-color: #208fc8 !important;}
+.react-datepicker__day--selected, .react-datepicker__day--in-selecting-range, .react-datepicker__day--in-range, .react-datepicker__month-text--selected, .react-datepicker__month-text--in-selecting-range, .react-datepicker__month-text--in-range, .react-datepicker__quarter-text--selected, .react-datepicker__quarter-text--in-selecting-range, .react-datepicker__quarter-text--in-range{background-color: #208fc8 !important;}
 .errorfont{ font-size: 12px; color:#e22929; margin-top: 7px; display: block;text-align: left;}
 .helplink {	border-width: 0px;z-index: 10;display: block; background: url(../images/helplink.png) center no-repeat; width: 20px; height: 20px; border-radius: 50%;}
 .placeholderdiv {float: left;}
@@ -366,6 +368,8 @@ textarea.form-control {min-height:46px;}
 	position: fixed; z-index: 10000; top: 49%; left: 49%; margin: -20px 0 0 -20px;
   }
   .modal-body{ margin-top: 15px;}
+
+
 /* Dashboard
 --------------------------------------------------------------------------------------------------------*/
   .widget-box{
