@@ -13,7 +13,7 @@ export const userService = {
 
 function getAllUser(page, perPage, sortDirection, sortBy) {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "User/AllUserDetails?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: {'Content-Type': 'application/json'} })
+        axios.get("User/AllUserDetails?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: {'Content-Type': 'application/json'} })
             .then(users => {
                 return users.data;
             })
@@ -22,7 +22,7 @@ function getAllUser(page, perPage, sortDirection, sortBy) {
 
 function getUserById(id) {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "User/GetUserDetailsById?id=" + id)
+        axios.get("User/GetUserDetailsById?id=" + id)
             .then(user => {
                 return user.data;
             })
@@ -31,7 +31,7 @@ function getUserById(id) {
 
 function updateUserDetail(user) {
     return (
-        axios.post(process.env.REACT_APP_API_URL + "User/UpdateUserDetails", user,
+        axios.post("User/UpdateUserDetails", user,
             { headers: {'Content-Type': 'application/json' } }).then(users => {
                 return users.data;
             })
@@ -40,7 +40,7 @@ function updateUserDetail(user) {
 
 function updatePassword(userId,oldPassword,newPassword) {
     return (
-        axios.post(process.env.REACT_APP_API_URL + "User/UpdatePassword", { "userId": userId, "oldPassword": oldPassword ,"newPassword": newPassword},
+        axios.post("User/UpdatePassword", { "userId": userId, "oldPassword": oldPassword ,"newPassword": newPassword},
             { headers: { 'Content-Type': 'application/json' } }).then(result => {
                 return result.data;
             })
@@ -49,7 +49,7 @@ function updatePassword(userId,oldPassword,newPassword) {
 
 function deleteUser(userIds) {
     return (
-        axios.delete(process.env.REACT_APP_API_URL + "User/DeleteUsers?ids=" + userIds).then(user => {
+        axios.delete("User/DeleteUsers?ids=" + userIds).then(user => {
             return user.data;
         })
     );
@@ -57,7 +57,7 @@ function deleteUser(userIds) {
 
 function educationList() {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "User/GetEducationList").then(
+        axios.get("User/GetEducationList").then(
             result => {
                 return result.data;
             })
@@ -66,7 +66,7 @@ function educationList() {
 
 function userRoleList() {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "User/GetUserRoleList").then(
+        axios.get("User/GetUserRoleList").then(
             result => {
                 return result.data;
             })

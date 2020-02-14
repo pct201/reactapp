@@ -8,7 +8,7 @@ export const permissionService = {
 
 function getAllPermissionList(page, perPage, sortDirection, sortBy) {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Permission/AllPermissionList?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers:{'Content-Type': 'application/json' }})
+        axios.get("Permission/AllPermissionList?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers:{'Content-Type': 'application/json' }})
             .then(result => {
                 return result.data;
             })
@@ -17,7 +17,7 @@ function getAllPermissionList(page, perPage, sortDirection, sortBy) {
 
 function getPermissionDetailById(permissionUid) {
         return (
-        axios.get(process.env.REACT_APP_API_URL + "Permission/GetPermissionDetailById?permissionUid=" + permissionUid)
+        axios.get("Permission/GetPermissionDetailById?permissionUid=" + permissionUid)
             .then(result => {               
                 return result.data;
             })
@@ -26,7 +26,7 @@ function getPermissionDetailById(permissionUid) {
 
 function updatePermissionDetail(pemissionDetail,roleList) {
     return (
-        axios.post(process.env.REACT_APP_API_URL + "Permission/UpdatePermissionDetail", { "pemissionDetail": pemissionDetail, "roleList": roleList },
+        axios.post("Permission/UpdatePermissionDetail", { "pemissionDetail": pemissionDetail, "roleList": roleList },
             { headers: {'Content-Type': 'application/json' }}).then(result => {
                 return result.data;
             })

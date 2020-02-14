@@ -6,7 +6,7 @@ export const dashBoardService = {
 
 function dashboardDetail() {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Home/DashboardDetail").then(
+        axios.get("Home/DashboardDetail").then(
             result => {
                 return result.data;
             })

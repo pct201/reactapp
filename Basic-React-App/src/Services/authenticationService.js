@@ -11,7 +11,7 @@ export const authenticationService = {
 
 function login(userName, password) {    
     return (       
-        axios.post(process.env.REACT_APP_API_URL + "Auth/Login", { "userName": userName, "password": password }, {
+        axios.post("Auth/Login", { "userName": userName, "password": password }, {
             'Content-Type': 'application/json'
         }).then(user => {           
            return user.data;          
@@ -29,7 +29,7 @@ function logout() {
 
 function register(user) {
     return (
-        axios.post(process.env.REACT_APP_API_URL + "Auth/RegisterNewUser", user,
+        axios.post("Auth/RegisterNewUser", user,
             {
                 'Content-Type': 'application/json'
             }).then(users => {
@@ -41,7 +41,7 @@ function register(user) {
 
 function createPassword(userId, token, password) {
     return (
-        axios.post(process.env.REACT_APP_API_URL + "Auth/CreatePassword", { "userId": userId, "token": token, "password": password }, {
+        axios.post("Auth/CreatePassword", { "userId": userId, "token": token, "password": password }, {
             'Content-Type': 'application/json'
         }).then(result => {
             return result.data;
@@ -51,7 +51,7 @@ function createPassword(userId, token, password) {
 
 function forgotPassword(email) {
     return (
-        axios.post(process.env.REACT_APP_API_URL + "Auth/ForgotPassword/?emailId=" + email)
+        axios.post("Auth/ForgotPassword/?emailId=" + email)
             .then(result => {
                 return result.data;
             },

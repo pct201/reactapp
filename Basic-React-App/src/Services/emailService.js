@@ -11,7 +11,7 @@ export const emailService = {
 //------------------------------ Email Template Service Region Start -----------------------------//
 function getAllEmailTemplate(page, perPage, sortDirection, sortBy) {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Email/AllEmailTemplate?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: {'Content-Type': 'application/json'} })
+        axios.get("Email/AllEmailTemplate?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: {'Content-Type': 'application/json'} })
             .then(result => {
                 return result.data;
             })
@@ -20,7 +20,7 @@ function getAllEmailTemplate(page, perPage, sortDirection, sortBy) {
 
 function getEmailTemplateById(emailUid) {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Email/GetEmailTemplateById?emailUid=" + emailUid)
+        axios.get("Email/GetEmailTemplateById?emailUid=" + emailUid)
             .then(result => {
                 return result.data;
             })
@@ -29,7 +29,7 @@ function getEmailTemplateById(emailUid) {
 
 function updateEmailTemplate(emailTemplate) {
     return (
-        axios.post(process.env.REACT_APP_API_URL + "Email/UpdateEmailTemplateDetail", emailTemplate,
+        axios.post("Email/UpdateEmailTemplateDetail", emailTemplate,
             { headers: { 'Content-Type': 'application/json' } }).then(result => {
                 return result.data;
             })
@@ -38,7 +38,7 @@ function updateEmailTemplate(emailTemplate) {
 
 function getPlaceholderList() {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Email/AllPlaceHolderList").then(
+        axios.get("Email/AllPlaceHolderList").then(
             result => {
                 return result.data;
             })
@@ -49,7 +49,7 @@ function getPlaceholderList() {
 //------------------------------ Email Log Service Region Start -----------------------------//
 function getAllEmailLog(page, perPage, sortDirection, sortBy, date, emailTitle) {
     return (
-        axios.get(process.env.REACT_APP_API_URL + "Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy + "&date=" + date + "&emailTitle=" + emailTitle, { headers: {'Content-Type': 'application/json'} })
+        axios.get("Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy + "&date=" + date + "&emailTitle=" + emailTitle, { headers: {'Content-Type': 'application/json'} })
             .then(result => {
                 return result.data;
             })
@@ -58,7 +58,7 @@ function getAllEmailLog(page, perPage, sortDirection, sortBy, date, emailTitle) 
 
 function resendEmail(emailId) {
     return (
-        axios.post(process.env.REACT_APP_API_URL + "Email/ResendMail?emailId=" + emailId, null, { headers: { 'Content-Type': 'application/json' } }).then(result => {
+        axios.post("Email/ResendMail?emailId=" + emailId, null, { headers: { 'Content-Type': 'application/json' } }).then(result => {
             return result.data;
         })
     );

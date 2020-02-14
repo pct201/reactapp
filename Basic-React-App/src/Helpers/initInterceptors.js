@@ -4,6 +4,7 @@ import axios from 'axios';
 const initInterceptors = (store) => {
 
 	axios.interceptors.request.use(request => {
+		request.url=process.env.REACT_APP_API_URL+request.url	
 		document.getElementById('loader_div').style.display = "block"
 		let user = JSON.parse(localStorage.getItem('user'));
 		if (user && user.jwtToken) {
