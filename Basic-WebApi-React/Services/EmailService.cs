@@ -109,8 +109,7 @@ namespace Services
         public IList<EmailModel> GetEmailLogList(int? pageNo, int? perPage, string sortExpression, string sortDirection, string date = null, string emailTitle = null)
         {
             this.PagingInformation.PageSize = perPage.HasValue ? perPage.Value : DefaultPageSize;
-            Collection<DBParameters> parameters = new Collection<DBParameters>();
-
+            Collection<DBParameters> parameters = new Collection<DBParameters>();          
             if (this.StartRowIndex(pageNo) > 0 && this.EndRowIndex(pageNo) > 0)
             {
                 parameters.Add(new DBParameters() { Name = "start_row_index", Value = this.StartRowIndex(pageNo), DBType = DbType.Int16 });
@@ -127,7 +126,7 @@ namespace Services
 
             if (!string.IsNullOrEmpty(date))
             {              
-                parameters.Add(new DBParameters() { Name = "@create_date", Value = DateTime.ParseExact(date.Split('T')[0], "yyyy/mm/dd", null), DBType = DbType.DateTime });
+                parameters.Add(new DBParameters() { Name = "@create_date", Value = Convert.ToDateTime(date), DBType = DbType.DateTime });
             }
 
             return this.ExecuteProcedure<EmailModel>("doc.emails_log_list_get", parameters).ToList();          

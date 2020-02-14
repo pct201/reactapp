@@ -48,8 +48,9 @@ function getPlaceholderList() {
 
 //------------------------------ Email Log Service Region Start -----------------------------//
 function getAllEmailLog(page, perPage, sortDirection, sortBy, date, emailTitle) {
+    let filterDate=(date!=="")?date.toISOString():""; 
     return (
-        axios.get("Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy + "&date=" + date + "&emailTitle=" + emailTitle, { headers: {'Content-Type': 'application/json'} })
+        axios.get("Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy + "&date=" + filterDate + "&emailTitle=" + emailTitle, { headers: {'Content-Type': 'application/json'} })
             .then(result => {
                 return result.data;
             })
