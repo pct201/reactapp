@@ -13,7 +13,7 @@ export default class Registration extends Component {
     constructor(props) {
         super(props);
 
-        
+
         this.state = {
             mainState: {
                 userId: this.props.match.params.userId,
@@ -36,7 +36,7 @@ export default class Registration extends Component {
                 fileName: "No file selected",
                 isDeleteShow: false,
                 educationData: null,
-                userRoleData: null,               
+                userRoleData: null,
             }, popupState: {
                 title: "",
                 redirect: false,
@@ -77,7 +77,7 @@ export default class Registration extends Component {
                     blog: user.blog,
                     birth_date: new Date(user.birth_Date)
                 },
-                otherState: {                  
+                otherState: {
                     educationData: educationList,
                     userRoleData: userRoleList,
                     fileName: (user.document_Name === null || user.document_Name === '') ? "No file selected" : user.document_Name,
@@ -128,7 +128,7 @@ export default class Registration extends Component {
         });
     }
 
-    handleDatepickerChange = (date) => {        
+    handleDatepickerChange = (date) => {
         this.setState({
             mainState: {
                 ...this.state.mainState,
@@ -178,14 +178,14 @@ export default class Registration extends Component {
 
     handleOnSubmit = event => {
         event.preventDefault();
-        if (this.validator.allValid()) {           
+        if (this.validator.allValid()) {
             userService.updateUserDetail(this.state.mainState).then(result => {
-                this.setState({                   
+                this.setState({
                     popupState: {
-                        isActionPopup: true,
+                        isEditShow: false,
                         message: (result > 0) ? "User Details saved successfully." : "Something went wrong. Please try again later.",
                         title: (result > 0) ? "Success" : "Error",
-                        isshow: true
+                        msgPopupShow: true
                     }
                 })
             })
@@ -202,12 +202,12 @@ export default class Registration extends Component {
         })
     }
 
-    handleModelSave = (result) => {   
+    handleModelSave = (result) => {
         this.setState({
             popupState: {
                 isEditShow: false,
-                message: (result===200) ? "Password changed successfully." : ((result===201)? "You have enter wrong old password.":"Somthing went wrong please try again later."),
-                title: (result===200) ? "Success" : "Error",
+                message: (result === 200) ? "Password changed successfully." : ((result === 201) ? "You have enter wrong old password." : "Somthing went wrong please try again later."),
+                title: (result === 200) ? "Success" : "Error",
                 msgPopupShow: true
             }
         })
@@ -232,7 +232,7 @@ export default class Registration extends Component {
                 title: "",
                 msgPopupShow: false
             }
-        })       
+        })
     }
 
     render() {
@@ -241,7 +241,7 @@ export default class Registration extends Component {
             display: this.state.otherState.isDeleteShow ? "inline-block" : "none"
         }
         return (
-            <Fragment>                
+            <Fragment>
                 <main className="main-content">
                     <div className="container-fluid">
                         <div className="titlebtn">
@@ -307,24 +307,18 @@ export default class Registration extends Component {
                                     </div>
                                     <div className="col-md-4 ">
                                         <div className="form-group">
-                                        <DatePicker
-                                                    className="form-control"
-                                                        onChange={this.handleDatepickerChange}
-                                                        selected={this.state.mainState.birth_date }
-                                                        minDate={new Date('1960/01/01')}
-                                                        maxDate={new Date('2000/12/31')}
-                                                        showMonthDropdown
-                                                        showYearDropdown
-                                                        dropdownMode="select"                                                       
-                                                        dateFormat="yyyy/MM/dd"
-                                                        placeholderText="Birth Date"
-                                                    />      
-                                            {/* <DatePickerInput
+                                            <DatePicker
+                                                className="form-control"
                                                 onChange={this.handleDatepickerChange}
-                                                value={this.state.mainState.birth_date}
-                                                displayFormat='YYYY-MM-DD'
-                                                ref="birth_date"
-                                                id="birth_date" placeholder="Birth Date" readOnly /> */}
+                                                selected={this.state.mainState.birth_date}
+                                                minDate={new Date('1960/01/01')}
+                                                maxDate={new Date('2000/12/31')}
+                                                showMonthDropdown
+                                                showYearDropdown
+                                                dropdownMode="select"
+                                                dateFormat="yyyy/MM/dd"
+                                                placeholderText="Birth Date"
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-md-4 ">
@@ -371,9 +365,9 @@ export default class Registration extends Component {
 
                                 </div>
                                 <div className="mt-3 text-right">
-                                    <button className="btn btn-primary mr-2 mb-0" value="Change Password" onClick={this.openChangePasswordPopup}><span>Change Password</span></button>
+                                    <button className="btn btn-secondary mb-0" value="Cancel" onClick={() => this.props.history.push('/manageuser/', null)}><span>Back</span></button>
+                                    <button className="btn btn-secondary mr-2 mb-0" value="Change Password" onClick={this.openChangePasswordPopup}><span>Change Password</span></button>
                                     <button className="btn btn-primary mr-2 mb-0" value="Save" onClick={this.handleOnSubmit}><span>Save</span></button>
-                                    <button className="btn btn-secondary mb-0" value="Cancel" onClick={() => this.props.history.push('/manageuser/', null)}><span>Cancel</span></button>
                                 </div>
                             </div>
                         </form>

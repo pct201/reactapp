@@ -20,7 +20,7 @@ function getAllUser(page, perPage, sortDirection, sortBy) {
     );
 }
 
-function getUserById(id) {
+function getUserById (id) {
     return (
         axios.get("User/GetUserDetailsById?id=" + id)
             .then(user => {
@@ -29,9 +29,9 @@ function getUserById(id) {
     )
 }
 
-function updateUserDetail(user) {   
+ async function updateUserDetail(user) {   
     return (
-        axios.post("User/UpdateUserDetails", user,
+        await axios.post("User/UpdateUserDetails", user,
             { headers: {'Content-Type': 'application/json' } }).then(users => {
                 return users.data;
             })
