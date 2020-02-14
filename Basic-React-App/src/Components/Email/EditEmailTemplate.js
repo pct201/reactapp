@@ -24,7 +24,7 @@ class EditEmailTemplate extends React.Component {
                 subject_text: "",
             },
             otherState: {
-                showLoader: false
+                placeholderList: null
             }
         };
 
@@ -59,8 +59,7 @@ class EditEmailTemplate extends React.Component {
                 subject_text: emailDetail.subject_text,
             },
             otherState: {
-                placeholderList: placeholderList,
-                showLoader: false
+                placeholderList: placeholderList              
             }
         })
     }
@@ -88,22 +87,7 @@ class EditEmailTemplate extends React.Component {
     updateTemplate = (e) => {
         e.preventDefault();
         if (this.validator.allValid()) {
-
-            this.setState({
-                otherState: {
-                    ...this.state.otherState,
-                    showLoader: true
-                }
-            })
-
-            emailService.updateEmailTemplate(this.state.mainState).then(result => {
-                this.setState({
-                    otherState: {
-                        ...this.state.otherState,
-                        showLoader: false
-                    }
-
-                })
+            emailService.updateEmailTemplate(this.state.mainState).then(result => {               
                 this.props.popupSave(result);
             })
         }

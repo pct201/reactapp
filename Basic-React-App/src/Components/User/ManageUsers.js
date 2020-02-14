@@ -94,8 +94,7 @@ export default class ManageUsers extends React.Component {
 
         this.state = {
             selected: [],
-            rows: [],
-            loading: false,
+            rows: [],          
             totalRows: 0,
             page: 1,
             perPage: process.env.REACT_APP_ROW_PER_Page,
@@ -114,15 +113,13 @@ export default class ManageUsers extends React.Component {
         this.deleteUser = this.deleteUser.bind(this);
     }
 
-    getAllUserDetail = async () => {
-        await this.setState({ ...this.state, loading: true });
+    getAllUserDetail = async () => {       
         await userService.getAllUser(this.state.page, this.state.perPage, this.state.sortDirection, this.state.sortBy).then(result => {
             if (result !== undefined) {
                 this.setState({
                     ...this.state,
                     rows: result,
-                    totalRows: (result.length > 0) ? result[0].total_records : 0,
-                    loading: false,
+                    totalRows: (result.length > 0) ? result[0].total_records : 0                   
                 })
             }
         })
@@ -228,8 +225,7 @@ export default class ManageUsers extends React.Component {
                                 columns={columns}
                                 data={this.state.rows}
                                 defaultSortField="first_name"
-                                highlightOnHover
-                                progressPending={this.state.loading}                              
+                                highlightOnHover                                                          
                                 onSort={this.handleSort}
                                 selectableRows={canDelete}
                                 selectableRowsComponent={MultiSectionCheckbox}                                

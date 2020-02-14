@@ -90,7 +90,7 @@ namespace Services
             parameters.Add(new DBParameters() { Name = "@mobile_number", Value = objUserModel.Mobile_number, DBType = DbType.AnsiString });
             parameters.Add(new DBParameters() { Name = "@education_id", Value = objUserModel.Education_Id, DBType = DbType.Int32 });
             parameters.Add(new DBParameters() { Name = "@salary", Value = objUserModel.Salary, DBType = DbType.Decimal });
-            parameters.Add(new DBParameters() { Name = "@birth_date", Value = objUserModel.Birth_Date, DBType = DbType.Date });
+            parameters.Add(new DBParameters() { Name = "@birth_date", Value = objUserModel.BirthDay, DBType = DbType.Date });
             parameters.Add(new DBParameters() { Name = "@is_married", Value = objUserModel.Is_Married, DBType = DbType.Boolean });
             if (!string.IsNullOrEmpty(objUserModel.Token))
                 parameters.Add(new DBParameters() { Name = "@token", Value = objUserModel.Token, DBType = DbType.String });

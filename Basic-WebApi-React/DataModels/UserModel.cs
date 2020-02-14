@@ -21,7 +21,7 @@ namespace DataModels
         public string Email { get; set; }
 
         public string Role { get; set; }
-        
+
         [NotMapped]
         public int Role_Id { get; set; }
 
@@ -41,7 +41,18 @@ namespace DataModels
 
         public bool Is_Active { get; set; }
 
-        public DateTime Birth_Date { get; set; }
+        public string Birth_Date { get; set; }
+
+        public DateTime? BirthDay
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Birth_Date))
+                    return (Convert.ToDateTime(Birth_Date));
+                else
+                    return null;
+            }
+        }
 
         public bool Is_Married { get; set; }
 

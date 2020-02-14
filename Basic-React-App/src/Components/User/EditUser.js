@@ -13,6 +13,7 @@ export default class Registration extends Component {
     constructor(props) {
         super(props);
 
+        
         this.state = {
             mainState: {
                 userId: this.props.match.params.userId,
@@ -35,8 +36,7 @@ export default class Registration extends Component {
                 fileName: "No file selected",
                 isDeleteShow: false,
                 educationData: null,
-                userRoleData: null,
-                showLoader: true,
+                userRoleData: null,               
             }, popupState: {
                 title: "",
                 redirect: false,
@@ -77,8 +77,7 @@ export default class Registration extends Component {
                     blog: user.blog,
                     birth_date: new Date(user.birth_Date)
                 },
-                otherState: {
-                    showLoader: false,
+                otherState: {                  
                     educationData: educationList,
                     userRoleData: userRoleList,
                     fileName: (user.document_Name === null || user.document_Name === '') ? "No file selected" : user.document_Name,
@@ -179,19 +178,9 @@ export default class Registration extends Component {
 
     handleOnSubmit = event => {
         event.preventDefault();
-        if (this.validator.allValid()) {
-            this.setState({
-                otherState: {
-                    ...this.state.otherState,
-                    showLoader: true
-                }
-            })
+        if (this.validator.allValid()) {           
             userService.updateUserDetail(this.state.mainState).then(result => {
-                this.setState({
-                    otherState: {
-                        ...this.state.otherState,
-                        showLoader: false
-                    },
+                this.setState({                   
                     popupState: {
                         isActionPopup: true,
                         message: (result > 0) ? "User Details saved successfully." : "Something went wrong. Please try again later.",

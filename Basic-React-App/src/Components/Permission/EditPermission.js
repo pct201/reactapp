@@ -18,8 +18,7 @@ class EditPermission extends React.Component {
                 assign_role_list: ""
             },
             otherState: {
-                role_List: null,
-                showLoader: false
+                role_List: null
             }
         };
 
@@ -41,8 +40,7 @@ class EditPermission extends React.Component {
                 },
                 otherState: {
                     assign_role_list: JSON.parse(permissionDetail.assign_role_list),
-                    role_List: permissionDetail.role_List,
-                    showLoader: false
+                    role_List: permissionDetail.role_List                 
                 }
             })
 
@@ -82,20 +80,7 @@ class EditPermission extends React.Component {
     updatePermission = (e) => {
         e.preventDefault();
         if (this.validator.allValid()) {
-
-            this.setState({
-                otherState: {
-                    ...this.state.otherState,
-                    showLoader: true
-                }
-            })
-            permissionService.updatePermissionDetail(this.state.mainState, selectedRole).then(result => {
-                this.setState({
-                    otherState: {
-                        ...this.state.otherState,
-                        showLoader: false
-                    }
-                })
+            permissionService.updatePermissionDetail(this.state.mainState, selectedRole).then(result => {               
                 this.props.popupSave(result);
             })
         }

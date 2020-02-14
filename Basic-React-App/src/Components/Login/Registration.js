@@ -26,8 +26,7 @@ export default class Registration extends Component {
             salary: "",
             birth_date: null,
             is_married: false
-        },
-        showLoader: false,
+        },       
         termCondition: false,
         educationData: null,
         popupState: {
@@ -97,16 +96,8 @@ export default class Registration extends Component {
 
     handleOnSubmit = event => {
         event.preventDefault();
-        if (this.validator.allValid()) {
-            this.setState({
-                ...this.state,
-                showLoader: true
-            })
-            authenticationService.register(this.state.mainState).then(result => {
-                this.setState({
-                    ...this.state,
-                    showLoader: false
-                })
+        if (this.validator.allValid()) {           
+            authenticationService.register(this.state.mainState).then(result => {               
                 switch (result.errorCode) {
                     case 201:
                         this.setState({

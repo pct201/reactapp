@@ -46,8 +46,7 @@ export default class ManagePermissions extends React.Component {
             
         this.state = {
             permissionUid: "",
-            rows: [],
-            loading: false,
+            rows: [],           
             totalRows: 0,
             page: 1,
             perPage: process.env.REACT_APP_ROW_PER_Page,
@@ -66,14 +65,12 @@ export default class ManagePermissions extends React.Component {
 
     }
 
-    getAllPermissions = async () => {
-        await this.setState({ ...this.state, loading: true });
+    getAllPermissions = async () => {      
         await permissionService.getAllPermissionList(this.state.page, this.state.perPage, this.state.sortDirection, this.state.sortBy).then(result => {
             this.setState({
                 ...this.state,
                 rows: result,
-                totalRows: (result.length > 0) ? result[0].total_records : 0,
-                loading: false,
+                totalRows: (result.length > 0) ? result[0].total_records : 0             
             })
         })
     }
@@ -160,8 +157,7 @@ export default class ManagePermissions extends React.Component {
                                 columns={columns}
                                 data={this.state.rows}
                                 defaultSortField="permission_code"
-                                highlightOnHover
-                                progressPending={this.state.loading}                               
+                                highlightOnHover                                                            
                                 onSort={this.handleSort}
                                 noContextMenu                               
                                 sortServer

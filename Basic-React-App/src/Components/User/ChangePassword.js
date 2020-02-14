@@ -11,8 +11,7 @@ export default class ChangePassword extends Component {
         this.state = {
             user_id: this.props.userId,
             old_password: "",
-            new_password: "",
-            showLoader: false,
+            new_password: ""           
         };
         this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     }
@@ -26,16 +25,8 @@ export default class ChangePassword extends Component {
 
     updatePassword = (e) => {
         e.preventDefault();
-        if (this.validator.allValid()) {
-            this.setState({
-                ...this.state,
-                showLoader: true
-            })
-            userService.updatePassword(this.state.user_id,this.state.old_password, this.state.new_password).then(result => {                
-                this.setState({
-                    ...this.state,
-                    showLoader: false
-                })
+        if (this.validator.allValid()) {          
+            userService.updatePassword(this.state.user_id,this.state.old_password, this.state.new_password).then(result => {          
                 this.props.popupSave(result);
             })
         }

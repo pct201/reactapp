@@ -60,8 +60,7 @@ export default class EmailLogList extends React.Component {
             emailId: 0,
             rows: [],
             emailTitle: "",
-            date: "",
-            loading: false,
+            date: "",            
             totalRows: 0,
             page: 1,
             perPage: process.env.REACT_APP_ROW_PER_Page,
@@ -79,16 +78,12 @@ export default class EmailLogList extends React.Component {
         this.resendMail = this.resendMail.bind(this);
     }
 
-
-
-    getAllEmailLog = async () => {
-        await this.setState({ ...this.state, loading: true });
+    getAllEmailLog = async () => {     
         await emailService.getAllEmailLog(this.state.page, this.state.perPage, this.state.sortDirection, this.state.sortBy, this.state.date, this.state.emailTitle).then(result => {
             this.setState({
                 ...this.state,
                 rows: result,
-                totalRows: (result.length > 0) ? result[0].total_records : 0,
-                loading: false,
+                totalRows: (result.length > 0) ? result[0].total_records : 0              
             })
         })
     }
@@ -123,14 +118,9 @@ export default class EmailLogList extends React.Component {
     }
 
     resendMail = (emailId) => {
-        this.setState({
-            ...this.state,
-            loading: true
-        })
+      
         emailService.resendEmail(emailId).then(result => {
             this.setState({
-                ...this.state,
-                loading: false,
                 popupState: {
                     isShow: true,
                     message: result.message,
@@ -224,8 +214,7 @@ export default class EmailLogList extends React.Component {
                                 columns={columns}
                                 data={this.state.rows}
                                 defaultSortField="created_date"
-                                highlightOnHover
-                                progressPending={this.state.loading}                              
+                                highlightOnHover                                                           
                                 onSort={this.handleSort}
                                 noContextMenu
                                 sortServer

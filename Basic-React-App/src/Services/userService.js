@@ -29,7 +29,7 @@ function getUserById(id) {
     )
 }
 
-function updateUserDetail(user) {
+function updateUserDetail(user) {   
     return (
         axios.post("User/UpdateUserDetails", user,
             { headers: {'Content-Type': 'application/json' } }).then(users => {

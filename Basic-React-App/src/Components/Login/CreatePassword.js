@@ -16,8 +16,7 @@ export default class CreatePassword extends Component {
       username: params.uid,
       password: "",
       confirm_password: "",
-      token: params.token,
-      showLoader: false,
+      token: params.token,     
       popupState: {
         message: "",
         title: "",
@@ -53,16 +52,8 @@ export default class CreatePassword extends Component {
       })
     }
     else {
-      if (this.validator.allValid()) {
-        this.setState({
-          ...this.state,
-          showLoader: true
-      })
-        authenticationService.createPassword(this.state.username, this.state.token, this.state.password).then(result => {
-          this.setState({
-            ...this.state,
-            showLoader: false
-        })
+      if (this.validator.allValid()) {      
+        authenticationService.createPassword(this.state.username, this.state.token, this.state.password).then(result => {        
           switch (result.errorCode) {
             case 201:
               this.setState({
