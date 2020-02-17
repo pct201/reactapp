@@ -1,6 +1,7 @@
 ﻿using DataModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,6 +11,8 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -24,78 +27,96 @@ namespace WebAPI.Controllers
     {
 
 
-        private readonly IConfiguration configuration;
-        private readonly CommonClass commonClass;
-        private readonly EmailService emailService;
-        public AuthController(IConfiguration configuration)
+        private readonly IConfiguration _configuration;
+        private readonly CommonClass _commonClass;
+        private readonly EmailService _emailService;
+        private readonly ILogger<AuthController> _logger;
+        public AuthController(IConfiguration configuration, ILogger<AuthController> logger)
         {
-            this.configuration = configuration;
-            this.emailService = new EmailService(configuration);
-            this.commonClass = new CommonClass(configuration);
+            _configuration = configuration;
+            _emailService = new EmailService(configuration);
+            _commonClass = new CommonClass(configuration);
+            _logger = logger;
         }
 
         [HttpPost]
         public ActionResult RegisterNewUser(UserModel model)
         {
-            using (var userService = new UserServices())
+            try
             {
-                model.Token = GenerateEmailToken();
-                int userId = userService.AddEditUser(model);
-                if (userId < 0)
-                    return Ok(new { success = false, errorCode = 201 });//Email Address Allready Registerd.
-
-                try
+                using (var userService = new UserServices())
                 {
-                    string url = HttpContext.Request.Headers["origin"];
-                    //Trigger usercreation email
-                    UserCreationEvent emailEvent = new UserCreationEvent(emailService, model.Email, model.Language_code);
-                    emailEvent.Send();
+                    model.Token = GenerateEmailToken();
+                    int userId = userService.AddEditUser(model);
+                    if (userId < 0)
+                        return Ok(new { success = false, errorCode = 201 });//Email Address Allready Registerd.
 
-                    //Trigger confirm email                                       
-                    ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + model.Token + "&uid=" + commonClass.Encrypt(model.Email)), model.Email, model.Language_code);
-                    EmailEvent.Send();
+                    try
+                    {
+                        string url = HttpContext.Request.Headers["origin"];
+                        //Trigger usercreation email
+                        UserCreationEvent emailEvent = new UserCreationEvent(_emailService, model.Email, model.Language_code);
+                        emailEvent.Send();
 
-                    return Ok(new { success = true, errorCode = 200 });//User Registered Successfully.
+                        //Trigger confirm email                                       
+                        ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(_emailService, (url + "/createpassword/?token=" + model.Token + "&uid=" + _commonClass.Encrypt(model.Email)), model.Email, model.Language_code);
+                        EmailEvent.Send();
+
+                        return Ok(new { success = true, errorCode = 200 });//User Registered Successfully.
+                    }
+                    catch
+                    {
+                        return Ok(new { success = false, errorCode = 202 });//Error In Mail Sending
+                    }
                 }
-                catch
-                {
-                    return Ok(new { success = false, errorCode = 202 });//Error In Mail Sending
-                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message, null);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPost]
         public ActionResult CreatePassword([FromBody] JObject credentialObj)
         {
-            string emailId = commonClass.Decrypt(Convert.ToString(credentialObj["userId"]));
-            string token = (Convert.ToString(credentialObj["token"])).Replace(" ", "+");
-            string password = Convert.ToString(credentialObj["password"]);
-            if (!string.IsNullOrEmpty(token) && isLatestToken(token))
+            try
             {
-                using (var userServices = new UserServices())
+                string emailId = _commonClass.Decrypt(Convert.ToString(credentialObj["userId"]));
+                string token = (Convert.ToString(credentialObj["token"])).Replace(" ", "+");
+                string password = Convert.ToString(credentialObj["password"]);
+                if (!string.IsNullOrEmpty(token) && isLatestToken(token))
                 {
-                    int resultCode = userServices.SetPassword(emailId, token, commonClass.Encrypt(password));
-                    bool isSuccess = (resultCode == 200) ? true : false;
-                    return Ok(new { success = isSuccess, errorCode = resultCode });//Password Created Successfully.                   
+                    using (var userServices = new UserServices())
+                    {
+                        int resultCode = userServices.SetPassword(emailId, token, _commonClass.Encrypt(password));
+                        bool isSuccess = (resultCode == 200) ? true : false;
+                        return Ok(new { success = isSuccess, errorCode = resultCode });//Password Created Successfully.                   
+                    }
+                }
+                else
+                {
+                    string url = HttpContext.Request.Headers["origin"];
+                    string newToken = GenerateEmailToken();
+                    using (var userServices = new UserServices())
+                    {
+
+                        if (userServices.UpdateTokenInDatabase(emailId, token, newToken))
+                        {
+                            //Trigger confirm email for expired link                                     
+                            ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(_emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + _commonClass.Encrypt(emailId)), emailId, "en-us");
+                            EmailEvent.Send();
+                            return Ok(new { success = false, errorCode = 204 });//Link Expired Sent New Link.
+                        }
+                        else
+                            return Ok(new { success = false, errorCode = 203 });//token or email provided wrong.
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                string url = HttpContext.Request.Headers["origin"];
-                string newToken = GenerateEmailToken();
-                using (var userServices = new UserServices())
-                {
-
-                    if (userServices.UpdateTokenInDatabase(emailId, token, newToken))
-                    {
-                        //Trigger confirm email for expired link                                     
-                        ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + commonClass.Encrypt(emailId)), emailId, "en-us");
-                        EmailEvent.Send();
-                        return Ok(new { success = false, errorCode = 204 });//Link Expired Sent New Link.
-                    }
-                    else
-                        return Ok(new { success = false, errorCode = 203 });//token or email provided wrong.
-                }
+                _logger.LogError(ex, ex.Message, null);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -110,13 +131,14 @@ namespace WebAPI.Controllers
                 {
                     userServices.UpdateTokenInDatabase(emailId, null, newToken);
                     //Trigger confirm email for expired link                                     
-                    ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + commonClass.Encrypt(emailId)), emailId, "en-us");
+                    ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(_emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + _commonClass.Encrypt(emailId)), emailId, "en-us");
                     EmailEvent.Send();
                 }
                 return Ok(new { success = true });
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return Ok(new { success = false });
             }
         }
@@ -124,57 +146,65 @@ namespace WebAPI.Controllers
         [HttpPost]
         public ActionResult Login([FromBody] JObject credentialObj)
         {
-            string emailId = Convert.ToString(credentialObj["userName"]);
-            string password = Convert.ToString(credentialObj["password"]);
-            using (var userServices = new UserServices())
+            try
             {
-                UserModel userDetail = userServices.GetUserByEmail(emailId);
-
-                if (userDetail != null && string.IsNullOrEmpty(userDetail.Password))
-                    return Ok(new { isvalidUser = false, errorCode = 201 });
-                else if (userDetail == null || userDetail.UserId <= 0 || (password != commonClass.Decrypt(userDetail.Password)))
-                    return Ok(new { isvalidUser = false, errorCode = 202 });
-
-                using (var permissionService = new PermissionService())
+                string emailId = Convert.ToString(credentialObj["userName"]);
+                string password = Convert.ToString(credentialObj["password"]);
+                using (var userServices = new UserServices())
                 {
-                    string[] permissions = null;
-                    IList<PermissionModel> permissionList = permissionService.GetPermissionListByUserId(userDetail.UserId);
-                    if (permissionList.Count > 0)
-                        permissions = permissionList.Select(x => x.permission_code).ToArray();
+                    UserModel userDetail = userServices.GetUserByEmail(emailId);
 
-                    var claims = new[]
-                {
+                    if (userDetail != null && string.IsNullOrEmpty(userDetail.Password))
+                        return Ok(new { isvalidUser = false, errorCode = 201 });
+                    else if (userDetail == null || userDetail.UserId <= 0 || (password != _commonClass.Decrypt(userDetail.Password)))
+                        return Ok(new { isvalidUser = false, errorCode = 202 });
+
+                    using (var permissionService = new PermissionService())
+                    {
+                        string[] permissions = null;
+                        IList<PermissionModel> permissionList = permissionService.GetPermissionListByUserId(userDetail.UserId);
+                        if (permissionList.Count > 0)
+                            permissions = permissionList.Select(x => x.permission_code).ToArray();
+
+                        var claims = new[]
+                    {
                     new Claim(JwtRegisteredClaimNames.Sub, userDetail.First_name + " " + userDetail.Last_name),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, userDetail.Email),
                       new Claim(ClaimTypes.Role, "Admin")
                 };
 
-                    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenAuthentication:SecretKey"]));
-                    var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-                    var securityToken = new JwtSecurityToken(
-                            issuer: configuration["TokenAuthentication:Issuer"],
-                            audience: configuration["TokenAuthentication:Audience"],
-                            claims: claims,
-                            expires: DateTime.UtcNow.AddHours(2),
-                            signingCredentials: signingCredentials
-                        );
-                    
-                    return Ok(new
-                    {
-                        jwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken),
-                        //refreshToken= commonClass.GenerateRefreshToken(),
-                        expiration = securityToken.ValidTo,
-                        userName = userDetail.First_name + " " + userDetail.Last_name,
-                        permissions = JsonConvert.SerializeObject(permissions),
-                        isvalidUser = true,
-                        errorCode = 200,
-                    });
+                        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenAuthentication:SecretKey"]));
+                        var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                        var securityToken = new JwtSecurityToken(
+                                issuer: _configuration["TokenAuthentication:Issuer"],
+                                audience: _configuration["TokenAuthentication:Audience"],
+                                claims: claims,
+                                expires: DateTime.UtcNow.AddHours(2),
+                                signingCredentials: signingCredentials
+                            );
+
+                        return Ok(new
+                        {
+                            jwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken),
+                            //refreshToken= commonClass.GenerateRefreshToken(),
+                            expiration = securityToken.ValidTo,
+                            userName = userDetail.First_name + " " + userDetail.Last_name,
+                            permissions = JsonConvert.SerializeObject(permissions),
+                            isvalidUser = true,
+                            errorCode = 200,
+                        });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message, null);
+                return BadRequest(ex.Message);
             }
         }
 
-      
+
         [NonAction]
         public string GenerateEmailToken()
         {
@@ -188,7 +218,7 @@ namespace WebAPI.Controllers
         {
             byte[] data = Convert.FromBase64String(token);
             DateTime generateTime = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
-            bool isValid = (generateTime < DateTime.UtcNow.AddMinutes(Convert.ToInt32(configuration["EmailLink:TimeToLiveHour"]) * -1)) ? true : false;
+            bool isValid = (generateTime < DateTime.UtcNow.AddMinutes(Convert.ToInt32(_configuration["EmailLink:TimeToLiveHour"]) * -1)) ? true : false;
             return isValid;
         }
 

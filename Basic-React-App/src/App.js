@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import Routes from './Route/route'
 import { ErrorBoundary,GlobalLoader } from './Components/Common';
 

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.Extensions.Logging;
 
 namespace WebAPI.Controllers
 {
@@ -16,8 +16,14 @@ namespace WebAPI.Controllers
     [Authorize]
     [ApiController]
     public class PermissionController : ControllerBase
-    {     
+    {
         #region Permissions
+
+        private readonly ILogger<PermissionController> _logger;
+        public PermissionController(ILogger<PermissionController> logger)
+        {
+            _logger = logger;
+        }
 
         [HttpGet]
         public IList<PermissionModel> AllPermissionList(int page, int perPage, string sortBy, string sortDirection)
@@ -29,9 +35,10 @@ namespace WebAPI.Controllers
                     return permissionService.GetPermissionsList(page, perPage, sortBy, sortDirection);
                 }
             }
-            catch 
+            catch (Exception ex)
             {
-                throw null;
+                _logger.LogError(ex, ex.Message, null);
+                return null;
             }
         }
 
@@ -53,16 +60,17 @@ namespace WebAPI.Controllers
                     return permissionObject;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw null;
+                _logger.LogError(ex, ex.Message, null);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPost]
         public bool UpdatePermissionDetail([FromBody] JObject permissionObj)
-        {           
-            var permissionModel =  JsonConvert.DeserializeObject<PermissionModel>(Convert.ToString(permissionObj["pemissionDetail"]));                
+        {
+            var permissionModel = JsonConvert.DeserializeObject<PermissionModel>(Convert.ToString(permissionObj["pemissionDetail"]));
             var roleList = JsonConvert.DeserializeObject<int[]>(Convert.ToString(permissionObj["roleList"]));
             try
             {
@@ -71,15 +79,14 @@ namespace WebAPI.Controllers
                     return permissionService.UpdatePermissionDetail(permissionModel, string.Join(",", roleList));
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return false;
             }
         }
-       
+
         #endregion
-
-
 
 
     }

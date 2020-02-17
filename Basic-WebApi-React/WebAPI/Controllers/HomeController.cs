@@ -2,7 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Services;
+using System;
+using System.Net;
+using System.Net.Http;
 
 namespace WebAPI.Controllers
 {
@@ -11,20 +15,31 @@ namespace WebAPI.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private readonly IConfiguration configuration;
-        private readonly EmailService emailService;
-        public HomeController(IConfiguration configuration)
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<HomeController> _logger;
+        private readonly EmailService _emailService;
+        public HomeController(IConfiguration configuration, ILogger<HomeController> logger)
         {
-            this.configuration = configuration;
-            this.emailService = new EmailService(configuration);
+            _configuration = configuration;
+            _emailService = new EmailService(configuration);
+            _logger = logger;
         }
 
         [HttpGet]
         public ActionResult<DashboardModel> DashboardDetail()
         {
-            using (var dashboardService = new DashboardService())
-            {
-                return dashboardService.GetDashboardUserCount();
+            try
+            {               
+                using (var dashboardService = new DashboardService())
+                {
+                    _logger.LogError("HI");
+                    return dashboardService.GetDashboardUserCount();
+
+                }
+            }
+            catch (Exception ex) {
+                _logger.LogError(ex,ex.Message,null);
+                return BadRequest(ex.Message);
             }
         }
     }

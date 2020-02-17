@@ -5,4 +5,5 @@ export {default as PopOver} from './PopOver';
 export {default as UnAuthorize} from './UnAuthorize';
 export {default as ErrorBoundary} from './ErrorBoundary';
 export {default as MultiSectionCheckbox} from './MultiSectionCheckbox';
+export {default as Error} from './Error';
 

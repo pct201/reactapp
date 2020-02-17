@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Modal } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import { userService } from '../../Services';

@@ -4,6 +4,8 @@ using Services;
 using DataModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using System;
+using Microsoft.Extensions.Logging;
 
 namespace WebAPI.Controllers
 {
@@ -12,11 +14,13 @@ namespace WebAPI.Controllers
     [ApiController]
     public class EmailController : ControllerBase
     {
-        private string languageCode = "en-us";        
+        private string languageCode = "en-us";
         private readonly EmailService emailService;
-        public EmailController(IConfiguration configuration)
+        private readonly ILogger<EmailController> _logger;
+        public EmailController(IConfiguration configuration, ILogger<EmailController> logger)
         {
             this.emailService = new EmailService(configuration);
+            _logger = logger;
         }
 
         #region Email Template 
@@ -29,8 +33,9 @@ namespace WebAPI.Controllers
                 IList<EmailModel> emailTemplateList = emailService.GetEmailTemplateList(page, perPage, sortBy, sortDirection, languageCode);
                 return emailTemplateList;
             }
-            catch 
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return null;
             }
         }
@@ -42,9 +47,10 @@ namespace WebAPI.Controllers
             {
                 return emailService.GetEmailTemplateById(emailUid, languageCode);
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex, ex.Message, null);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -55,8 +61,9 @@ namespace WebAPI.Controllers
             {
                 return emailService.UpdateEmailTemplate(model);
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return false;
             }
         }
@@ -69,8 +76,9 @@ namespace WebAPI.Controllers
                 IList<PlaceholderModel> placeholderList = emailService.GetPlaceHolderList();
                 return placeholderList;
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return null;
             }
         }
@@ -86,8 +94,9 @@ namespace WebAPI.Controllers
                 IList<EmailModel> emailTemplateList = emailService.GetEmailLogList(page, perPage, sortBy, sortDirection, date, emailTitle);
                 return emailTemplateList;
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return null;
             }
         }
@@ -112,16 +121,17 @@ namespace WebAPI.Controllers
                     EmailModel errorEmailModel = emailService.GetEmailLogById(newEmailId);
                     if (errorEmailModel != null && !string.IsNullOrEmpty(errorEmailModel.response_message))
                         message = errorEmailModel.response_message;
-                    else 
+                    else
                         message = "Error in email sending.";
                 }
                 else
-                     message = "Email resend successfully.";
+                    message = "Email resend successfully.";
 
                 return Ok(new { success = isSuccess, message = message });
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return Ok(new { success = false, message = "Somthing went wrong please try again later." });
             }
 

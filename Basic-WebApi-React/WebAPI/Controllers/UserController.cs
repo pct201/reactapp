@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using WebAPI.Email;
 using Microsoft.Extensions.Configuration;
 using WebAPI.Common;
+using Microsoft.Extensions.Logging;
 
 namespace WebAPI.Controllers
 {
@@ -18,13 +19,15 @@ namespace WebAPI.Controllers
     [Authorize]
     [ApiController]
     public class UserController : ControllerBase
-    {    
-        private readonly EmailService emailService;
-        private readonly CommonClass commonClass;
-        public UserController(IConfiguration configuration)
+    {
+        private readonly EmailService _emailService;
+        private readonly CommonClass _commonClass;
+        private readonly ILogger<UserController> _logger;
+        public UserController(IConfiguration configuration, ILogger<UserController> logger)
         {
-            this.emailService = new EmailService(configuration);
-            this.commonClass = new CommonClass(configuration);
+            _emailService = new EmailService(configuration);
+            _commonClass = new CommonClass(configuration);
+            _logger = logger;
         }
 
         [HttpGet]
@@ -38,8 +41,9 @@ namespace WebAPI.Controllers
                     return userList;
                 }
             }
-            catch 
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return null;
             }
         }
@@ -60,9 +64,10 @@ namespace WebAPI.Controllers
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex, ex.Message, null);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -77,8 +82,9 @@ namespace WebAPI.Controllers
                     return userService.GetEducationList();
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return null;
             }
         }
@@ -94,8 +100,9 @@ namespace WebAPI.Controllers
                     return userService.GetUserRoleList();
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return null;
             }
         }
@@ -111,24 +118,26 @@ namespace WebAPI.Controllers
                     return userService.AddEditUser(model);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return 0;
             }
         }
 
         [HttpPost]
         public int UpdatePassword([FromBody] JObject pwrdDetailObj)
-        {          
+        {
             try
-            {                
+            {
                 using (var userService = new UserServices())
                 {
-                    return userService.UpdatePassword(Convert.ToInt32(pwrdDetailObj["userId"]), commonClass.Encrypt(Convert.ToString(pwrdDetailObj["oldPassword"])), commonClass.Encrypt(Convert.ToString(pwrdDetailObj["newPassword"])));
+                    return userService.UpdatePassword(Convert.ToInt32(pwrdDetailObj["userId"]), _commonClass.Encrypt(Convert.ToString(pwrdDetailObj["oldPassword"])), _commonClass.Encrypt(Convert.ToString(pwrdDetailObj["newPassword"])));
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message, null);
                 return 202;
             }
         }
@@ -146,8 +155,9 @@ namespace WebAPI.Controllers
                         return true;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, ex.Message, null);
                     return false;
                 }
             }

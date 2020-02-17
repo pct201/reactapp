@@ -58,7 +58,7 @@ export default class Registration extends Component {
         let educationList = await userService.educationList();
         let userRoleList = await userService.userRoleList();
         let user = await userService.getUserById(this.state.mainState.userId);
-        if (user !== undefined) {
+        if (user !== undefined) {           
             await this.setState({
                 mainState: {
                     userId: user.userId,

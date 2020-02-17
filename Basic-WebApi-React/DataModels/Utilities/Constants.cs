@@ -41,6 +41,12 @@ namespace DataModel.Utilities
 
             public const string yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
         }
+        
+        public class RouteDataKey
+        {
+            public const string controller = "controller";
+            public const string action = "action";          
+        }
 
     } 
 

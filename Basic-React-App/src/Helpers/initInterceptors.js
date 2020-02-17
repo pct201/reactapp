@@ -23,11 +23,11 @@ const initInterceptors = (store) => {
 		},
 	);
 
-	axios.interceptors.response.use(response => {
+	axios.interceptors.response.use(response => {	
 		setTimeout(function () { document.getElementById('loader_div').style.display = "none" }, 250);
 		return response;
 	},
-		(error) => {
+		(error) => {			
 			setTimeout(function () { document.getElementById('loader_div').style.display = "none" }, 250);
 			const { config } = error;
 			const originalRequest = config;
@@ -52,7 +52,9 @@ const initInterceptors = (store) => {
 				localStorage.removeItem('user');
 				window.location.href = "/login";
 			}
-			return error;
+			else{	
+				window.location.href = "/error/"+error.response.data;
+			}			
 		},
 	);
 };

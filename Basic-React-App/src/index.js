@@ -10,7 +10,6 @@ import configureStore from './Store/configStore';
 import { history } from './Helpers/history'
 import * as serviceWorker from './serviceWorker';
 import  initInterceptors  from './Helpers/initInterceptors';
-import  Footer  from './Components/Common/GlobalLoader';
 
 const initialState = window.initialReduxState;
 const store = configureStore(history, initialState);
