@@ -31,10 +31,8 @@ namespace WebAPI.Controllers
             try
             {               
                 using (var dashboardService = new DashboardService())
-                {
-                    _logger.LogError("HI");
+                {                   
                     return dashboardService.GetDashboardUserCount();
-
                 }
             }
             catch (Exception ex) {
