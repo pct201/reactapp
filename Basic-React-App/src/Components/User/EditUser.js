@@ -324,7 +324,7 @@ export default class Registration extends Component {
                                     <div className="col-md-4 ">
                                         <div className="form-group">
                                             <div className="custom-control custom-switch">
-                                                <input type="checkbox" className="custom-control-input" id="is_married" ref="is_married" value={this.state.mainState.is_married} onClick={this.handleInputChange} />
+                                                <input type="checkbox" className="custom-control-input" id="is_married" ref="is_married" value={this.state.mainState.is_married} onClick={this.handleInputChange} onChange={()=>{return true}} checked={this.state.mainState.is_married} />
                                                 <label className="custom-control-label" htmlFor="is_married">Married</label>
                                             </div>
                                         </div>
@@ -345,7 +345,7 @@ export default class Registration extends Component {
                                     <div className="col-md-4">
                                         <div className="form-group">
                                             <div className="custom-control custom-switch">
-                                                <input type="checkbox" className="custom-control-input" id="is_active" ref="is_active" value={this.state.mainState.is_active} onClick={this.handleInputChange} defaultChecked={this.state.mainState.is_active} />
+                                                <input type="checkbox" className="custom-control-input" id="is_active" value={this.state.mainState.is_active} onClick={this.handleInputChange} onChange={()=>{return true}} checked={this.state.mainState.is_active} />
                                                 <label className="custom-control-label" htmlFor="is_active">Active</label>
                                             </div>
                                         </div>
