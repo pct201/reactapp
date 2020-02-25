@@ -37,6 +37,7 @@ export default class Registration extends Component {
                 isDeleteShow: false,
                 educationData: null,
                 userRoleData: null,
+                initialBlog:""
             }, popupState: {
                 title: "",
                 redirect: false,
@@ -55,6 +56,7 @@ export default class Registration extends Component {
     }
 
     componentWillMount = async () => {
+        
         let educationList = await userService.educationList();
         let userRoleList = await userService.userRoleList();
         let user = await userService.getUserById(this.state.mainState.userId);
@@ -81,7 +83,8 @@ export default class Registration extends Component {
                     educationData: educationList,
                     userRoleData: userRoleList,
                     fileName: (user.document_Name === null || user.document_Name === '') ? "No file selected" : user.document_Name,
-                    isDeleteShow: (user.document_Name === null || user.document_Name === '') ? false : true
+                    isDeleteShow: (user.document_Name === null || user.document_Name === '') ? false : true,
+                    initialBlog: user.blog
                 }
             })
         }
@@ -280,7 +283,8 @@ export default class Registration extends Component {
                                     </div>
                                     <div className="col-md-4 ">
                                         <div className="form-group">
-                                            <select className="form-control" id="education_id" ref="education_id" value={this.state.mainState.education_id} placeholder="Education" onChange={this.handleInputChange}>
+                                            <select className="form-control" id="education_id" ref="education_id" value={this.state.mainState.education_id} 
+                                            placeholder="Education" onChange={this.handleInputChange}>
                                                 <option>Select</option>
                                                 {this.state.otherState.educationData !== null ? this.state.otherState.educationData.map(key => (
                                                     <option value={key.education_Id} key={key.education_Id}>{key.education_Name}</option>
@@ -359,7 +363,7 @@ export default class Registration extends Component {
                                     </div>
                                     <div className="col-md-6">
                                         <div className="form-group">
-                                            <SunEditor setContents={this.state.mainState.blog} setOptions={{ "placeholder": "Blog" }} onChange={this.handleSunEditorChange} />
+                                            <SunEditor setContents={this.state.otherState.initialBlog} setOptions={{ "placeholder": "Blog" }} onChange={this.handleSunEditorChange} />
                                         </div>
                                     </div>
 
