@@ -4,7 +4,7 @@ import { Modal } from 'react-bootstrap';
 export const MessagePopup = (props) => {
 
     return (
-        <Modal show={props.show} aria-labelledby="contained-modal-title-vcenter" centered="true"  onHide={props.popupClose}>
+        <Modal show={props.show} aria-labelledby="contained-modal-title-vcenter" centered="true" backdrop="static" onHide={props.popupClose}>
             <Modal.Header closeButton>
                 <Modal.Title>{props.title}</Modal.Title>
             </Modal.Header>

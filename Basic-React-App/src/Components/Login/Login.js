@@ -14,7 +14,8 @@ class Login extends Component {
 
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      redirectToReferrer: false
     };
 
     history.listen((location, action) => {
@@ -37,7 +38,7 @@ class Login extends Component {
     e.preventDefault();
     if (this.validator.allValid()) {
       const { username, password } = this.state;
-      authenticationService.login(username, password).then(user => {        
+      authenticationService.login(username, password).then(user => {
         switch (user.errorCode) {
           case 201:
             this.props.errorAlerts("You have not set password.Please check your email");
@@ -47,7 +48,10 @@ class Login extends Component {
             break
           default:
             localStorage.setItem('user', JSON.stringify(user));
-            history.push('/dashboard');
+            this.setState({
+              redirectToReferrer: true
+            })
+          // history.push('/dashboard');
         }
       }, error => {
         this.props.errorAlerts("Somthing wrong!")
@@ -60,6 +64,11 @@ class Login extends Component {
 
   render() {
 
+    const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
+    const { redirectToReferrer } = this.state
+    if (redirectToReferrer === true) {
+      return <Redirect to={from} />
+    }
     const { alert } = this.props;
     return (
       <div className="wrapper login-page">
