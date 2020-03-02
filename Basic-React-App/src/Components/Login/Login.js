@@ -14,8 +14,7 @@ class Login extends Component {
 
     this.state = {
       username: '',
-      password: '',
-      redirectToReferrer: false
+      password: ''     
     };
 
     history.listen((location, action) => {
@@ -47,10 +46,9 @@ class Login extends Component {
             this.props.errorAlerts("Username or password is incorrect");
             break
           default:
+            const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
             localStorage.setItem('user', JSON.stringify(user));
-            this.setState({
-              redirectToReferrer: true
-            })
+            history.push(from.pathname);
           // history.push('/dashboard');
         }
       }, error => {
@@ -62,13 +60,7 @@ class Login extends Component {
     }
   }
 
-  render() {
-
-    const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
-    const { redirectToReferrer } = this.state
-    if (redirectToReferrer === true) {
-      return <Redirect to={from} />
-    }
+  render() {    
     const { alert } = this.props;
     return (
       <div className="wrapper login-page">
