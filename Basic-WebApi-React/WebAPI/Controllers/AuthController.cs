@@ -159,48 +159,124 @@ namespace WebAPI.Controllers
                     else if (userDetail == null || userDetail.UserId <= 0 || (password != _commonClass.Decrypt(userDetail.Password)))
                         return Ok(new { isvalidUser = false, errorCode = 202 });
 
-                    using (var permissionService = new PermissionService())
-                    {
-                        string[] permissions = null;
-                        IList<PermissionModel> permissionList = permissionService.GetPermissionListByUserId(userDetail.UserId);
-                        if (permissionList.Count > 0)
-                            permissions = permissionList.Select(x => x.permission_code).ToArray();
+                    return PreparejwtToken(userDetail, userServices);
 
-                        var claims = new[]
-                    {
-                    new Claim(JwtRegisteredClaimNames.Sub, userDetail.First_name + " " + userDetail.Last_name),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, userDetail.Email),
-                      new Claim(ClaimTypes.Role, "Admin")
-                };
+                    //    using (var permissionService = new PermissionService())
+                    //    {
+                    //        string[] permissions = null;
+                    //        IList<PermissionModel> permissionList = permissionService.GetPermissionListByUserId(userDetail.UserId);
+                    //        if (permissionList.Count > 0)
+                    //            permissions = permissionList.Select(x => x.permission_code).ToArray();
 
-                        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenAuthentication:SecretKey"]));
-                        var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-                        var securityToken = new JwtSecurityToken(
-                                issuer: _configuration["TokenAuthentication:Issuer"],
-                                audience: _configuration["TokenAuthentication:Audience"],
-                                claims: claims,
-                                expires: DateTime.UtcNow.AddHours(2),
-                                signingCredentials: signingCredentials
-                            );
+                    //        var claims = new[]
+                    //    {
+                    //    new Claim(JwtRegisteredClaimNames.Sub, userDetail.First_name + " " + userDetail.Last_name),
+                    //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    //    new Claim(JwtRegisteredClaimNames.Email, userDetail.Email),
+                    //    new Claim(ClaimTypes.Role, "Admin")
+                    //};
 
-                        return Ok(new
-                        {
-                            jwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken),
-                            //refreshToken= commonClass.GenerateRefreshToken(),
-                            expiration = securityToken.ValidTo,
-                            userName = userDetail.First_name + " " + userDetail.Last_name,
-                            permissions = JsonConvert.SerializeObject(permissions),
-                            isvalidUser = true,
-                            errorCode = 200,
-                        });
-                    }
+                    //        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenAuthentication:SecretKey"]));
+                    //        var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                    //        var securityToken = new JwtSecurityToken(
+                    //                issuer: _configuration["TokenAuthentication:Issuer"],
+                    //                audience: _configuration["TokenAuthentication:Audience"],
+                    //                claims: claims,
+                    //                //expires: DateTime.UtcNow.AddHours(2),
+                    //                expires: DateTime.UtcNow.AddMinutes(1),
+                    //                signingCredentials: signingCredentials
+                    //            );
+
+                    //        return Ok(new
+                    //        {
+                    //            jwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken),
+                    //            refreshToken= _commonClass.GenerateRefreshToken(),
+                    //            expiration = securityToken.ValidTo,
+                    //            userName = userDetail.First_name + " " + userDetail.Last_name,
+                    //            permissions = JsonConvert.SerializeObject(permissions),
+                    //            isvalidUser = true,
+                    //            errorCode = 200,
+                    //        });
+                    //    }
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message, null);
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult RefreshAuthToken([FromBody] JObject credentialObj)
+        {
+            try
+            {
+                string jwtToken = Convert.ToString(credentialObj["jwtToken"]);
+                string refreshToken = Convert.ToString(credentialObj["refreshToken"]);
+                using (var userServices = new UserServices())
+                {
+                    UserModel userDetail = userServices.GetUserByRefreshToken(jwtToken, refreshToken);
+
+                    //if (userDetail != null)
+                    //    return Ok(new { isvalidUser = false, isvalidToken = false, errorCode = 201 });
+
+                    return PreparejwtToken(userDetail, userServices);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message, null);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [NonAction]
+        public OkObjectResult PreparejwtToken(UserModel userDetail, UserServices userServices)
+        {
+            using (var permissionService = new PermissionService())
+            {
+                string[] permissions = null;
+                IList<PermissionModel> permissionList = permissionService.GetPermissionListByUserId(userDetail.UserId);
+                if (permissionList.Count > 0)
+                    permissions = permissionList.Select(x => x.permission_code).ToArray();
+
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, userDetail.First_name + " " + userDetail.Last_name),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, userDetail.Email),
+                    new Claim(ClaimTypes.Role, "Admin")
+                };
+
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenAuthentication:SecretKey"]));
+                var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                var securityToken = new JwtSecurityToken(
+                        issuer: _configuration["TokenAuthentication:Issuer"],
+                        audience: _configuration["TokenAuthentication:Audience"],
+                        claims: claims,
+                        //expires: DateTime.UtcNow.AddHours(2),
+                        expires: DateTime.UtcNow.AddMinutes(1),
+                        signingCredentials: signingCredentials
+                    );
+
+                var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
+                var refToken = _commonClass.GenerateRefreshToken();
+                
+
+                // code to insert refreshtoken into Database
+                var saveToken  = userServices.UpdateRefreshToken(userDetail.UserId, token, refToken, DateTime.UtcNow.AddMonths(1));
+
+                return Ok(new
+                {
+                    jwtToken = token,
+                    refreshToken =refToken,
+                    expiration = securityToken.ValidTo,
+                    userName = userDetail.First_name + " " + userDetail.Last_name,
+                    permissions = JsonConvert.SerializeObject(permissions),
+                    isvalidUser = true,
+                    errorCode = 200,
+                });
             }
         }
 
@@ -221,6 +297,15 @@ namespace WebAPI.Controllers
             bool isValid = (generateTime < DateTime.UtcNow.AddMinutes(Convert.ToInt32(_configuration["EmailLink:TimeToLiveHour"]) * -1)) ? true : false;
             return isValid;
         }
+
+    }
+
+    public class TmpRefreshToken
+    {
+        public int UserId { get; set; }
+        public string Token { get; set; }
+        public string RefreshToken { get; set; }
+        public DateTime ExpireOn { get; set; }
 
     }
 }
