@@ -218,7 +218,7 @@ namespace WebAPI.Controllers
         {
             byte[] data = Convert.FromBase64String(token);
             DateTime generateTime = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
-            bool isValid = (generateTime < DateTime.UtcNow.AddMinutes(Convert.ToInt32(_configuration["EmailLink:TimeToLiveHour"]) * -1)) ? true : false;
+            bool isValid = (generateTime > DateTime.UtcNow.AddHours(Convert.ToInt32(_configuration["EmailLink:TimeToLiveHour"]) * -1)) ? true : false;
             return isValid;
         }
 

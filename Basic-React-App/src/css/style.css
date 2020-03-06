@@ -468,3 +468,14 @@ textarea.form-control {min-height:46px;}
 
 }
 
+.custom-modal{
+	overflow-y: auto;
+}
+
+.wordwrap {   
+	-ms-word-break: break-all;
+	word-break: break-all;
+	word-break: break-word;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	hyphens: auto;}

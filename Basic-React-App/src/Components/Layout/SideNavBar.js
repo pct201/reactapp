@@ -36,6 +36,10 @@ export default class SideNavBar extends React.Component {
                                 <img className="icon" src={require('../../images/billing.svg')} alt="Manage Permissions" />
                                 Manage Permissions
                             </NavLink>}
+                            {permissionList.includes('ViewErrorLog') && <NavLink to="/manageerrorlog" className="nav-link">
+                                <img className="icon" src={require('../../images/billing.svg')} alt="Manage ErrorLog" />
+                                Manage ErrorLog
+                            </NavLink>}
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>

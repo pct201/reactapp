@@ -27,10 +27,10 @@ const initInterceptors = (store) => {
 		setTimeout(function () { document.getElementById('loader_div').style.display = "none" }, 250);
 		return response;
 	},
-		(error) => {			
+		(error) => {	
 			setTimeout(function () { document.getElementById('loader_div').style.display = "none" }, 250);
-			const { config } = error;
-			const originalRequest = config;
+			// const { config } = error;
+			// const originalRequest = config;
 			if (error.response && error.response.status === 401) {
 
 				// if (!isRefreshing) {

@@ -3,6 +3,8 @@ using System;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
+using System.Data;
+using OfficeOpenXml;
 
 namespace WebAPI.Common
 {
@@ -70,5 +72,16 @@ namespace WebAPI.Common
             return cipherText;
         }
 
+        public static MemoryStream GenrateExcelFile(DataTable dataTable)
+        {
+            var ms = new System.IO.MemoryStream();
+            using (ExcelPackage pck = new ExcelPackage(ms))
+            {
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Sheet1");
+                ws.Cells["A1"].LoadFromDataTable(dataTable, true);
+                pck.Save();
+                return ms;
+            }
+        }
     }
 }
