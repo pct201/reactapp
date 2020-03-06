@@ -186,7 +186,7 @@ export default class Registration extends Component {
                                             </div>
                                             <div className="col-md-6 ">
                                                 <div className="form-group">
-                                                    <input type="text" className="form-control" id="salary" ref="salary" additional_validation="salary" placeholder="Salary" value={this.state.mainState.salary} onChange={this.handleInputChange} error_msg="Salary" />
+                                                    <input type="text" className="form-control" id="salary" ref="salary" additional_validation="salary" placeholder="Salary" maxLength="6" value={this.state.mainState.salary} onChange={this.handleInputChange} error_msg="Salary" />
                                                     <span className="errorfont">{this.validator.message('salary', this.state.mainState.salary, 'required|numeric')}</span>
                                                 </div>
                                             </div>
@@ -196,12 +196,12 @@ export default class Registration extends Component {
                                                     className="form-control"
                                                         onChange={this.handleDatepickerChange}
                                                         selected={this.state.mainState.birth_date }
-                                                        minDate={new Date('1960/01/01')}
-                                                        maxDate={new Date('2000/12/31')}
+                                                        minDate={new Date('01/01/1960')}
+                                                        maxDate={new Date('31/12/2000')}
                                                         showMonthDropdown
                                                         showYearDropdown
                                                         dropdownMode="select"                                                       
-                                                        dateFormat="yyyy/MM/dd"
+                                                        dateFormat="dd/MM/yyyy"
                                                         placeholderText="Birth Date"
                                                     />                                                    
                                                 </div>

@@ -191,7 +191,7 @@ export default class EmailLogList extends React.Component {
                                                         showMonthDropdown
                                                         showYearDropdown
                                                         dropdownMode="select"                                                       
-                                                        dateFormat="yyyy/MM/dd"
+                                                        dateFormat="dd/MM/yyyy"
                                                         placeholderText="Date"
                                                         id="date"
                                                         autoComplete="off"

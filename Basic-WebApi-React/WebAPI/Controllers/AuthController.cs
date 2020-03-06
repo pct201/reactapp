@@ -254,9 +254,8 @@ namespace WebAPI.Controllers
                 var securityToken = new JwtSecurityToken(
                         issuer: _configuration["TokenAuthentication:Issuer"],
                         audience: _configuration["TokenAuthentication:Audience"],
-                        claims: claims,
-                        //expires: DateTime.UtcNow.AddHours(2),
-                        expires: DateTime.UtcNow.AddMinutes(1),
+                        claims: claims,                       
+                        expires: DateTime.UtcNow.AddMinutes(Convert.ToInt32(_configuration["TokenAuthentication:SessionTimeOutInMinute"])),
                         signingCredentials: signingCredentials
                     );
 
