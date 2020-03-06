@@ -1,33 +1,24 @@
-
 const axios = require('axios');
 
-export const authenticationService = {
-    login,
-    logout,
-    register,
-    createPassword,
-    forgotPassword
-};
-
-function login(userName, password) {    
-    return (       
+const login = (userName, password) => {
+    return (
         axios.post("Auth/Login", { "userName": userName, "password": password }, {
             'Content-Type': 'application/json'
-        }).then(user => {           
-           return user.data;          
+        }).then(user => {
+            return user.data;
         },
-            error => {    
-                return error;          
+            error => {
+                return error;
                 // dispatch(alertService.error("Somthing wrong!"));
             })
     )
 }
 
-function logout() {
-    localStorage.removeItem('user');  
+const logout = () => {
+    localStorage.removeItem('user');
 }
 
-function register(user) {
+const register = (user) => {
     return (
         axios.post("Auth/RegisterNewUser", user,
             {
@@ -39,7 +30,7 @@ function register(user) {
 }
 
 
-function createPassword(userId, token, password) {
+const createPassword = (userId, token, password) => {
     return (
         axios.post("Auth/CreatePassword", { "userId": userId, "token": token, "password": password }, {
             'Content-Type': 'application/json'
@@ -49,7 +40,7 @@ function createPassword(userId, token, password) {
     );
 }
 
-function forgotPassword(email) {
+const forgotPassword = (email) => {
     return (
         axios.post("Auth/ForgotPassword/?emailId=" + email)
             .then(result => {
@@ -60,3 +51,11 @@ function forgotPassword(email) {
                 })
     );
 }
+
+export const authenticationService = {
+    login,
+    logout,
+    register,
+    createPassword,
+    forgotPassword
+};

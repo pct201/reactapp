@@ -1,10 +1,6 @@
 const axios = require('axios');
 
-export const dashBoardService = {
-    dashboardDetail
-};
-
-function dashboardDetail() {
+const dashboardDetail = () => {
     return (
         axios.get("Home/DashboardDetail").then(
             result => {
@@ -13,6 +9,9 @@ function dashboardDetail() {
     )
 }
 
+export const dashBoardService = {
+    dashboardDetail
+};
 
 
 

@@ -1,24 +1,16 @@
 const axios = require('axios');
-export const emailService = {
-    getAllEmailTemplate,
-    getEmailTemplateById,
-    updateEmailTemplate,
-    getPlaceholderList,
-    getAllEmailLog,
-    resendEmail
-};
 
 //------------------------------ Email Template Service Region Start -----------------------------//
-function getAllEmailTemplate(page, perPage, sortDirection, sortBy) {
+const getAllEmailTemplate = (page, perPage, sortDirection, sortBy) => {
     return (
-        axios.get("Email/AllEmailTemplate?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: {'Content-Type': 'application/json'} })
+        axios.get("Email/AllEmailTemplate?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy, { headers: { 'Content-Type': 'application/json' } })
             .then(result => {
                 return result.data;
             })
     );
 }
 
-function getEmailTemplateById(emailUid) {
+const getEmailTemplateById = (emailUid) => {
     return (
         axios.get("Email/GetEmailTemplateById?emailUid=" + emailUid)
             .then(result => {
@@ -27,7 +19,7 @@ function getEmailTemplateById(emailUid) {
     )
 }
 
-function updateEmailTemplate(emailTemplate) {
+const updateEmailTemplate = (emailTemplate) => {
     return (
         axios.post("Email/UpdateEmailTemplateDetail", emailTemplate,
             { headers: { 'Content-Type': 'application/json' } }).then(result => {
@@ -36,7 +28,7 @@ function updateEmailTemplate(emailTemplate) {
     )
 }
 
-function getPlaceholderList() {
+const getPlaceholderList = () => {
     return (
         axios.get("Email/AllPlaceHolderList").then(
             result => {
@@ -47,17 +39,17 @@ function getPlaceholderList() {
 //------------------------------ Email Template Service Region END -----------------------------//
 
 //------------------------------ Email Log Service Region Start -----------------------------//
-function getAllEmailLog(page, perPage, sortDirection, sortBy, date, emailTitle) {
-    let filterDate=(date!=="")?date.toISOString():""; 
+const getAllEmailLog = (page, perPage, sortDirection, sortBy, date, emailTitle) => {
+    let filterDate = (date !== "") ? date.toISOString() : "";
     return (
-        axios.get("Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy + "&date=" + filterDate + "&emailTitle=" + emailTitle, { headers: {'Content-Type': 'application/json'} })
+        axios.get("Email/AllEmailLog?page=" + page + "&perPage=" + perPage + "&sortDirection=" + sortDirection + "&sortBy=" + sortBy + "&date=" + filterDate + "&emailTitle=" + emailTitle, { headers: { 'Content-Type': 'application/json' } })
             .then(result => {
                 return result.data;
             })
     );
 }
 
-function resendEmail(emailId) {
+const resendEmail = (emailId) => {
     return (
         axios.post("Email/ResendMail?emailId=" + emailId, null, { headers: { 'Content-Type': 'application/json' } }).then(result => {
             return result.data;
@@ -65,6 +57,14 @@ function resendEmail(emailId) {
     );
 }
 //------------------------------ Email Log Service Region END -----------------------------//
+export const emailService = {
+    getAllEmailTemplate,
+    getEmailTemplateById,
+    updateEmailTemplate,
+    getPlaceholderList,
+    getAllEmailLog,
+    resendEmail
+};
 
 
 

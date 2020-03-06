@@ -64,7 +64,7 @@ export default class ManageUsers extends React.Component {
         this.setState({
             popupState: {
                 message: data,
-                title: "stack trace",
+                title: "Stack Trace",
                 isshow: true
             }
         })
