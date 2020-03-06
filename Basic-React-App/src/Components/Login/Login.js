@@ -76,7 +76,7 @@ class Login extends Component {
 
               <form>
                 <div className="form-group">
-                  <input type="text" className="form-control" id="username" name="username" placeholder="User ID" value={this.state.username} onChange={this.handleChange} />
+                  <input type="text" className="form-control" id="username" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange} />
                   <span className="errorfont">{this.validator.message('username', this.state.username, `required`)}</span>
                 </div>
                 <div className="form-group">

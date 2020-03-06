@@ -37,7 +37,7 @@ export default class Registration extends Component {
                 isDeleteShow: false,
                 educationData: null,
                 userRoleData: null,
-                initialBlog:""
+                initialBlog: ""
             }, popupState: {
                 title: "",
                 redirect: false,
@@ -56,11 +56,11 @@ export default class Registration extends Component {
     }
 
     componentWillMount = async () => {
-        
+
         let educationList = await userService.educationList();
         let userRoleList = await userService.userRoleList();
         let user = await userService.getUserById(this.state.mainState.userId);
-        if (user !== undefined) {           
+        if (user !== undefined) {
             await this.setState({
                 mainState: {
                     userId: user.userId,
@@ -283,8 +283,8 @@ export default class Registration extends Component {
                                     </div>
                                     <div className="col-md-4 ">
                                         <div className="form-group">
-                                            <select className="form-control" id="education_id" ref="education_id" value={this.state.mainState.education_id} 
-                                            placeholder="Education" onChange={this.handleInputChange}>
+                                            <select className="form-control" id="education_id" ref="education_id" value={this.state.mainState.education_id}
+                                                placeholder="Education" onChange={this.handleInputChange}>
                                                 <option>Select</option>
                                                 {this.state.otherState.educationData !== null ? this.state.otherState.educationData.map(key => (
                                                     <option value={key.education_Id} key={key.education_Id}>{key.education_Name}</option>
@@ -315,20 +315,20 @@ export default class Registration extends Component {
                                                 className="form-control"
                                                 onChange={this.handleDatepickerChange}
                                                 selected={this.state.mainState.birth_date}
-                                                minDate={new Date('01/01/1960')}
-                                                maxDate={new Date('31/12/2000')}
+                                                minDate={new Date('1960/01/01')}
+                                                maxDate={new Date('2000/12/31')}
                                                 showMonthDropdown
                                                 showYearDropdown
                                                 dropdownMode="select"
                                                 dateFormat="dd/MM/yyyy"
                                                 placeholderText="Birth Date"
-                                            />                                          
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-md-4 ">
                                         <div className="form-group">
                                             <div className="custom-control custom-switch">
-                                                <input type="checkbox" className="custom-control-input" id="is_married" ref="is_married" value={this.state.mainState.is_married} onClick={this.handleInputChange} onChange={()=>{return true}} checked={this.state.mainState.is_married} />
+                                                <input type="checkbox" className="custom-control-input" id="is_married" ref="is_married" value={this.state.mainState.is_married} onClick={this.handleInputChange} onChange={() => { return true }} checked={this.state.mainState.is_married} />
                                                 <label className="custom-control-label" htmlFor="is_married">Married</label>
                                             </div>
                                         </div>
@@ -349,7 +349,7 @@ export default class Registration extends Component {
                                     <div className="col-md-4">
                                         <div className="form-group">
                                             <div className="custom-control custom-switch">
-                                                <input type="checkbox" className="custom-control-input" id="is_active" value={this.state.mainState.is_active} onClick={this.handleInputChange} onChange={()=>{return true}} checked={this.state.mainState.is_active} />
+                                                <input type="checkbox" className="custom-control-input" id="is_active" value={this.state.mainState.is_active} onClick={this.handleInputChange} onChange={() => { return true }} checked={this.state.mainState.is_active} />
                                                 <label className="custom-control-label" htmlFor="is_active">Active</label>
                                             </div>
                                         </div>

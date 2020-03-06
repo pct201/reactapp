@@ -196,12 +196,12 @@ export default class Registration extends Component {
                                                     className="form-control"
                                                         onChange={this.handleDatepickerChange}
                                                         selected={this.state.mainState.birth_date }
-                                                        minDate={new Date('01/01/1960')}
-                                                        maxDate={new Date('31/12/2000')}
+                                                        minDate={new Date('1960/01/01')}
+                                                        maxDate={new Date('2000/12/31')}
                                                         showMonthDropdown
                                                         showYearDropdown
                                                         dropdownMode="select"                                                       
-                                                        dateFormat="dd/MM/yyyy"
+                                                         dateFormat="dd/MM/yyyy"
                                                         placeholderText="Birth Date"
                                                     />                                                    
                                                 </div>
