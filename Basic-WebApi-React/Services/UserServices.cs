@@ -208,6 +208,23 @@ namespace Services
             return this.ExecuteProcedure<UserModel>("[dbo].[user_detail_get]", parameters).FirstOrDefault();
         }
 
+        public virtual int UpdateRefreshToken(int userId, string token, string refreshToken, DateTime expireOn)
+        {
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "@user_id", Value = userId, DBType = DbType.Int32});
+            parameters.Add(new DBParameters() { Name = "@token", Value = token, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@refresh_token", Value = refreshToken, DBType = DbType.AnsiString });            
+            parameters.Add(new DBParameters() { Name = "@expire_on", Value = expireOn, DBType = DbType.DateTime});
+            return this.ExecuteProcedure<int>("[auth].[user_token_add_update]", parameters).FirstOrDefault();
+        }
+
+        public UserModel GetUserByRefreshToken(string token, string refreshToken)
+        {
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "@token", Value = token, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@refresh_token", Value = refreshToken, DBType = DbType.AnsiString });
+            return this.ExecuteProcedure<UserModel>("[dbo].[user_get_by_token]", parameters).FirstOrDefault();
+        }
 
     }
 }
