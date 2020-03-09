@@ -10,10 +10,10 @@ namespace WebAPI.Email
     public class ForgotPasswordEvent : EmailEvent
     {
         
-        public ForgotPasswordEvent(EmailService emailService,string confirmPasswordLink,int tokenTimeToLive, string emailAddress,string languageCode)
-        {
+        public ForgotPasswordEvent(EmailService emailService,string resetPasswordLink, int tokenTimeToLive, string emailAddress,string languageCode)
+        {            
             this.EmailService = emailService;
-            EmailModel EmailObj = this.EmailService.GetEmailDetailByEmailName(Emails.ForgotPwrd, emailAddress, languageCode, confirmPasswordLink);
+            EmailModel EmailObj = this.EmailService.GetForgotPasswordEMailDetails(resetPasswordLink, tokenTimeToLive,emailAddress, languageCode);
             if(EmailObj != null)
             {
                 this.Intialize(EmailObj);

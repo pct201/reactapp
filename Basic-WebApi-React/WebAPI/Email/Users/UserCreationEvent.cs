@@ -14,7 +14,7 @@ namespace WebAPI.Email
         {
             this.EmailService = emailService;
 
-            EmailModel EmailObj = emailService.GetEmailDetailByEmailName(Emails.UserCreation, emailAddress, languageCode,null);
+            EmailModel EmailObj = emailService.GetUserCreationEMailDetails(emailAddress, languageCode);
 
             if (EmailObj != null)
             {

@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
                         emailEvent.Send();
 
                         //Trigger confirm email                                       
-                        ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(_emailService, (url + "/createpassword/?token=" + model.Token + "&uid=" + _commonClass.Encrypt(model.Email)), model.Email, model.Language_code);
+                        ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(_emailService, (url + "/createpassword/?token=" + model.Token + "&uid=" + _commonClass.Encrypt(model.Email)), Convert.ToInt32(_configuration["EmailLink:TimeToLiveHour"]),model.Email, model.Language_code);
                         EmailEvent.Send();
 
                         return Ok(new { success = true, errorCode = 200 });//User Registered Successfully.
@@ -104,7 +104,7 @@ namespace WebAPI.Controllers
                         if (userServices.UpdateTokenInDatabase(emailId, token, newToken))
                         {
                             //Trigger confirm email for expired link                                     
-                            ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(_emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + _commonClass.Encrypt(emailId)), emailId, "en-us");
+                            ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(_emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + _commonClass.Encrypt(emailId)), Convert.ToInt32(_configuration["EmailLink:TimeToLiveHour"]),emailId, "en-us");
                             EmailEvent.Send();
                             return Ok(new { success = false, errorCode = 204 });//Link Expired Sent New Link.
                         }
@@ -131,7 +131,7 @@ namespace WebAPI.Controllers
                 {
                     userServices.UpdateTokenInDatabase(emailId, null, newToken);
                     //Trigger confirm email for expired link                                     
-                    ConfirmPasswordEvent EmailEvent = new ConfirmPasswordEvent(_emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + _commonClass.Encrypt(emailId)), emailId, "en-us");
+                    ForgotPasswordEvent EmailEvent = new ForgotPasswordEvent(_emailService, (url + "/createpassword/?token=" + newToken + "&uid=" + _commonClass.Encrypt(emailId)), Convert.ToInt32(_configuration["EmailLink:TimeToLiveHour"]), emailId, "en-us");
                     EmailEvent.Send();
                 }
                 return Ok(new { success = true });
@@ -146,7 +146,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public ActionResult Login([FromBody] JObject credentialObj)
         {
-            try
+            try  
             {
                 string emailId = Convert.ToString(credentialObj["userName"]);
                 string password = Convert.ToString(credentialObj["password"]);

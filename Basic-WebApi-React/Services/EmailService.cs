@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Data;
 using Microsoft.Extensions.Configuration;
 using System.Net;
+using static DataModel.Utilities.Constants;
 
 namespace Services
 {
@@ -166,6 +167,64 @@ namespace Services
 
             if (!string.IsNullOrEmpty(confirmPasswordLink))
                 parameters.Add(new DBParameters() { Name = "@confirm_password_link", Value = confirmPasswordLink, DBType = DbType.AnsiString });
+
+            return this.ExecuteProcedureWithPerameterwithoutPagination<EmailModel>("[doc].[email_details_get]", parameters).FirstOrDefault();
+        }
+
+
+
+        /// <summary>
+        /// get user creation email details
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        /// <param name="languageCode"></param>
+        /// <returns></returns>
+        public EmailModel GetUserCreationEMailDetails(string emailAddress, string languageCode)
+        {
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "@email_name", Value = Emails.UserCreation, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@language_code", Value = languageCode, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@email_address", Value = emailAddress, DBType = DbType.String });
+
+            return this.ExecuteProcedureWithPerameterwithoutPagination<EmailModel>("[doc].[email_details_get]", parameters).FirstOrDefault();
+        }
+
+
+        /// <summary>
+        /// get forgot password email details
+        /// </summary>
+        /// <param name="resetPasswordLink"></param>
+        /// <param name="tokenTimeToLive"></param>
+        /// <param name="emailAddress"></param>
+        /// <param name="languageCode"></param>
+        /// <returns></returns>
+        public EmailModel GetForgotPasswordEMailDetails(string resetPasswordLink, int tokenTimeToLive, string emailAddress, string languageCode)
+        {
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "@email_name", Value = Emails.ForgotPwrd, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@language_code", Value = languageCode, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@email_address", Value = emailAddress, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@reset_password_link", Value = resetPasswordLink, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@token_time_to_live", Value = tokenTimeToLive, DBType = DbType.Int32 });
+
+            return this.ExecuteProcedureWithPerameterwithoutPagination<EmailModel>("[doc].[email_details_get]", parameters).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// get confirm password email details
+        /// </summary>
+        /// <param name="confirmPasswordLink"></param>
+        /// <param name="emailAddress"></param>
+        /// <param name="languageCode"></param>
+        /// <returns></returns>
+        public EmailModel GetConfirmPasswordEMailDetails(string confirmPasswordLink, int tokenTimeToLive,string emailAddress, string languageCode)
+        {
+            Collection<DBParameters> parameters = new Collection<DBParameters>();
+            parameters.Add(new DBParameters() { Name = "@email_name", Value = Emails.ConfirmPwrd, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@language_code", Value = languageCode, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@email_address", Value = emailAddress, DBType = DbType.String });
+            parameters.Add(new DBParameters() { Name = "@confirm_password_link", Value = confirmPasswordLink, DBType = DbType.AnsiString });
+            parameters.Add(new DBParameters() { Name = "@token_time_to_live", Value = tokenTimeToLive, DBType = DbType.Int32 });
 
             return this.ExecuteProcedureWithPerameterwithoutPagination<EmailModel>("[doc].[email_details_get]", parameters).FirstOrDefault();
         }

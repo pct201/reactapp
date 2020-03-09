@@ -10,10 +10,10 @@ namespace WebAPI.Email
     public class ConfirmPasswordEvent : EmailEvent
     {
         
-        public ConfirmPasswordEvent(EmailService emailService,string confirmPasswordLink,string emailAddress,string languageCode)
+        public ConfirmPasswordEvent(EmailService emailService,string confirmPasswordLink,int tokenTimeToLive,string emailAddress,string languageCode)
         {
             this.EmailService = emailService;
-            EmailModel EmailObj = this.EmailService.GetEmailDetailByEmailName(Emails.ConfirmPwrd, emailAddress, languageCode, confirmPasswordLink);
+            EmailModel EmailObj = this.EmailService.GetConfirmPasswordEMailDetails(confirmPasswordLink, tokenTimeToLive,emailAddress, languageCode);
             if(EmailObj != null)
             {
                 this.Intialize(EmailObj);
